@@ -355,7 +355,7 @@
     /* ---------- E. tombol nggak reaksi + stempel (12.5 - 15.9) ---------- */
     rise(E.btnSimpan, t, 12.52, 0.4);
     const ck = easeInOut(seg(t, 12.6, 13.0));
-    const cursorOn = t > 12.55 && t < 15.9 && t < 26.18;
+    const cursorOn = t > 12.55 && t < 14.32; // keluar pas stempel mendarat, biar nggak nutupin tulisan
     set(E.cursor, { left: mix(452, 432, ck) + 'px', top: mix(812, 752, ck) + 'px',
       opacity: cursorOn ? '1' : '0', visibility: cursorOn ? 'visible' : 'hidden' });
     const press = seg(t, 13.0, 13.12) * (1 - seg(t, 13.12, 13.34));
