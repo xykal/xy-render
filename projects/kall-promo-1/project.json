@@ -1,0 +1,21 @@
+{
+  "id": "kall-promo-1",
+  "title": "DownloadAja — tempel link, klik, beres (TikTok)",
+  "width": 720,
+  "height": 1280,
+  "fps": 60,
+  "duration": 22,
+  "scene": "scene.html",
+  "audio": {
+    "voice": { "file": "assets/vo.mp3", "gain": 1.0 },
+    "sfx": [
+      { "file": "assets/sfx/vine-boom.mp3", "at": 0.2, "gain": 0.55 },
+      { "file": "assets/sfx/bruh.mp3", "at": 3.05, "gain": 0.5 },
+      { "file": "assets/sfx/error.mp3", "at": 4.7, "gain": 0.45 },
+      { "file": "assets/sfx/anime-wow.mp3", "at": 6.2, "gain": 0.55 },
+      { "file": "assets/sfx/rizz.mp3", "at": 8.5, "gain": 0.5 },
+      { "file": "assets/sfx/metal-pipe.mp3", "at": 13.15, "gain": 0.5 }
+    ]
+  },
+  "out": "kall-promo-1.mp4"
+}

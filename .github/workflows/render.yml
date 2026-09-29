@@ -1,0 +1,58 @@
+name: Render video (720p60)
+
+# Manual only — jangan tambah schedule/trigger otomatis (GitHub AUP).
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        description: 'Folder di projects/ (mis. kall-promo-1)'
+        required: true
+        default: 'kall-promo-1'
+
+concurrency:
+  group: render-${{ github.event.inputs.project }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache browser Playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-chromium-v1
+
+      - name: Pasang dependensi
+        run: npm install --no-audit --no-fund
+
+      - name: Pasang chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Render
+        run: node tools/render.mjs "projects/${{ github.event.inputs.project }}"
+
+      - name: Upload artifact (7 hari)
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-${{ github.event.inputs.project }}
+          path: out/
+          retention-days: 7
+
+      - name: Commit hasil ke out/
+        run: |
+          git config user.name "xy-render-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add out/
+          git diff --cached --quiet || git commit -m "render: ${{ github.event.inputs.project }} (${github.sha::7})"
+          git push

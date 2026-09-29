@@ -1,0 +1,14 @@
+{
+  "name": "xy-render",
+  "private": true,
+  "description": "Render video 720x1280@60fps via GitHub Actions — jangan render di lokal",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "render": "node tools/render.mjs"
+  },
+  "devDependencies": {
+    "ffmpeg-static": "^5.2.0",
+    "playwright": "^1.49.0"
+  }
+}
