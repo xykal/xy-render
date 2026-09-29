@@ -2,142 +2,142 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Next.js — use client itu pintu, bukan stiker</title>
+<title>Next.js — apa itu, dan kenapa tombol lu nggak bisa diklik</title>
 <style>
   @font-face { font-family: PJS; src: url('assets/font/pjs-400.woff2') format('woff2'); font-weight: 400; font-display: block; }
   @font-face { font-family: PJS; src: url('assets/font/pjs-700.woff2') format('woff2'); font-weight: 700; font-display: block; }
   @font-face { font-family: PJS; src: url('assets/font/pjs-800.woff2') format('woff2'); font-weight: 800; font-display: block; }
+  @font-face { font-family: JBM; src: url('assets/font/jbm-700.woff2') format('woff2'); font-weight: 700; font-display: block; }
 
   :root {
     --bg: #0b0d10;
-    --surface: #12151a;
-    --card: #171c24;
-    --line: #2a323d;
-    --text: #f2f3f5;
-    --text-2: #dfe4ea;
-    --muted: #8d95a3;
-    --faint: #6b7280;
-    --accent: #7fb2ff;
+    --ink: #f3f4f6;
+    --ink-2: #d7dbe2;
+    --muted: #939aa7;
+    --faint: #5f6673;
+    --line: #2b333f;
+    --surface: #131720;
+    --card: #1a1f27;
+    --card-2: #202632;
+    --accent: #7fb0ff;
     --accent-text: #cfe2ff;
-    --accent-soft: rgba(127, 178, 255, .13);
-    --bad: #d97066;
+    --accent-soft: rgba(127, 176, 255, .14);
+    --bad: #e07b6f;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   html, body { background: var(--bg); }
-
-  body {
-    font-family: PJS, system-ui, sans-serif;
-    color: var(--text);
-    -webkit-font-smoothing: antialiased;
-  }
-
-  #stage { position: absolute; left: 0; top: 0; width: 720px; height: 1280px;
-    overflow: hidden; background: var(--bg); }
-
+  body { font-family: PJS, system-ui, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  #stage { position: absolute; left: 0; top: 0; width: 720px; height: 1280px; overflow: hidden; background: var(--bg); }
   .abs { position: absolute; }
-  .num { font-variant-numeric: tabular-nums; }
+  .mono { font-family: JBM, ui-monospace, monospace; }
 
-  /* ---------- kolom aman: x 30..590 (kanan 130px, bawah 300px) ---------- */
+  /* ---------- kepala ---------- */
+  #wm { left: 30px; top: 162px; font-size: 40px; font-weight: 700; color: var(--faint); }
+  #tagNext { left: 416px; top: 156px; height: 56px; padding: 0 22px; border-radius: 14px;
+    background: var(--card); border: 1px solid var(--line); display: flex; align-items: center;
+    font-size: 36px; font-weight: 700; color: var(--muted); }
 
-  #wm { left: 30px; top: 162px; font-size: 42px; font-weight: 700; letter-spacing: .02em;
-    color: var(--faint); }
-
-  #tagNext { left: 30px; top: 214px; height: 58px; padding: 0 24px; border-radius: 14px;
-    background: var(--card); border: 1px solid var(--line);
-    display: flex; align-items: center; font-size: 42px; font-weight: 700; color: var(--muted);
-    letter-spacing: .01em; }
-
-  /* ---------- hook ---------- */
-  #h1 { left: 30px; top: 322px; width: 560px;
-    font-size: 82px; font-weight: 800; line-height: 1.14; letter-spacing: -.03em; }
-  #h1 em { font-style: normal; color: var(--bad); }
-
-  #hookBtn { left: 130px; top: 646px; width: 320px; height: 94px; border-radius: 20px;
-    background: var(--card); border: 1px solid var(--line);
-    display: flex; align-items: center; justify-content: flex-start; padding-left: 46px;
-    font-size: 44px; font-weight: 800; color: var(--text); }
-
-  #cursor { left: 180px; top: 770px; width: 26px; height: 26px; border-radius: 50%;
-    background: var(--accent); }
-  #tapRing { left: 266px; top: 650px; width: 110px; height: 110px; border-radius: 50%;
-    border: 3px solid var(--accent); }
-
-  #onclickTag { left: 330px; top: 596px; height: 66px; padding: 0 22px; border-radius: 14px;
-    background: var(--card); border: 1px solid var(--line);
-    display: flex; align-items: center; gap: 12px;
-    font-size: 42px; font-weight: 700; color: var(--bad); }
-
-  /* ---------- wilayah server / browser ---------- */
-  #serverLabel { left: 30px; top: 250px; font-size: 42px; font-weight: 700;
-    letter-spacing: .06em; color: var(--muted); }
-
-  #browserBox { left: 30px; top: 592px; width: 560px; height: 254px; border-radius: 22px;
-    background: var(--surface); border: 1px solid var(--line); }
-  #doorMask { left: 238px; top: 586px; width: 244px; height: 12px; background: var(--bg); }
-  #browserLabel { left: 62px; top: 602px; font-size: 42px; font-weight: 700;
-    letter-spacing: .06em; color: var(--muted); }
-
-  /* ---------- kartu file ---------- */
-  .card { border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
-  .doc { position: absolute; left: 24px; top: 30px; width: 44px; height: 54px;
-    border-radius: 8px; background: var(--line); }
-  .doc::after { content: ''; position: absolute; left: 10px; top: 14px; width: 24px; height: 4px;
-    border-radius: 2px; background: var(--card); box-shadow: 0 10px 0 var(--card), 0 20px 0 var(--card); }
-  .fname { position: absolute; left: 92px; top: 34px; font-size: 42px; font-weight: 700;
-    color: var(--text-2); letter-spacing: -.01em; }
-
-  #file1 { left: 90px; top: 300px; width: 440px; height: 116px; }
-  #card2 { left: 90px; top: 424px; width: 440px; height: 112px; }
-
-  /* ---------- chip API yang nggak ada di server ---------- */
-  .api { left: 90px; width: 440px; height: 76px; border-radius: 16px;
+  /* ---------- A. hook ---------- */
+  #hookTitle { left: 30px; top: 340px; font-size: 84px; font-weight: 800; line-height: 1.1; letter-spacing: -.035em; }
+  #hookAns { left: 30px; top: 580px; width: 560px; padding: 26px 30px; border-radius: 22px;
     background: var(--card); border: 1px solid var(--line); }
-  .api .lbl { position: absolute; left: 26px; top: 0; height: 74px; display: flex; align-items: center;
-    font-size: 44px; font-weight: 700; color: var(--text-2); }
-  .api .strike { position: absolute; left: 26px; top: 36px; height: 4px; width: 0;
-    border-radius: 2px; background: var(--bad); }
-  .api .x { position: absolute; right: 22px; top: 0; height: 74px; display: flex; align-items: center;
-    font-size: 46px; font-weight: 800; color: var(--bad); }
-  #api0 { top: 300px; }
-  #api1 { top: 388px; }
-  #api2 { top: 476px; }
+  #hookAns1 { font-size: 42px; font-weight: 800; color: var(--accent-text); }
+  #hookAns2 { margin-top: 10px; font-size: 38px; font-weight: 700; color: var(--ink-2); }
 
-  /* ---------- arahan 'use client' + komponen kecil ---------- */
-  #directive { left: 288px; top: 262px; width: 296px; height: 74px; border-radius: 16px;
-    background: var(--accent-soft); border: 2px solid var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 44px; font-weight: 800; color: var(--accent-text); }
+  /* ---------- B. dua wilayah ---------- */
+  .rlabel { font-size: 38px; font-weight: 800; letter-spacing: .1em; color: var(--muted); }
+  #srvLabel { left: 30px; top: 214px; }
+  .note { font-size: 30px; font-weight: 700; color: var(--faint); text-align: right; }
+  #srvNote { left: 420px; top: 222px; width: 170px; }
+  #brwNote { left: 335px; top: 548px; width: 255px; }
+  #srvPanel { left: 30px; top: 262px; width: 560px; height: 248px; border-radius: 22px;
+    background: var(--surface); border: 1px solid var(--line); }
+  #bnd { left: 30px; top: 524px; width: 560px; height: 3px; border-radius: 2px; background: var(--line); }
+  #doorGap { left: 296px; top: 521px; width: 128px; height: 9px; background: var(--bg); }
+  #doorL { left: 300px; top: 512px; width: 4px; height: 30px; border-radius: 2px; background: var(--accent); }
+  #doorR { left: 416px; top: 512px; width: 4px; height: 30px; border-radius: 2px; background: var(--accent); }
+  #flow { left: 356px; top: 528px; width: 8px; height: 58px; border-radius: 4px;
+    background: repeating-linear-gradient(180deg, var(--accent) 0 10px, transparent 10px 20px); }
+  #brwLabel { left: 30px; top: 540px; }
+  #brwPanel { left: 30px; top: 590px; width: 560px; height: 230px; border-radius: 22px;
+    background: var(--surface); border: 1px solid var(--line); }
+  #brwTop { left: 30px; top: 590px; width: 560px; height: 52px; background: #0f131a;
+    border-radius: 22px 22px 0 0; border-bottom: 1px solid var(--line); }
+  .dot { width: 13px; height: 13px; border-radius: 50%; background: var(--line); top: 610px; }
+  #dot1 { left: 58px; } #dot2 { left: 80px; } #dot3 { left: 102px; }
+  #brwPill { left: 126px; top: 604px; width: 426px; height: 30px; border-radius: 9px; background: var(--card-2); overflow: hidden; }
+  #brwFill { position: absolute; left: 0; top: 0; height: 100%; width: 8%; background: var(--accent-soft);
+    border-right: 2px solid var(--accent); }
+  #brwPillText { position: absolute; left: 14px; top: 0; height: 30px; display: flex; align-items: center;
+    font-size: 24px; color: var(--muted); letter-spacing: .02em; }
 
-  .kid { left: 110px; top: 340px; width: 200px; height: 62px; border-radius: 14px;
-    background: var(--card); border: 1px solid var(--line);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 42px; font-weight: 700; color: var(--text-2); }
-  .kid.on { border-color: var(--accent); color: var(--accent-text); background: var(--accent-soft); }
+  /* ---------- C. kartu file ---------- */
+  #ed { left: 56px; top: 284px; width: 508px; height: 202px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
+  #edHead { left: 56px; top: 284px; width: 508px; height: 46px; background: var(--card-2);
+    border-radius: 18px 18px 0 0; border-bottom: 1px solid var(--line); }
+  #edDot { left: 78px; top: 301px; width: 12px; height: 12px; border-radius: 50%; background: var(--faint); }
+  #edName { left: 102px; top: 292px; font-size: 31px; font-weight: 700; }
+  #edHi { left: 118px; top: 338px; width: 330px; height: 46px; border-radius: 10px;
+    background: var(--accent-soft); border: 1.5px solid var(--accent); }
+  #edClient { left: 132px; top: 343px; font-size: 37px; color: var(--accent-text); }
+  .gl { left: 80px; width: 44px; text-align: right; font-size: 24px; color: var(--faint); }
+  #gl1 { top: 347px; } #gl2 { top: 386px; } #gl3 { top: 422px; } #gl4 { top: 458px; }
+  .cl { left: 132px; height: 15px; border-radius: 7px; background: #242b36; }
+  #cl1 { top: 392px; width: 250px; } #cl2 { top: 428px; width: 300px; } #cl3 { top: 464px; width: 180px; }
 
-  /* ---------- CTA ---------- */
-  #cta { left: 30px; top: 332px; width: 560px; text-align: center;
-    font-size: 64px; font-weight: 800; line-height: 1.16; letter-spacing: -.05em; }
-  #cta span { display: block; }
-  #cta em { font-style: normal; color: var(--accent); }
-  #ctaPill { left: 190px; top: 604px; width: 240px; height: 88px; border-radius: 999px;
-    background: var(--accent); color: #08131f; display: flex; align-items: center; justify-content: center;
-    font-size: 46px; font-weight: 800; }
+  /* ---------- D. yang nggak ada di server ---------- */
+  .need { height: 52px; width: 156px; border-radius: 14px; background: var(--card); border: 1px solid var(--line);
+    display: flex; align-items: center; padding-left: 20px; font-size: 33px; font-weight: 700; color: var(--muted); }
+  #need1 { left: 56px; top: 656px; } #need2 { left: 232px; top: 656px; } #need3 { left: 408px; top: 656px; }
+  .mk { position: absolute; right: 12px; top: 12px; width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 21px; font-weight: 800; }
+  .mk.no { color: var(--bad); border: 2px solid var(--bad); }
+  .mk.yes { color: var(--accent-text); border: 2px solid var(--accent); }
 
-  /* ---------- penutup ---------- */
+  /* ---------- E. tombol yang nggak reaksi ---------- */
+  #btnSimpan { left: 250px; top: 726px; width: 220px; height: 78px; border-radius: 16px; background: var(--card-2);
+    border: 1px solid var(--line); display: flex; align-items: center; padding-left: 26px;
+    font-size: 42px; font-weight: 800; }
+  #tapRing { left: 397px; top: 717px; width: 96px; height: 96px; border-radius: 50%; border: 3px solid var(--accent); }
+  #cursor { left: 432px; top: 752px; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); }
+  #tagRespon { left: 250px; top: 660px; width: 220px; height: 52px; border-radius: 13px; background: var(--card);
+    border: 1.5px solid var(--bad); display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 800; color: var(--bad); }
+  #stamp { left: 60px; top: 716px; width: 480px; height: 96px; border-radius: 18px; border: 4px solid var(--bad);
+    display: flex; align-items: center; justify-content: center; font-size: 60px; font-weight: 800; color: var(--bad); }
+
+  /* ---------- F. komponen yang pindah ---------- */
+  .kid { width: 220px; height: 46px; border-radius: 12px; background: var(--card-2); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center; font-size: 33px; font-weight: 700; color: var(--ink-2); }
+  .kid.hot { border-color: var(--accent); color: var(--accent-text); background: var(--accent-soft); }
+  #doorChip { left: 196px; top: 484px; width: 328px; height: 44px; border-radius: 12px;
+    background: var(--accent-soft); border: 2px solid var(--accent); display: flex; align-items: center;
+    justify-content: center; font-size: 34px; color: var(--accent-text); }
+
+  /* ---------- G. CTA ---------- */
+  #ctaQ { left: 30px; top: 330px; width: 560px; text-align: center; font-size: 66px; font-weight: 800;
+    line-height: 1.14; letter-spacing: -.04em; }
+  #ctaA, #ctaB { top: 520px; width: 244px; height: 92px; border-radius: 18px; background: var(--card);
+    border: 1px solid var(--line); display: flex; align-items: center; justify-content: center;
+    font-size: 33px; font-weight: 700; color: var(--ink-2); text-align: center; padding: 0 14px; }
+  #ctaA { left: 56px; } #ctaB { left: 320px; }
+  #ctaPill { left: 210px; top: 660px; width: 300px; height: 92px; border-radius: 999px; background: var(--accent);
+    display: flex; align-items: center; justify-content: center; font-size: 44px; font-weight: 800; color: #08131f; }
+
+  /* ---------- H. penutup ---------- */
   #endDark { left: 0; top: 0; width: 720px; height: 1280px; background: var(--bg); }
-  #endWrap { left: 30px; top: 470px; width: 560px; text-align: center; }
-  #endRule1, #endRule2 { font-size: 48px; font-weight: 700; line-height: 1.35; color: var(--text-2); }
-  #endRule2 { color: var(--accent-text); }
-  #endCredit { margin-top: 92px; font-size: 46px; font-weight: 800; }
-  #endBrand { margin-top: 14px; font-size: 42px; font-weight: 700; color: var(--muted);
-    letter-spacing: -.02em; }
+  #endRule1 { left: 30px; top: 500px; width: 560px; text-align: center; font-size: 50px; font-weight: 800; line-height: 1.24; }
+  #endRule2 { left: 30px; top: 580px; width: 560px; text-align: center; font-size: 46px; font-weight: 700;
+    color: var(--accent-text); line-height: 1.26; }
+  #endCredit { left: 30px; top: 780px; width: 560px; text-align: center; font-size: 44px; font-weight: 800; }
+  #endBrand { left: 30px; top: 840px; width: 560px; text-align: center; font-size: 37px; font-weight: 700;
+    color: var(--muted); letter-spacing: -.01em; }
 
-  /* ---------- caption gaya TikTok ---------- */
-  #caption { left: 30px; top: 860px; width: 560px; padding: 20px 28px; border-radius: 20px;
-    background: rgba(9, 11, 15, .88); border: 1px solid rgba(255, 255, 255, .1);
-    font-size: 44px; font-weight: 800; line-height: 1.2; text-align: center; }
+  /* ---------- caption ---------- */
+  #caption { left: 30px; top: 830px; width: 560px; padding: 18px 26px; border-radius: 20px;
+    background: rgba(9, 11, 15, .9); border: 1px solid rgba(255, 255, 255, .1);
+    font-size: 38px; font-weight: 800; line-height: 1.18; text-align: center; white-space: pre-line; }
 </style>
 </head>
 <body>
@@ -145,27 +145,58 @@
   <div class="abs" id="wm">bikinan Kall</div>
   <div class="abs" id="tagNext">next.js</div>
 
-  <div class="abs" id="browserBox"></div>
-  <div class="abs" id="doorMask"></div>
-  <div class="abs" id="browserLabel">DI BROWSER</div>
-
-  <div class="abs" id="serverLabel">DI SERVER</div>
-
-  <div class="abs card" id="file1">
-    <div class="doc"></div>
-    <div class="fname">page.tsx</div>
+  <div class="abs" id="hookTitle">NEXT.JS<br>ITU APA?</div>
+  <div class="abs" id="hookAns">
+    <div id="hookAns1">framework React</div>
+    <div id="hookAns2">buat bikin web</div>
   </div>
 
-  <div class="abs card" id="card2">
-    <div class="doc"></div>
-    <div class="fname">like-button.tsx</div>
+  <div class="abs rlabel" id="srvLabel">DI SERVER</div>
+  <div class="abs note" id="srvNote">jadi HTML</div>
+  <div class="abs" id="srvPanel"></div>
+
+  <div class="abs" id="ed"></div>
+  <div class="abs" id="edHead"></div>
+  <div class="abs" id="edDot"></div>
+  <div class="abs mono" id="edName">like-button.tsx</div>
+  <div class="abs" id="edHi"></div>
+  <div class="abs mono" id="edClient"></div>
+  <div class="abs mono gl" id="gl1">1</div>
+  <div class="abs mono gl" id="gl2">2</div>
+  <div class="abs mono gl" id="gl3">3</div>
+  <div class="abs mono gl" id="gl4">4</div>
+  <div class="abs cl" id="cl1"></div>
+  <div class="abs cl" id="cl2"></div>
+  <div class="abs cl" id="cl3"></div>
+
+  <div class="abs" id="doorChip"><span class="mono">'use client'</span></div>
+  <div class="abs" id="flow"></div>
+  <div class="abs" id="bnd"></div>
+  <div class="abs" id="doorGap"></div>
+  <div class="abs" id="doorL"></div>
+  <div class="abs" id="doorR"></div>
+
+  <div class="abs rlabel" id="brwLabel">DI BROWSER</div>
+  <div class="abs note" id="brwNote">yang interaktif</div>
+  <div class="abs" id="brwPanel"></div>
+  <div class="abs" id="brwTop"></div>
+  <div class="abs dot" id="dot1"></div>
+  <div class="abs dot" id="dot2"></div>
+  <div class="abs dot" id="dot3"></div>
+  <div class="abs" id="brwPill">
+    <div id="brwFill"></div>
+    <div id="brwPillText">situs lu</div>
   </div>
 
-  <div class="abs api" id="api0"><div class="lbl">onClick</div><div class="strike"></div><div class="x">&#215;</div></div>
-  <div class="abs api" id="api1"><div class="lbl">useState</div><div class="strike"></div><div class="x">&#215;</div></div>
-  <div class="abs api" id="api2"><div class="lbl">localStorage</div><div class="strike"></div><div class="x">&#215;</div></div>
+  <div class="abs need" id="need1">klik<span class="mk no" id="mk1">&#215;</span></div>
+  <div class="abs need" id="need2">state<span class="mk no" id="mk2">&#215;</span></div>
+  <div class="abs need" id="need3">storage<span class="mk no" id="mk3">&#215;</span></div>
 
-  <div class="abs" id="directive">'use client'</div>
+  <div class="abs" id="btnSimpan">Simpan</div>
+  <div class="abs" id="tapRing"></div>
+  <div class="abs" id="cursor"></div>
+  <div class="abs" id="tagRespon">nggak respon</div>
+  <div class="abs" id="stamp">BUKAN BUG</div>
 
   <div class="abs kid" id="kid0">tombol</div>
   <div class="abs kid" id="kid1">icon</div>
@@ -174,287 +205,283 @@
   <div class="abs kid" id="kid4">search</div>
   <div class="abs kid" id="kid5">map</div>
 
-  <div class="abs" id="h1">TOMBOL LU<br>NGGAK BISA<br><em>DIKLIK?</em></div>
-  <div class="abs" id="hookBtn">Simpan</div>
-  <div class="abs" id="cursor"></div>
-  <div class="abs" id="tapRing"></div>
-  <div class="abs" id="onclickTag">onClick <span>&#215;</span></div>
-
-  <div class="abs" id="cta"><span>LU TIM</span><span><em>'USE CLIENT'</em></span><span>DI MANA?</span></div>
+  <div class="abs" id="ctaQ">LU TIM<br>YANG MANA?</div>
+  <div class="abs" id="ctaA">A. di file gede</div>
+  <div class="abs" id="ctaB">B. di komponen kecil</div>
   <div class="abs" id="ctaPill">komen</div>
 
   <div class="abs" id="endDark"></div>
-  <div class="abs" id="endWrap">
-    <div id="endRule1">server by default,</div>
-    <div id="endRule2">client kalau butuh interaksi.</div>
-    <div id="endCredit">bikinan Kall</div>
-    <div id="endBrand">XyVerse Technology Global</div>
-  </div>
+  <div class="abs" id="endRule1">server by default,</div>
+  <div class="abs" id="endRule2">client kalau butuh interaksi.</div>
+  <div class="abs" id="endCredit">bikinan Kall</div>
+  <div class="abs" id="endBrand">XyVerse Technology Global</div>
 
   <div class="abs" id="caption"></div>
 <script>
 (function () {
   'use strict';
-  // Scene deterministik: semua gerak dihitung dari window.SEEK(t). Tanpa timer, tanpa acak.
+  // Semua gerak dihitung dari window.SEEK(t). Tanpa timer, tanpa acak, tanpa CSS animation.
   const $ = (s) => document.querySelector(s);
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
   const seg = (t, a, b) => clamp01((t - a) / (b - a));
   const mix = (a, b, x) => a + (b - a) * x;
   const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
   const easeInOut = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
-  const easeOutBack = (x) => {
-    const c1 = 1.70158, c3 = c1 + 1;
-    return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
-  };
+  const easeOutBack = (x) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
 
-  const ACCENT = '#7fb2ff', ACCENT_TEXT = '#cfe2ff', ACCENT_SOFT = 'rgba(127,178,255,.13)';
-  const LINE = '#2a323d', CARD = '#171c24', CARD_ON = '#151d29', TEXT2 = '#dfe4ea';
+  const CLIENT = "'use client'";
+  const SLOT = [[56, 656], [232, 656], [408, 656], [56, 716], [232, 716], [408, 716]]; // 156x52
+  const CARDK = [[80, 330], [320, 330], [80, 385], [320, 385], [200, 440]];            // 220x46
+  const DOOR_TOP = [250, 462, 220, 46];
 
-  const E = {
-    wm: $('#wm'), tagNext: $('#tagNext'),
-    h1: $('#h1'), hookBtn: $('#hookBtn'), cursor: $('#cursor'), tapRing: $('#tapRing'),
-    onclickTag: $('#onclickTag'),
-    serverLabel: $('#serverLabel'), browserBox: $('#browserBox'), doorMask: $('#doorMask'),
-    browserLabel: $('#browserLabel'),
-    file1: $('#file1'), card2: $('#card2'),
-    api: [$('#api0'), $('#api1'), $('#api2')],
-    directive: $('#directive'),
-    kid: [$('#kid0'), $('#kid1'), $('#kid2'), $('#kid3'), $('#kid4'), $('#kid5')],
-    cta: $('#cta'), ctaPill: $('#ctaPill'),
-    endDark: $('#endDark'), endRule1: $('#endRule1'), endRule2: $('#endRule2'),
-    endCredit: $('#endCredit'), endBrand: $('#endBrand'),
-    caption: $('#caption'),
-  };
+  const E = {};
+  ['wm', 'tagNext', 'hookTitle', 'hookAns', 'srvLabel', 'srvNote', 'srvPanel', 'ed', 'edHead', 'edDot', 'edName',
+   'edHi', 'edClient', 'gl1', 'gl2', 'gl3', 'gl4', 'cl1', 'cl2', 'cl3', 'doorChip', 'flow', 'bnd',
+   'doorGap', 'doorL', 'doorR', 'brwLabel', 'brwNote', 'brwPanel', 'brwTop', 'dot1', 'dot2', 'dot3', 'brwPill',
+   'brwFill', 'brwPillText', 'need1', 'need2', 'need3', 'mk1', 'mk2', 'mk3', 'btnSimpan', 'tapRing',
+   'cursor', 'tagRespon', 'stamp', 'kid0', 'kid1', 'kid2', 'kid3', 'kid4', 'kid5', 'ctaQ', 'ctaA',
+   'ctaB', 'ctaPill', 'endDark', 'endRule1', 'endRule2', 'endCredit', 'endBrand', 'caption'
+  ].forEach((id) => { E[id] = $('#' + id); });
+  const GUTTER = [E.gl1, E.gl2, E.gl3, E.gl4];
+  const BARS = [E.cl1, E.cl2, E.cl3];
+  const KIDS = [E.kid0, E.kid1, E.kid2, E.kid3, E.kid4, E.kid5];
+  const DGRP = [E.srvLabel, E.srvNote, E.brwNote, E.srvPanel, E.ed, E.edHead, E.edDot, E.edName, E.edHi, E.edClient, E.doorChip, E.flow,
+    E.bnd, E.doorGap, E.doorL, E.doorR, E.brwLabel, E.brwPanel, E.brwTop, E.dot1, E.dot2, E.dot3,
+    E.brwPill, E.need1].concat(GUTTER, BARS, KIDS);
 
   function set(el, o) { Object.assign(el.style, o); }
   function hide(el) { set(el, { opacity: '0', visibility: 'hidden' }); }
   function at(el, x, y, w, h) { set(el, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' }); }
+  function show(el, o) { set(el, { opacity: '1', visibility: 'visible' }); if (o) set(el, o); }
 
-  // muncul: naik + memudar masuk
+  // muncul: naik sedikit + membesar, pakai easeOutBack
   function rise(el, t, t0, dur) {
-    const x = seg(t, t0, t0 + (dur || 0.42));
-    if (x <= 0) { hide(el); set(el, { transform: 'translateY(18px) scale(0.96)' }); return 0; }
-    set(el, {
-      opacity: String(Math.min(1, x * 1.7)), visibility: 'visible',
-      transform: 'translateY(' + mix(18, 0, easeOutCubic(x)) + 'px) scale(' + mix(0.96, 1, easeOutBack(x)) + ')',
-    });
+    const x = seg(t, t0, t0 + (dur || 0.4));
+    if (x <= 0) { hide(el); set(el, { transform: 'translateY(16px) scale(0.97)' }); return 0; }
+    set(el, { opacity: String(Math.min(1, x * 1.8)), visibility: 'visible',
+      transform: 'translateY(' + mix(16, 0, easeOutCubic(x)) + 'px) scale(' + mix(0.97, 1, easeOutBack(x)) + ')' });
     return x;
   }
-  // hilang: cuma memudar, tanpa gerak
   function drop(el, t, t1, dur) {
-    const x = seg(t, t1, t1 + (dur || 0.3));
+    const x = seg(t, t1, t1 + (dur || 0.26));
     if (x <= 0) return 0;
     if (x >= 1) { hide(el); return 1; }
     set(el, { opacity: String(1 - x) });
     return x;
   }
-  // jalur: deretan segmen [t0, t1, dari, ke] — hasilnya nggak tergantung urutan pemanggilan
-  function path(t, steps, ease) {
-    if (t < steps[0][0]) return null;
-    let x = steps[0][2][0], y = steps[0][2][1];
-    for (const s of steps) {
-      const k = clamp01(seg(t, s[0], s[1]));
-      const kk = (ease || easeOutCubic)(k);
-      x = mix(s[2][0], s[3][0], kk);
-      y = mix(s[2][1], s[3][1], kk);
-      if (k < 1) break;
+  // perpindahan berukuran: posisi dan ukuran ikut berubah, disambung beberapa kaki
+  function travel(el, t, legs) {
+    if (t < legs[0].t0) { hide(el); at(el, legs[0].from[0], legs[0].from[1], legs[0].from[2], legs[0].from[3]); return; }
+    for (let i = 0; i < legs.length; i++) {
+      const L = legs[i];
+      if (t < L.t1) {
+        const k = easeInOut(clamp01(seg(t, L.t0, L.t1)));
+        const w = mix(L.from[2], L.to[2], k), h = mix(L.from[3], L.to[3], k);
+        const cx = mix(L.from[0] + L.from[2] / 2, L.to[0] + L.to[2] / 2, k);
+        const cy = mix(L.from[1] + L.from[3] / 2, L.to[1] + L.to[3] / 2, k);
+        at(el, cx - w / 2, cy - h / 2, w, h);
+        show(el);
+        return;
+      }
     }
-    return [x, y];
-  }
-  // perjalanan komponen kecil: posisi + ukuran ikut berubah
-  function travel(el, t, t0, dur, from, to) {
-    const x = clamp01(seg(t, t0, t0 + dur));
-    if (x <= 0) { hide(el); at(el, from[0], from[1], from[2], from[3]); return 0; }
-    const k = easeInOut(x);
-    const w = mix(from[2], to[2], k), h = mix(from[3], to[3], k);
-    const cx = mix(from[0] + from[2] / 2, to[0] + to[2] / 2, k);
-    const cy = mix(from[1] + from[3] / 2, to[1] + to[3] / 2, k);
-    set(el, {
-      left: (cx - w / 2) + 'px', top: (cy - h / 2) + 'px', width: w + 'px', height: h + 'px',
-      opacity: String(clamp01(x * 3)), visibility: 'visible',
-    });
-    return x;
+    const L = legs[legs.length - 1].to;
+    at(el, L[0], L[1], L[2], L[3]);
+    show(el);
   }
 
-  // celah pintu di garis pemisah + enam slot di wilayah browser
-  // posisi diam chip di celah pintu: di atas kotak browser, nggak nutupin labelnya
-  const DPATH = [
-    [11.05, 11.55, [200, 150], [108, 369]],
-    [13.35, 13.85, [108, 369], [216, 528]],
-    [15.85, 16.35, [216, 528], [288, 246]],
-    [18.95, 19.45, [288, 246], [216, 528]],
-  ];
-  // tujuan: enam slot di wilayah browser (ukuran 240x56)
-  const SLOT = [[62, 662], [318, 662], [62, 724], [318, 724], [62, 786], [318, 786]];
-  // posisi di dalam kartu file gede (ukuran 190x54, mulai di bawah nama file)
-  const INSIDE = [[110, 400], [320, 400], [110, 458], [320, 458], [110, 516], [320, 516]];
-  const IN_SMALL = [[116, 448], [336, 448]];
-  // posisi balik ke wilayah server pas kartunya udah nggak ada (ukuran 160x54)
-  const SRV_ROWS = [[40, 330], [220, 330], [400, 330], [130, 390], [310, 390]];
-  const API_T = [[6.0, 6.5], [7.05, 7.65], [8.05, 8.5]];
   const CAPS = [
-    [0.38, 2.13, 'nggak bisa diklik?'],
-    [2.46, 3.17, 'itu bukan bug'],
-    [3.60, 6.15, 'default-nya di server'],
-    [6.46, 7.43, 'nggak ada klik'],
-    [7.63, 8.24, 'nggak ada state'],
-    [8.49, 9.49, 'nggak ada storage'],
-    [9.89, 10.81, 'yang butuh interaksi'],
-    [11.00, 12.80, "tandain: 'use client'"],
-    [13.27, 15.52, 'pintu, bukan stiker'],
-    [15.86, 17.10, 'sekali di file gede'],
-    [17.27, 18.58, 'semua isinya ikut'],
-    [19.63, 20.93, 'di komponen terkecil'],
-    [21.37, 22.63, 'lu tim yang mana?'],
-    [22.93, 23.23, 'komen'],
+    [0.40, 3.05, 'nextjs itu\nframework React'],
+    [3.55, 5.30, 'jalan di dua tempat:\nserver & browser'],
+    [5.75, 6.95, 'komponen lu\ndefault di server'],
+    [7.64, 9.15, 'nggak ada klik'],
+    [9.56, 10.25, 'nggak ada state'],
+    [10.43, 11.15, 'nggak ada storage'],
+    [12.50, 14.10, 'makanya tombol lu\nnggak bisa diklik'],
+    [14.39, 15.32, 'dan itu bukan bug'],
+    [16.04, 17.10, 'yang butuh interaksi'],
+    [17.35, 19.55, "tandain: 'use client'\ndi baris paling atas"],
+    [20.14, 22.58, 'use client itu pintu,\nbukan stiker'],
+    [23.03, 24.48, 'sekali ditulis\ndi file gede'],
+    [24.79, 26.00, 'semuanya ikut\nke browser'],
+    [26.60, 27.40, 'lu tim yang mana?'],
+    [27.72, 28.06, 'komen'],
   ];
 
   window.SEEK = function (t) {
-    /* ---------------- kredit wajib + tag ---------------- */
-    const wmOn = t > 1.9 ? 1 : 0;
-    const wmGone = 1 - seg(t, 23.3, 23.6); // nggak boleh nembus overlay penutup
+    /* ---------- kredit + tag ---------- */
+    const wmOn = t > 1.7 ? 1 : 0;
+    const wmGone = 1 - seg(t, 28.3, 28.6);
     set(E.wm, { opacity: String(wmOn * wmGone * 0.9), visibility: wmOn * wmGone > 0 ? 'visible' : 'hidden' });
-    rise(E.tagNext, t, 0.2, 0.4);
-    drop(E.tagNext, t, 3.0, 0.3);
+    rise(E.tagNext, t, 0.2, 0.36);
+    drop(E.tagNext, t, 3.2, 0.26);
 
-    /* ---------------- A. hook: tombol yang nggak reaksi (0 - 3.3) ---------------- */
-    rise(E.h1, t, 0.06, 0.5);
-    rise(E.hookBtn, t, 0.5, 0.4);
-    // kursor berhenti di sisi kanan tombol biar nggak nutupin label "Simpan"
-    const tapK = easeInOut(seg(t, 0.95, 1.4));
-    const cursorOn = t > 0.85 && t < 2.95;
-    set(E.cursor, {
-      left: mix(470, 388, tapK) + 'px', top: mix(786, 690, tapK) + 'px',
-      opacity: cursorOn ? '1' : '0', visibility: cursorOn ? 'visible' : 'hidden',
+    /* ---------- A. hook (0 - 3.2) ---------- */
+    rise(E.hookTitle, t, 0.14, 0.5);
+    rise(E.hookAns, t, 1.5, 0.44);
+    drop(E.hookTitle, t, 3.2, 0.28);
+    drop(E.hookAns, t, 3.2, 0.28);
+
+    /* ---------- B. dua wilayah (3.4 - 7) ---------- */
+    rise(E.srvLabel, t, 3.42, 0.36);
+    rise(E.srvNote, t, 4.05, 0.36);
+    rise(E.srvPanel, t, 3.58, 0.42);
+    const bo = seg(t, 4.5, 4.9);
+    set(E.bnd, { opacity: String(bo), visibility: bo > 0 ? 'visible' : 'hidden' });
+    set(E.doorGap, { opacity: String(bo), visibility: bo > 0 ? 'visible' : 'hidden' });
+    set(E.doorL, { opacity: String(bo), visibility: bo > 0 ? 'visible' : 'hidden' });
+    set(E.doorR, { opacity: String(bo), visibility: bo > 0 ? 'visible' : 'hidden' });
+    rise(E.brwLabel, t, 5.7, 0.36);
+    rise(E.brwNote, t, 6.3, 0.36);
+    const bw = seg(t, 5.86, 6.28);
+    [E.brwPanel, E.brwTop, E.dot1, E.dot2, E.dot3, E.brwPill].forEach((el) => {
+      set(el, { opacity: String(bw), visibility: bw > 0 ? 'visible' : 'hidden' });
     });
-    const rp = seg(t, 1.45, 2.05);
+
+    /* ---------- C. file + kode (7.5 - 16) ---------- */
+    rise(E.ed, t, 7.5, 0.42);
+    rise(E.edHead, t, 7.5, 0.42);
+    rise(E.edDot, t, 7.72, 0.3);
+    rise(E.edName, t, 7.62, 0.36);
+    GUTTER.forEach((el, i) => rise(el, t, 7.9 + i * 0.1, 0.3));
+    BARS.forEach((el, i) => rise(el, t, 8.0 + i * 0.12, 0.32));
+
+    /* ---------- D. tiga hal yang nggak ada di server (9.5 - 12.4) ---------- */
+    const NT = [9.5, 10.4, 11.3];
+    [E.need1, E.need2, E.need3].forEach((el, i) => rise(el, t, NT[i], 0.4));
+    drop(E.need2, t, 12.42, 0.24);
+    drop(E.need3, t, 12.48, 0.24);
+
+    /* ---------- E. tombol nggak reaksi + stempel (12.5 - 15.9) ---------- */
+    rise(E.btnSimpan, t, 12.52, 0.4);
+    const ck = easeInOut(seg(t, 12.6, 13.0));
+    const cursorOn = t > 12.55 && t < 15.9 && t < 26.18;
+    set(E.cursor, { left: mix(452, 432, ck) + 'px', top: mix(812, 752, ck) + 'px',
+      opacity: cursorOn ? '1' : '0', visibility: cursorOn ? 'visible' : 'hidden' });
+    const press = seg(t, 13.0, 13.12) * (1 - seg(t, 13.12, 13.34));
+    set(E.btnSimpan, { transform: 'scale(' + (1 - press * 0.08) + ')' });
+    const rp = seg(t, 13.08, 13.6);
     if (rp > 0 && rp < 1) {
-      const d = mix(55, 150, rp);
-      set(E.tapRing, {
-        left: (401 - d / 2) + 'px', top: (703 - d / 2) + 'px',
-        width: d + 'px', height: d + 'px',
-        opacity: String(1 - rp), visibility: 'visible',
-      });
+      const d = mix(70, 168, rp);
+      at(E.tapRing, 445 - d / 2, 765 - d / 2, d, d);
+      set(E.tapRing, { opacity: String(1 - rp), visibility: 'visible' });
     } else { hide(E.tapRing); }
-    rise(E.onclickTag, t, 1.6, 0.35);
-    drop(E.h1, t, 2.95, 0.3);
-    drop(E.hookBtn, t, 2.95, 0.3);
-    drop(E.onclickTag, t, 2.95, 0.3);
+    rise(E.tagRespon, t, 13.62, 0.34);
+    const st = seg(t, 14.34, 14.78);
+    if (st > 0) {
+      const s = mix(1.7, 1, easeOutBack(st));
+      const wob = Math.sin((t - 14.34) * 22) * Math.exp(-6 * (t - 14.34)) * 4;
+      set(E.stamp, { opacity: String(Math.min(1, st * 2.4)), visibility: 'visible',
+        transform: 'scale(' + s + ') rotate(' + (-5 + wob) + 'deg)' });
+    } else { hide(E.stamp); }
+    set(E.btnSimpan, { filter: t > 14.3 && t < 15.9 ? 'brightness(0.62)' : 'none' });
+    drop(E.stamp, t, 15.86, 0.24);
+    drop(E.tagRespon, t, 15.86, 0.24);
+    drop(E.btnSimpan, t, 15.9, 0.24);
 
-    /* ---------------- B. dua wilayah: server, browser (3.3 - 6) ---------------- */
-    rise(E.serverLabel, t, 3.35, 0.38);
-    rise(E.file1, t, 3.45, 0.42);
-    const bx = seg(t, 3.75, 4.15);
-    set(E.browserBox, { opacity: String(bx), visibility: bx > 0 ? 'visible' : 'hidden' });
-    set(E.doorMask, { opacity: String(bx), visibility: bx > 0 ? 'visible' : 'hidden' });
-    rise(E.browserLabel, t, 3.9, 0.35);
-    drop(E.file1, t, 5.7, 0.3);
+    /* ---------- F. tandain 'use client' (16 - 20) ---------- */
+    rise(E.edHi, t, 16.02, 0.36);
+    const typed = CLIENT.slice(0, Math.round(seg(t, 17.36, 18.02) * CLIENT.length));
+    if (E.edClient.textContent !== typed) E.edClient.textContent = typed;
+    set(E.edClient, { opacity: typed.length > 0 ? '1' : '0', visibility: typed.length > 0 ? 'visible' : 'hidden' });
+    drop(BARS[0], t, 20.3, 0.16);
+    drop(BARS[1], t, 20.34, 0.16);
+    drop(BARS[2], t, 20.38, 0.16);
+    drop(GUTTER[1], t, 20.3, 0.16);
+    drop(GUTTER[2], t, 20.34, 0.16);
+    drop(GUTTER[3], t, 20.38, 0.16);
+    // tombolnya muncul di dalam file, baru jalan lewat pintu
+    if (t < 21.0) { at(E.kid0, 170, 430, 220, 46); rise(E.kid0, t, 20.5, 0.38); }
 
-    /* ---------------- C. yang di server nggak ada (6 - 9.6) ---------------- */
-    E.api.forEach(function (el, i) {
-      rise(el, t, API_T[i][0], 0.4);
-      drop(el, t, 9.5 + i * 0.05, 0.3);
-      set(el.children[1], {
-        width: (388 * seg(t, API_T[i][1], API_T[i][1] + 0.3)) + 'px',
-        opacity: String(seg(t, API_T[i][1] + 0.02, API_T[i][1] + 0.2)),
-      });
-      set(el.children[2], { opacity: String(seg(t, API_T[i][1] + 0.15, API_T[i][1] + 0.4)) });
-    });
+    /* pintunya: chip turun dari kartu ke batas server/browser */
+    travel(E.doorChip, t, [
+      { t0: 19.95, t1: 20.32, from: [74, 338, 328, 46], to: [210, 420, 300, 46] },
+      { t0: 20.32, t1: 20.62, from: [210, 420, 300, 46], to: [196, 484, 328, 44] },
+    ]);
+    const open1 = seg(t, 20.72, 21.0) * (1 - seg(t, 22.6, 22.86));
+    const open2 = seg(t, 23.5, 23.78);
+    const swing = Math.max(open1, open2);
+    set(E.doorL, { transform: 'rotate(' + (-44 * swing) + 'deg)', opacity: String(Math.max(bo * (1 - seg(t, 26.15, 26.35)), 0)) });
+    set(E.doorR, { transform: 'rotate(' + (44 * swing) + 'deg)' });
+    const fw = Math.max(seg(t, 20.74, 21.0) * (1 - seg(t, 22.55, 22.8)), seg(t, 23.52, 23.78) * (1 - seg(t, 26.05, 26.3)));
+    set(E.flow, { opacity: String(fw), visibility: fw > 0.02 ? 'visible' : 'hidden' });
+    drop(E.edHi, t, 20.1, 0.22);
 
-    /* ---------------- D. tandain: 'use client' (9.7 - 13.2) ---------------- */
-    rise(E.card2, t, 9.95, 0.42);
-    const dp = path(t, DPATH, easeInOut);
-    if (dp) {
-      set(E.directive, {
-        left: dp[0] + 'px', top: dp[1] + 'px', opacity: '1', visibility: 'visible',
-      });
-    } else { hide(E.directive); at(E.directive, DPATH[0][2][0], DPATH[0][2][1], 296, 74); }
-    const on = t >= 11.6 && t < 21.0;
-    set(E.card2, { borderColor: on ? ACCENT : LINE, background: on ? CARD_ON : CARD });
-    drop(E.card2, t, 14.6, 0.35);
-
-    /* ---------------- E. pintu + dua komponen (13.2 - 15.7) ---------------- */
-    travel(E.kid[0], t, 13.75, 0.7, [IN_SMALL[0][0], IN_SMALL[0][1], 200, 62], [SLOT[0][0], SLOT[0][1], 240, 56]);
-    travel(E.kid[1], t, 14.1, 0.7, [IN_SMALL[1][0], IN_SMALL[1][1], 200, 62], [SLOT[1][0], SLOT[1][1], 240, 56]);
-
-    /* ---------------- F. file gede: semua isinya ikut (15.7 - 18.9) ---------------- */
-    drop(E.kid[0], t, 15.4, 0.25);
-    drop(E.kid[1], t, 15.4, 0.25);
-    const fg = easeInOut(seg(t, 15.8, 16.25));
-    if (t >= 15.8 && t < 18.85) {
-      rise(E.file1, t, 15.8, 0.4);
-      at(E.file1, 90, mix(300, 306, fg), 440, mix(116, 284, fg));
+    /* ---------- G. tombol pindah ke browser (21 - 22.6) ---------- */
+    if (t >= 21.0) {
+      travel(E.kid0, t, [
+        { t0: 21.0, t1: 21.44, from: [170, 430, 220, 46], to: DOOR_TOP },
+        { t0: 21.44, t1: 21.9, from: DOOR_TOP, to: [SLOT[0][0], SLOT[0][1], 156, 52] },
+      ]);
     }
-    E.kid.forEach(function (el, i) {
-      const kt = 16.3 + i * 0.3;
-      if (t < kt) {
-        rise(el, t, 15.95 + i * 0.07, 0.32);
-        at(el, INSIDE[i][0], INSIDE[i][1], 190, 54);
-      } else {
-        travel(el, t, kt, 0.7, [INSIDE[i][0], INSIDE[i][1], 190, 54], [SLOT[i][0], SLOT[i][1], 240, 56]);
+    const hot = t >= 21.95 && t < 26.18;
+    if (hot) { if (E.kid0.className.indexOf('hot') < 0) E.kid0.className = 'abs kid hot'; }
+    else if (E.kid0.className.indexOf('hot') >= 0) E.kid0.className = 'abs kid';
+    drop(E.need1, t, 21.85, 0.22);
+
+    /* ---------- H. file gede: semua ikut (22.9 - 26.1) ---------- */
+    if (t > 22.86) {
+      if (E.edName.textContent !== 'page.tsx') E.edName.textContent = 'page.tsx';
+    } else if (E.edName.textContent !== 'like-button.tsx') E.edName.textContent = 'like-button.tsx';
+    drop(E.edClient, t, 22.86, 0.16);
+    drop(GUTTER[0], t, 22.86, 0.16);
+    KIDS.slice(1).forEach((el, i) => {
+      const kt = 23.0 + i * 0.08;
+      const legA0 = 24.6 + i * 0.12;
+      const from = [CARDK[i][0], CARDK[i][1], 220, 46];
+      const to = [SLOT[i + 1][0], SLOT[i + 1][1], 156, 52];
+      at(el, from[0], from[1], from[2], from[3]);
+      if (t < kt) { rise(el, t, kt, 0.34); }
+      else if (t < legA0) { show(el); }
+      else {
+        travel(el, t, [
+          { t0: legA0, t1: legA0 + 0.34, from: from, to: DOOR_TOP },
+          { t0: legA0 + 0.34, t1: legA0 + 0.78, from: DOOR_TOP, to: to },
+        ]);
       }
     });
+    const bf = seg(t, 24.72, 26.0);
+    set(E.brwFill, { width: String(mix(8, 100, easeInOut(bf))) + '%' });
+    if (t > 24.68) {
+      if (E.brwPillText.textContent !== 'bundel js') E.brwPillText.textContent = 'bundel js';
+    } else if (E.brwPillText.textContent !== 'situs lu') E.brwPillText.textContent = 'situs lu';
 
-    /* ---------------- G. pindah ke komponen kecil (18.9 - 21.2) ---------------- */
-    if (t >= 18.8) {
-      const tail = 1 - seg(t, 21.0, 21.3); // semuanya keluar sebelum CTA
-      drop(E.file1, t, 18.85, 0.3);        // kartu gede pergi
-      // komponen yang nggak butuh interaksi balik ke wilayah server
-      for (let i = 1; i < 6; i++) {
-        const kt = 19.5 + (i - 1) * 0.1, to = SRV_ROWS[i - 1];
-        if (t < kt) {
-          at(E.kid[i], SLOT[i][0], SLOT[i][1], 240, 56);
-          set(E.kid[i], { opacity: String(tail), visibility: 'visible' });
-        } else if (t < kt + 0.6) {
-          travel(E.kid[i], t, kt, 0.6, [SLOT[i][0], SLOT[i][1], 240, 56], [to[0], to[1], 160, 54]);
-          set(E.kid[i], { opacity: String(clamp01(seg(t, kt, kt + 0.2)) * tail) });
-        } else {
-          at(E.kid[i], to[0], to[1], 160, 54);
-          set(E.kid[i], { opacity: String(tail), visibility: 'visible' });
-        }
-      }
-      // yang butuh interaksi: satu-satunya yang tetap tinggal di browser, nggak pindah ke mana-mana
-      const hi = t >= 20.1;
-      at(E.kid[0], SLOT[0][0], SLOT[0][1], 240, 56);
-      set(E.kid[0], {
-        opacity: String(tail), visibility: 'visible',
-        borderColor: hi ? ACCENT : LINE, color: hi ? ACCENT_TEXT : TEXT2,
-        background: hi ? ACCENT_SOFT : CARD,
-      });
-      set(E.browserBox, { borderColor: hi && t < 20.95 ? ACCENT : LINE });
-      set(E.browserLabel, { color: hi && t < 20.95 ? ACCENT_TEXT : '#8d95a3' });
-    }
+    /* ---------- I. CTA (26.5 - 28.1) ---------- */
+    rise(E.ctaQ, t, 26.5, 0.42);
+    rise(E.ctaA, t, 26.94, 0.4);
+    rise(E.ctaB, t, 27.14, 0.4);
+    rise(E.ctaPill, t, 27.68, 0.4);
+    const pp = seg(t, 27.86, 27.98) * (1 - seg(t, 27.98, 28.2));
+    set(E.ctaPill, { transform: 'scale(' + (1 - pp * 0.07) + ')' });
+    drop(E.ctaQ, t, 28.02, 0.24);
+    drop(E.ctaA, t, 28.02, 0.24);
+    drop(E.ctaB, t, 28.02, 0.24);
+    drop(E.ctaPill, t, 28.06, 0.24);
 
-    /* ---------------- H. CTA (21.3 - 23.5) ---------------- */
-    drop(E.serverLabel, t, 20.95, 0.3);
-    drop(E.browserLabel, t, 20.95, 0.3);
-    drop(E.browserBox, t, 20.95, 0.3);
-    drop(E.doorMask, t, 20.95, 0.3);
-    drop(E.directive, t, 20.95, 0.3);
-    drop(E.file1, t, 21.05, 0.3);
-    rise(E.cta, t, 21.3, 0.45);
-    rise(E.ctaPill, t, 22.9, 0.4);
-    drop(E.cta, t, 23.35, 0.25);
-    drop(E.ctaPill, t, 23.35, 0.25);
+    /* ---------- J. penutup (28.3 - 29.6) ---------- */
+    set(E.endDark, { opacity: String(mix(0, 1, easeOutCubic(seg(t, 28.3, 28.62)))) });
+    rise(E.endRule1, t, 28.5, 0.4);
+    rise(E.endRule2, t, 28.66, 0.4);
+    rise(E.endCredit, t, 28.86, 0.4);
+    rise(E.endBrand, t, 29.0, 0.4);
 
-    /* ---------------- I. penutup (23.4 - 25.2) ---------------- */
-    set(E.endDark, { opacity: String(mix(0, 0.96, easeOutCubic(seg(t, 23.35, 23.85)))) });
-    rise(E.endRule1, t, 23.55, 0.4);
-    rise(E.endRule2, t, 23.75, 0.4);
-    rise(E.endCredit, t, 24.05, 0.4);
-    rise(E.endBrand, t, 24.25, 0.4);
-
-    /* ---------------- caption per frasa ---------------- */
+    /* ---------- K. caption per frasa ---------- */
     const cap = CAPS.find((c) => t >= c[0] && t <= c[1]);
     if (cap) {
-      const k = seg(t, cap[0], cap[0] + 0.18);
-      // textContent itu properti elemen, bukan properti CSS: nggak boleh lewat set()/el.style
+      const k = seg(t, cap[0], cap[0] + 0.16);
       if (E.caption.textContent !== cap[2]) E.caption.textContent = cap[2];
-      set(E.caption, {
-        visibility: 'visible', opacity: String(Math.min(1, k * 1.9)),
-        transform: 'scale(' + mix(0.94, 1, easeOutBack(k)) + ')',
-      });
+      set(E.caption, { visibility: 'visible', opacity: String(Math.min(1, k * 2)),
+        transform: 'scale(' + mix(0.95, 1, easeOutBack(k)) + ')' });
     } else { hide(E.caption); }
+
+    /* ---------- L. diagram keluar bareng sebelum CTA ---------- */
+    const dgf = 1 - seg(t, 26.18, 26.44);
+    if (dgf < 1) {
+      DGRP.forEach((el) => {
+        if (dgf <= 0) { hide(el); return; }
+        const cur = parseFloat(el.style.opacity);
+        set(el, { opacity: String((isNaN(cur) ? 1 : cur) * dgf), visibility: 'visible' });
+      });
+    }
   };
 
   window.__READY = (async () => {
