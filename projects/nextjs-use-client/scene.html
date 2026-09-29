@@ -491,7 +491,9 @@
   ids.forEach((id) => { E[id] = $('#' + id); });
   STK.forEach((s) => { s.el = $('#' + s.id); });
 
-  function set(el, o) { Object.assign(el.style, o); }
+  const KEEP = ['stage'];              // elemen statik: jangan pernah disembunyiin
+  const touched = new Set();           // id yang ditulis di frame ini
+  function set(el, o) { if (el && el.id) touched.add(el.id); Object.assign(el.style, o); }
   function hide(el) { set(el, { opacity: '0', visibility: 'hidden' }); }
   function at(el, x, y, w, h) { set(el, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' }); }
   function rise(el, t, t0, dur) {
@@ -563,6 +565,7 @@
   const G_HOW = [E.toolBox, E.toolHead, E.tl0, E.tl1, E.tl2, E.tl3];
 
   window.SEEK = function (t) {
+    touched.clear();
     /* ---------- kepala ---------- */
     const wmOn = t > 1.6 ? 1 : 0;
     const wmGone = 1 - seg(t, 94.3, 94.6);
@@ -827,6 +830,12 @@
       set(E.caption, { visibility: 'visible', opacity: String(Math.min(1, k * 2)),
         transform: 'scale(' + mix(0.95, 1, easeOutBack(k)) + ')' });
     } else { hide(E.caption); }
+
+    /* ---------- jaring pengaman ----------
+       elemen yang nggak ditulis di frame ini = nggak hidup di beat ini -> matiin.
+       Tanpa ini, sisa elemen dari beat sebelumnya nangkring terus (kejadian di v3 pertama). */
+    KEEP.forEach((id) => touched.add(id));
+    for (const id of ids) { if (!touched.has(id)) hide(E[id]); }
   };
 
   window.__READY = (async () => {
