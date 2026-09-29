@@ -209,9 +209,6 @@
       <span style="width:13px;height:13px;border-radius:50%;background:#4fe3c1;box-shadow:0 0 12px #4fe3c1;"></span>
       <span class="sub" style="font-size:32px;">tempel link, klik, beres.</span>
     </div>
-    <div class="abs stik" id="demoStik" style="left:486px;top:962px;width:168px;transform:rotate(-5deg);">
-      <img src="assets/sticker/stiker-01.webp" width="168">
-    </div>
   </div>
 
   <!-- ============ 5. PUNCH (16.6–21.5) ============ -->
@@ -225,6 +222,9 @@
     </div>
     <div class="abs cen" id="punch4" style="top:748px;">
       <span class="pill" style="background:rgba(180,140,255,.16);border:1.5px solid rgba(180,140,255,.5);color:#e2d4ff;font-size:28px;">awas lu ketawa.</span>
+    </div>
+    <div class="abs stik" id="punchStik" style="left:468px;top:816px;width:172px;transform:rotate(-5deg);">
+      <img src="assets/sticker/stiker-01.webp" width="172">
     </div>
   </div>
 
@@ -245,8 +245,8 @@
     <div class="abs cen" id="cta4" style="top:738px;">
       <span class="pill" style="background:rgba(124,92,255,.18);border:1.5px solid rgba(160,130,255,.5);color:#d9ccff;font-size:26px;">gratis · tanpa login · tanpa ribet</span>
     </div>
-    <div class="abs stik" id="ctaStik" style="left:276px;top:836px;width:168px;transform:rotate(4deg);">
-      <img src="assets/sticker/stiker-12.webp" width="168">
+    <div class="abs stik" id="ctaStik" style="left:262px;top:816px;width:196px;transform:rotate(4deg);">
+      <img src="assets/sticker/stiker-11.webp" width="196">
     </div>
   </div>
 
@@ -364,7 +364,6 @@ window.SEEK = function(t) {
   /* ===== DEMO 9.5–17.75 ===== */
   set($('phone'), t, {on:9.55, off:17.5, y:70, sc:0.93});
   set($('demoCap'), t, {on:10.2, off:17.5, x:-60});
-  set($('demoStik'), t, {on:12.2, off:17.5, sc:0.55, rot:-5});
   // micro-interaksi dalam layar HP
   const press = t>=11.05 && t<11.45 ? 1-0.045*Math.abs(sin((t-11.05)*14)) : 1;
   $('dBtn').style.filter = (t>=11.05&&t<11.35) ? 'brightness(1.2)' : 'none';
@@ -390,6 +389,7 @@ window.SEEK = function(t) {
   set($('punch2'), t, {on:18.7, off:22.75, y:26});
   set($('punch3'), t, {on:19.7, off:22.75, y:30});
   set($('punch4'), t, {on:21.0, off:22.75, y:30});
+  set($('punchStik'), t, {on:18.9, off:22.75, sc:0.55, rot:-5});
 
   /* ===== CTA 23.05–28.2 ===== */
   set($('ctaUp'), t, {on:23.2, off:27.9, y:-26});
