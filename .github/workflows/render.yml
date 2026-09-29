@@ -54,5 +54,5 @@ jobs:
           git config user.name "xy-render-bot"
           git config user.email "actions@users.noreply.github.com"
           git add out/
-          git diff --cached --quiet || git commit -m "render: ${{ github.event.inputs.project }} (${github.sha::7})"
+          git diff --cached --quiet || git commit -m "render: ${{ github.event.inputs.project }} ($(git rev-parse --short HEAD))"
           git push
