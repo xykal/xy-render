@@ -1,0 +1,18 @@
+{
+  "id": "nextjs-use-client",
+  "title": "Next.js — 'use client' itu pintu, bukan stiker",
+  "width": 720,
+  "height": 1280,
+  "fps": 60,
+  "duration": 25.2,
+  "scene": "scene.html",
+  "audio": {
+    "voice": { "file": "assets/vo.mp3", "at": 0.15, "gain": 1.0, "speed": 1.3, "energy": true },
+    "sfx": [
+      { "file": "assets/sfx/bruh.mp3", "at": 0.35, "gain": 0.42 },
+      { "file": "assets/sfx/vine-boom.mp3", "at": 13.2, "gain": 0.36 },
+      { "file": "assets/sfx/metal-pipe.mp3", "at": 18.95, "gain": 0.26 }
+    ]
+  },
+  "out": "nextjs-use-client.mp4"
+}

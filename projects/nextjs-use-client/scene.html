@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Next.js — use client itu pintu, bukan stiker</title>
+<style>
+  @font-face { font-family: PJS; src: url('assets/font/pjs-400.woff2') format('woff2'); font-weight: 400; font-display: block; }
+  @font-face { font-family: PJS; src: url('assets/font/pjs-700.woff2') format('woff2'); font-weight: 700; font-display: block; }
+  @font-face { font-family: PJS; src: url('assets/font/pjs-800.woff2') format('woff2'); font-weight: 800; font-display: block; }
+
+  :root {
+    --bg: #0b0d10;
+    --surface: #12151a;
+    --card: #171c24;
+    --line: #2a323d;
+    --text: #f2f3f5;
+    --text-2: #dfe4ea;
+    --muted: #8d95a3;
+    --faint: #6b7280;
+    --accent: #7fb2ff;
+    --accent-text: #cfe2ff;
+    --accent-soft: rgba(127, 178, 255, .13);
+    --bad: #d97066;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { background: var(--bg); }
+
+  body {
+    font-family: PJS, system-ui, sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #stage { position: absolute; left: 0; top: 0; width: 720px; height: 1280px;
+    overflow: hidden; background: var(--bg); }
+
+  .abs { position: absolute; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* ---------- kolom aman: x 30..590 (kanan 130px, bawah 300px) ---------- */
+
+  #wm { left: 30px; top: 162px; font-size: 42px; font-weight: 700; letter-spacing: .02em;
+    color: var(--faint); }
+
+  #tagNext { left: 30px; top: 214px; height: 58px; padding: 0 24px; border-radius: 14px;
+    background: var(--card); border: 1px solid var(--line);
+    display: flex; align-items: center; font-size: 42px; font-weight: 700; color: var(--muted);
+    letter-spacing: .01em; }
+
+  /* ---------- hook ---------- */
+  #h1 { left: 30px; top: 322px; width: 560px;
+    font-size: 82px; font-weight: 800; line-height: 1.14; letter-spacing: -.03em; }
+  #h1 em { font-style: normal; color: var(--bad); }
+
+  #hookBtn { left: 150px; top: 646px; width: 320px; height: 94px; border-radius: 20px;
+    background: var(--card); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 44px; font-weight: 800; color: var(--text); }
+
+  #cursor { left: 180px; top: 770px; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); }
+  #tapRing { left: 266px; top: 650px; width: 110px; height: 110px; border-radius: 50%;
+    border: 3px solid var(--accent); }
+
+  #onclickTag { left: 330px; top: 596px; height: 66px; padding: 0 22px; border-radius: 14px;
+    background: var(--card); border: 1px solid var(--line);
+    display: flex; align-items: center; gap: 12px;
+    font-size: 42px; font-weight: 700; color: var(--bad); }
+
+  /* ---------- wilayah server / browser ---------- */
+  #serverLabel { left: 30px; top: 250px; font-size: 42px; font-weight: 700;
+    letter-spacing: .06em; color: var(--muted); }
+
+  #browserBox { left: 30px; top: 592px; width: 560px; height: 254px; border-radius: 22px;
+    background: var(--surface); border: 1px solid var(--line); }
+  #doorMask { left: 238px; top: 586px; width: 244px; height: 12px; background: var(--bg); }
+  #browserLabel { left: 62px; top: 602px; font-size: 42px; font-weight: 700;
+    letter-spacing: .06em; color: var(--muted); }
+
+  /* ---------- kartu file ---------- */
+  .card { border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
+  .doc { position: absolute; left: 24px; top: 30px; width: 44px; height: 54px;
+    border-radius: 8px; background: var(--line); }
+  .doc::after { content: ''; position: absolute; left: 10px; top: 14px; width: 24px; height: 4px;
+    border-radius: 2px; background: var(--card); box-shadow: 0 10px 0 var(--card), 0 20px 0 var(--card); }
+  .fname { position: absolute; left: 92px; top: 34px; font-size: 42px; font-weight: 700;
+    color: var(--text-2); letter-spacing: -.01em; }
+
+  #file1 { left: 90px; top: 300px; width: 440px; height: 116px; }
+  #card2 { left: 90px; top: 424px; width: 440px; height: 112px; }
+
+  /* ---------- chip API yang nggak ada di server ---------- */
+  .api { left: 90px; width: 440px; height: 76px; border-radius: 16px;
+    background: var(--card); border: 1px solid var(--line); }
+  .api .lbl { position: absolute; left: 26px; top: 0; height: 74px; display: flex; align-items: center;
+    font-size: 44px; font-weight: 700; color: var(--text-2); }
+  .api .strike { position: absolute; left: 26px; top: 36px; height: 4px; width: 0;
+    border-radius: 2px; background: var(--bad); }
+  .api .x { position: absolute; right: 22px; top: 0; height: 74px; display: flex; align-items: center;
+    font-size: 46px; font-weight: 800; color: var(--bad); }
+  #api0 { top: 300px; }
+  #api1 { top: 388px; }
+  #api2 { top: 476px; }
+
+  /* ---------- arahan 'use client' + komponen kecil ---------- */
+  #directive { left: 288px; top: 262px; width: 296px; height: 74px; border-radius: 16px;
+    background: var(--accent-soft); border: 2px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 44px; font-weight: 800; color: var(--accent-text); }
+
+  .kid { left: 110px; top: 340px; width: 200px; height: 62px; border-radius: 14px;
+    background: var(--card); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 42px; font-weight: 700; color: var(--text-2); }
+  .kid.on { border-color: var(--accent); color: var(--accent-text); background: var(--accent-soft); }
+
+  /* ---------- CTA ---------- */
+  #cta { left: 30px; top: 332px; width: 560px; text-align: center;
+    font-size: 64px; font-weight: 800; line-height: 1.16; letter-spacing: -.05em; }
+  #cta span { display: block; }
+  #cta em { font-style: normal; color: var(--accent); }
+  #ctaPill { left: 190px; top: 604px; width: 240px; height: 88px; border-radius: 999px;
+    background: var(--accent); color: #08131f; display: flex; align-items: center; justify-content: center;
+    font-size: 46px; font-weight: 800; }
+
+  /* ---------- penutup ---------- */
+  #endDark { left: 0; top: 0; width: 720px; height: 1280px; background: var(--bg); }
+  #endWrap { left: 30px; top: 470px; width: 560px; text-align: center; }
+  #endRule1, #endRule2 { font-size: 48px; font-weight: 700; line-height: 1.35; color: var(--text-2); }
+  #endRule2 { color: var(--accent-text); }
+  #endCredit { margin-top: 92px; font-size: 46px; font-weight: 800; }
+  #endBrand { margin-top: 14px; font-size: 42px; font-weight: 700; color: var(--muted);
+    letter-spacing: -.02em; }
+
+  /* ---------- caption gaya TikTok ---------- */
+  #caption { left: 30px; top: 860px; width: 560px; padding: 20px 28px; border-radius: 20px;
+    background: rgba(9, 11, 15, .88); border: 1px solid rgba(255, 255, 255, .1);
+    font-size: 44px; font-weight: 800; line-height: 1.2; text-align: center; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="abs" id="wm">bikinan Kall</div>
+  <div class="abs" id="tagNext">next.js</div>
+
+  <div class="abs" id="browserBox"></div>
+  <div class="abs" id="doorMask"></div>
+  <div class="abs" id="browserLabel">DI BROWSER</div>
+
+  <div class="abs" id="serverLabel">DI SERVER</div>
+
+  <div class="abs card" id="file1">
+    <div class="doc"></div>
+    <div class="fname">page.tsx</div>
+  </div>
+
+  <div class="abs card" id="card2">
+    <div class="doc"></div>
+    <div class="fname">like-button.tsx</div>
+  </div>
+
+  <div class="abs api" id="api0"><div class="lbl">onClick</div><div class="strike"></div><div class="x">&#215;</div></div>
+  <div class="abs api" id="api1"><div class="lbl">useState</div><div class="strike"></div><div class="x">&#215;</div></div>
+  <div class="abs api" id="api2"><div class="lbl">localStorage</div><div class="strike"></div><div class="x">&#215;</div></div>
+
+  <div class="abs" id="directive">'use client'</div>
+
+  <div class="abs kid" id="kid0">tombol</div>
+  <div class="abs kid" id="kid1">icon</div>
+  <div class="abs kid" id="kid2">modal</div>
+  <div class="abs kid" id="kid3">chart</div>
+  <div class="abs kid" id="kid4">search</div>
+  <div class="abs kid" id="kid5">map</div>
+
+  <div class="abs" id="h1">TOMBOL LU<br>NGGAK BISA<br><em>DIKLIK?</em></div>
+  <div class="abs" id="hookBtn">Simpan</div>
+  <div class="abs" id="cursor"></div>
+  <div class="abs" id="tapRing"></div>
+  <div class="abs" id="onclickTag">onClick <span>&#215;</span></div>
+
+  <div class="abs" id="cta"><span>LU TIM</span><span><em>'USE CLIENT'</em></span><span>DI MANA?</span></div>
+  <div class="abs" id="ctaPill">komen</div>
+
+  <div class="abs" id="endDark"></div>
+  <div class="abs" id="endWrap">
+    <div id="endRule1">server by default,</div>
+    <div id="endRule2">client kalau butuh interaksi.</div>
+    <div id="endCredit">bikinan Kall</div>
+    <div id="endBrand">XyVerse Technology Global</div>
+  </div>
+
+  <div class="abs" id="caption"></div>
+<script>
+(function () {
+  'use strict';
+  // Scene deterministik: semua gerak dihitung dari window.SEEK(t). Tanpa timer, tanpa acak.
+  const $ = (s) => document.querySelector(s);
+  const clamp01 = (x) => Math.max(0, Math.min(1, x));
+  const seg = (t, a, b) => clamp01((t - a) / (b - a));
+  const mix = (a, b, x) => a + (b - a) * x;
+  const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
+  const easeInOut = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
+  const easeOutBack = (x) => {
+    const c1 = 1.70158, c3 = c1 + 1;
+    return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+  };
+
+  const ACCENT = '#7fb2ff', ACCENT_TEXT = '#cfe2ff', ACCENT_SOFT = 'rgba(127,178,255,.13)';
+  const LINE = '#2a323d', CARD = '#171c24', CARD_ON = '#151d29', TEXT2 = '#dfe4ea';
+
+  const E = {
+    wm: $('#wm'), tagNext: $('#tagNext'),
+    h1: $('#h1'), hookBtn: $('#hookBtn'), cursor: $('#cursor'), tapRing: $('#tapRing'),
+    onclickTag: $('#onclickTag'),
+    serverLabel: $('#serverLabel'), browserBox: $('#browserBox'), doorMask: $('#doorMask'),
+    browserLabel: $('#browserLabel'),
+    file1: $('#file1'), card2: $('#card2'),
+    api: [$('#api0'), $('#api1'), $('#api2')],
+    directive: $('#directive'),
+    kid: [$('#kid0'), $('#kid1'), $('#kid2'), $('#kid3'), $('#kid4'), $('#kid5')],
+    cta: $('#cta'), ctaPill: $('#ctaPill'),
+    endDark: $('#endDark'), endRule1: $('#endRule1'), endRule2: $('#endRule2'),
+    endCredit: $('#endCredit'), endBrand: $('#endBrand'),
+    caption: $('#caption'),
+  };
+
+  function set(el, o) { Object.assign(el.style, o); }
+  function hide(el) { set(el, { opacity: '0', visibility: 'hidden' }); }
+  function at(el, x, y, w, h) { set(el, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' }); }
+
+  // muncul: naik + memudar masuk
+  function rise(el, t, t0, dur) {
+    const x = seg(t, t0, t0 + (dur || 0.42));
+    if (x <= 0) { hide(el); set(el, { transform: 'translateY(18px) scale(0.96)' }); return 0; }
+    set(el, {
+      opacity: String(Math.min(1, x * 1.7)), visibility: 'visible',
+      transform: 'translateY(' + mix(18, 0, easeOutCubic(x)) + 'px) scale(' + mix(0.96, 1, easeOutBack(x)) + ')',
+    });
+    return x;
+  }
+  // hilang: cuma memudar, tanpa gerak
+  function drop(el, t, t1, dur) {
+    const x = seg(t, t1, t1 + (dur || 0.3));
+    if (x <= 0) return 0;
+    if (x >= 1) { hide(el); return 1; }
+    set(el, { opacity: String(1 - x) });
+    return x;
+  }
+  // jalur: deretan segmen [t0, t1, dari, ke] — hasilnya nggak tergantung urutan pemanggilan
+  function path(t, steps, ease) {
+    if (t < steps[0][0]) return null;
+    let x = steps[0][2][0], y = steps[0][2][1];
+    for (const s of steps) {
+      const k = clamp01(seg(t, s[0], s[1]));
+      const kk = (ease || easeOutCubic)(k);
+      x = mix(s[2][0], s[3][0], kk);
+      y = mix(s[2][1], s[3][1], kk);
+      if (k < 1) break;
+    }
+    return [x, y];
+  }
+  // perjalanan komponen kecil: posisi + ukuran ikut berubah
+  function travel(el, t, t0, dur, from, to) {
+    const x = clamp01(seg(t, t0, t0 + dur));
+    if (x <= 0) { hide(el); at(el, from[0], from[1], from[2], from[3]); return 0; }
+    const k = easeInOut(x);
+    const w = mix(from[2], to[2], k), h = mix(from[3], to[3], k);
+    const cx = mix(from[0] + from[2] / 2, to[0] + to[2] / 2, k);
+    const cy = mix(from[1] + from[3] / 2, to[1] + to[3] / 2, k);
+    set(el, {
+      left: (cx - w / 2) + 'px', top: (cy - h / 2) + 'px', width: w + 'px', height: h + 'px',
+      opacity: String(clamp01(x * 3)), visibility: 'visible',
+    });
+    return x;
+  }
+
+  // celah pintu di garis pemisah + enam slot di wilayah browser
+  const DPATH = [
+    [11.05, 11.55, [200, 150], [108, 392]],
+    [13.35, 13.85, [108, 392], [216, 555]],
+    [15.85, 16.35, [216, 555], [288, 262]],
+    [18.95, 19.45, [288, 262], [216, 555]],
+  ];
+  const SLOT = [[62, 662], [318, 662], [62, 724], [318, 724], [62, 786], [318, 786]];
+  const INSIDE = [[110, 340], [320, 340], [110, 406], [320, 406], [110, 472], [320, 472]];
+  const IN_SMALL = [[116, 448], [336, 448]];
+  const API_T = [[6.0, 6.5], [7.05, 7.65], [8.05, 8.5]];
+  const CAPS = [
+    [0.38, 2.13, 'nggak bisa diklik?'],
+    [2.46, 3.17, 'itu bukan bug'],
+    [3.60, 6.15, 'default-nya di server'],
+    [6.46, 7.43, 'nggak ada klik'],
+    [7.63, 8.24, 'nggak ada state'],
+    [8.49, 9.49, 'nggak ada storage'],
+    [9.89, 10.81, 'yang butuh interaksi'],
+    [11.00, 12.80, "tandain: 'use client'"],
+    [13.27, 15.52, 'pintu, bukan stiker'],
+    [15.86, 17.10, 'sekali di file gede'],
+    [17.27, 18.58, 'semua isinya ikut'],
+    [19.63, 20.93, 'di komponen terkecil'],
+    [21.37, 22.63, 'lu tim yang mana?'],
+    [22.93, 23.23, 'komen'],
+  ];
+
+  window.SEEK = function (t) {
+    /* ---------------- kredit wajib + tag ---------------- */
+    const wmOn = t > 1.9 ? 1 : 0;
+    set(E.wm, { opacity: String(wmOn * 0.9), visibility: wmOn ? 'visible' : 'hidden' });
+    rise(E.tagNext, t, 0.2, 0.4);
+    drop(E.tagNext, t, 3.0, 0.3);
+
+    /* ---------------- A. hook: tombol yang nggak reaksi (0 - 3.3) ---------------- */
+    rise(E.h1, t, 0.06, 0.5);
+    rise(E.hookBtn, t, 0.5, 0.4);
+    const tapK = easeInOut(seg(t, 0.95, 1.4));
+    const cursorOn = t > 0.85 && t < 2.95;
+    set(E.cursor, {
+      left: mix(176, 296, tapK) + 'px', top: mix(776, 686, tapK) + 'px',
+      opacity: cursorOn ? '1' : '0', visibility: cursorOn ? 'visible' : 'hidden',
+    });
+    const rp = seg(t, 1.45, 2.05);
+    if (rp > 0 && rp < 1) {
+      const s = mix(0.5, 1.7, rp);
+      set(E.tapRing, {
+        left: (321 - 55 * s) + 'px', top: (705 - 55 * s) + 'px',
+        width: (110 * s) + 'px', height: (110 * s) + 'px',
+        opacity: String(1 - rp), visibility: 'visible',
+      });
+    } else { hide(E.tapRing); }
+    rise(E.onclickTag, t, 1.6, 0.35);
+    drop(E.h1, t, 2.95, 0.3);
+    drop(E.hookBtn, t, 2.95, 0.3);
+    drop(E.onclickTag, t, 2.95, 0.3);
+
+    /* ---------------- B. dua wilayah: server, browser (3.3 - 6) ---------------- */
+    rise(E.serverLabel, t, 3.35, 0.38);
+    rise(E.file1, t, 3.45, 0.42);
+    const bx = seg(t, 3.75, 4.15);
+    set(E.browserBox, { opacity: String(bx), visibility: bx > 0 ? 'visible' : 'hidden' });
+    set(E.doorMask, { opacity: String(bx), visibility: bx > 0 ? 'visible' : 'hidden' });
+    rise(E.browserLabel, t, 3.9, 0.35);
+    drop(E.file1, t, 5.7, 0.3);
+
+    /* ---------------- C. yang di server nggak ada (6 - 9.6) ---------------- */
+    E.api.forEach(function (el, i) {
+      rise(el, t, API_T[i][0], 0.4);
+      drop(el, t, 9.5 + i * 0.05, 0.3);
+      set(el.children[1], {
+        width: (388 * seg(t, API_T[i][1], API_T[i][1] + 0.3)) + 'px',
+        opacity: String(seg(t, API_T[i][1] + 0.02, API_T[i][1] + 0.2)),
+      });
+      set(el.children[2], { opacity: String(seg(t, API_T[i][1] + 0.15, API_T[i][1] + 0.4)) });
+    });
+
+    /* ---------------- D. tandain: 'use client' (9.7 - 13.2) ---------------- */
+    rise(E.card2, t, 9.95, 0.42);
+    const dp = path(t, DPATH, easeInOut);
+    if (dp) {
+      set(E.directive, {
+        left: dp[0] + 'px', top: dp[1] + 'px', opacity: '1', visibility: 'visible',
+      });
+    } else { hide(E.directive); at(E.directive, DPATH[0][2][0], DPATH[0][2][1], 296, 74); }
+    const on = t >= 11.6 && t < 21.0;
+    set(E.card2, { borderColor: on ? ACCENT : LINE, background: on ? CARD_ON : CARD });
+    drop(E.card2, t, 14.6, 0.35);
+
+    /* ---------------- E. pintu + dua komponen (13.2 - 15.7) ---------------- */
+    travel(E.kid[0], t, 13.75, 0.7, [IN_SMALL[0][0], IN_SMALL[0][1], 200, 62], [SLOT[0][0], SLOT[0][1], 240, 56]);
+    travel(E.kid[1], t, 14.1, 0.7, [IN_SMALL[1][0], IN_SMALL[1][1], 200, 62], [SLOT[1][0], SLOT[1][1], 240, 56]);
+
+    /* ---------------- F. file gede: semua isinya ikut (15.7 - 18.9) ---------------- */
+    drop(E.kid[0], t, 15.4, 0.25);
+    drop(E.kid[1], t, 15.4, 0.25);
+    const fg = easeInOut(seg(t, 15.8, 16.25));
+    if (t >= 15.8) {
+      rise(E.file1, t, 15.8, 0.4);
+      at(E.file1, 90, mix(300, 296, fg), 440, mix(116, 268, fg));
+    }
+    E.kid.forEach(function (el, i) {
+      const kt = 16.3 + i * 0.3;
+      if (t < kt) {
+        rise(el, t, 15.95 + i * 0.07, 0.32);
+        at(el, INSIDE[i][0], INSIDE[i][1], 200, 62);
+      } else {
+        travel(el, t, kt, 0.7, [INSIDE[i][0], INSIDE[i][1], 200, 62], [SLOT[i][0], SLOT[i][1], 240, 56]);
+      }
+    });
+
+    /* ---------------- G. pindah ke komponen kecil (18.9 - 21.2) ---------------- */
+    if (t >= 18.8) {
+      const tail = 1 - seg(t, 21.0, 21.3); // semuanya keluar sebelum CTA
+      E.kid.forEach(function (el, i) {
+        if (i === 0) {
+          set(el, {
+            left: SLOT[0][0] + 'px', top: SLOT[0][1] + 'px', width: '240px', height: '56px',
+            opacity: String(tail), visibility: 'visible',
+            borderColor: t >= 20.1 ? ACCENT : LINE,
+            color: t >= 20.1 ? ACCENT_TEXT : TEXT2,
+            background: t >= 20.1 ? ACCENT_SOFT : CARD,
+          });
+          return;
+        }
+        const kt = 19.55 + (i - 1) * 0.12;
+        if (t < kt) {
+          at(el, SLOT[i][0], SLOT[i][1], 240, 56);
+          set(el, { opacity: String(tail), visibility: 'visible' });
+        } else if (t < kt + 0.6) {
+          travel(el, t, kt, 0.6, [SLOT[i][0], SLOT[i][1], 240, 56], [INSIDE[i][0], INSIDE[i][1], 200, 62]);
+          set(el, { opacity: String(clamp01(seg(t, kt, kt + 0.2)) * tail) });
+        } else {
+          at(el, INSIDE[i][0], INSIDE[i][1], 200, 62);
+          set(el, { opacity: String(mix(1, 0.4, seg(t, kt + 0.6, kt + 0.95)) * tail), visibility: 'visible' });
+        }
+      });
+      set(E.file1, { borderColor: LINE });
+    }
+
+    /* ---------------- H. CTA (21.3 - 23.5) ---------------- */
+    drop(E.serverLabel, t, 20.95, 0.3);
+    drop(E.browserLabel, t, 20.95, 0.3);
+    drop(E.browserBox, t, 20.95, 0.3);
+    drop(E.doorMask, t, 20.95, 0.3);
+    drop(E.directive, t, 20.95, 0.3);
+    drop(E.file1, t, 21.05, 0.3);
+    rise(E.cta, t, 21.3, 0.45);
+    rise(E.ctaPill, t, 22.9, 0.4);
+    drop(E.cta, t, 23.35, 0.25);
+    drop(E.ctaPill, t, 23.35, 0.25);
+
+    /* ---------------- I. penutup (23.4 - 25.2) ---------------- */
+    set(E.endDark, { opacity: String(mix(0, 0.96, easeOutCubic(seg(t, 23.4, 24.0)))) });
+    rise(E.endRule1, t, 23.7, 0.4);
+    rise(E.endRule2, t, 23.95, 0.4);
+    rise(E.endCredit, t, 24.35, 0.4);
+    rise(E.endBrand, t, 24.6, 0.4);
+
+    /* ---------------- caption per frasa ---------------- */
+    const cap = CAPS.find((c) => t >= c[0] && t <= c[1]);
+    if (cap) {
+      const k = seg(t, cap[0], cap[0] + 0.18);
+      set(E.caption, {
+        visibility: 'visible', opacity: String(Math.min(1, k * 1.9)),
+        transform: 'scale(' + mix(0.94, 1, easeOutBack(k)) + ')',
+        textContent: cap[2],
+      });
+    } else { hide(E.caption); }
+  };
+
+  window.__READY = (async () => {
+    await document.fonts.ready;
+    window.SEEK(0);
+    return true;
+  })();
+})();
+</script>
+</div>
+</body>
+</html>
