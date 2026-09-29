@@ -278,10 +278,10 @@
 
   // celah pintu di garis pemisah + enam slot di wilayah browser
   const DPATH = [
-    [11.05, 11.55, [200, 150], [108, 392]],
-    [13.35, 13.85, [108, 392], [216, 555]],
-    [15.85, 16.35, [216, 555], [288, 262]],
-    [18.95, 19.45, [288, 262], [216, 555]],
+    [11.05, 11.55, [200, 150], [108, 369]],
+    [13.35, 13.85, [108, 369], [216, 555]],
+    [15.85, 16.35, [216, 555], [288, 246]],
+    [18.95, 19.45, [288, 246], [216, 555]],
   ];
   const SLOT = [[62, 662], [318, 662], [62, 724], [318, 724], [62, 786], [318, 786]];
   const INSIDE = [[110, 340], [320, 340], [110, 406], [320, 406], [110, 472], [320, 472]];
@@ -430,20 +430,21 @@
     drop(E.ctaPill, t, 23.35, 0.25);
 
     /* ---------------- I. penutup (23.4 - 25.2) ---------------- */
-    set(E.endDark, { opacity: String(mix(0, 0.96, easeOutCubic(seg(t, 23.4, 24.0)))) });
-    rise(E.endRule1, t, 23.7, 0.4);
-    rise(E.endRule2, t, 23.95, 0.4);
-    rise(E.endCredit, t, 24.35, 0.4);
-    rise(E.endBrand, t, 24.6, 0.4);
+    set(E.endDark, { opacity: String(mix(0, 0.96, easeOutCubic(seg(t, 23.35, 23.85)))) });
+    rise(E.endRule1, t, 23.55, 0.4);
+    rise(E.endRule2, t, 23.75, 0.4);
+    rise(E.endCredit, t, 24.05, 0.4);
+    rise(E.endBrand, t, 24.25, 0.4);
 
     /* ---------------- caption per frasa ---------------- */
     const cap = CAPS.find((c) => t >= c[0] && t <= c[1]);
     if (cap) {
       const k = seg(t, cap[0], cap[0] + 0.18);
+      // textContent itu properti elemen, bukan properti CSS: nggak boleh lewat set()/el.style
+      if (E.caption.textContent !== cap[2]) E.caption.textContent = cap[2];
       set(E.caption, {
         visibility: 'visible', opacity: String(Math.min(1, k * 1.9)),
         transform: 'scale(' + mix(0.94, 1, easeOutBack(k)) + ')',
-        textContent: cap[2],
       });
     } else { hide(E.caption); }
   };

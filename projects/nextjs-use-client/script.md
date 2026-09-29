@@ -75,3 +75,7 @@ Hashtag (5): #nextjs #frontend #webdev #programmerindonesia #javascript
 Dites: sintaks JS scene (`node --check`); nggak ada `Date.now`, `Math.random`, timer, `requestAnimationFrame`, CSS transition/animation, atau URL http; scene dijalani 1513 langkah `SEEK(i/60)` di DOM tiruan tanpa error; hasil `SEEK(17,5)` identik walau urutan pemanggilannya diacak (nggak ada state bocor); semua elemen punya ukuran tetap dicek masuk kolom aman x 30..590 dan y 150..980; lebar teks dicek pakai font pengganti yang lebih lebar dari Plus Jakarta Sans, yang lewat batas dipangkas.
 
 Belum dites: hasil gambar sebenarnya (nggak ada browser/renderer di sandbox), dan pelafalan "use client" sama "Next.js" oleh suara (gua nggak bisa dengerin hasilnya, cuma bisa ngukur durasi). Kalau pelafalannya aneh, ganti ejaan di naskahnya terus VO-nya diganti.
+
+## Catatan bug buat xy-render
+
+Scene contoh `kall-promo-1` nge-set `textContent` lewat helper `set()` yang isinya cuma `Object.assign(el.style, o)`. Di DOM, `style.textContent` itu properti JS biasa, bukan deklarasi CSS, jadi caption di scene itu nggak pernah tampil. Gua cek frame `out/kall-promo-1.mp4` di detik 1 dan 4: area caption (x 60..660, y 944..1018) kosong tanpa satu piksel terang pun, padahal VO-nya lagi jalan. Di scene ini gua set `el.textContent` langsung ke elemennya, dan hasilnya udah gua verifikasi dari frame mp4. Perbaikan yang sama bisa dipakai di `kall-promo-1/scene.html`.
