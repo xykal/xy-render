@@ -54,9 +54,9 @@
     font-size: 82px; font-weight: 800; line-height: 1.14; letter-spacing: -.03em; }
   #h1 em { font-style: normal; color: var(--bad); }
 
-  #hookBtn { left: 150px; top: 646px; width: 320px; height: 94px; border-radius: 20px;
+  #hookBtn { left: 130px; top: 646px; width: 320px; height: 94px; border-radius: 20px;
     background: var(--card); border: 1px solid var(--line);
-    display: flex; align-items: center; justify-content: center;
+    display: flex; align-items: center; justify-content: flex-start; padding-left: 46px;
     font-size: 44px; font-weight: 800; color: var(--text); }
 
   #cursor { left: 180px; top: 770px; width: 26px; height: 26px; border-radius: 50%;
@@ -277,15 +277,20 @@
   }
 
   // celah pintu di garis pemisah + enam slot di wilayah browser
+  // posisi diam chip di celah pintu: di atas kotak browser, nggak nutupin labelnya
   const DPATH = [
     [11.05, 11.55, [200, 150], [108, 369]],
-    [13.35, 13.85, [108, 369], [216, 555]],
-    [15.85, 16.35, [216, 555], [288, 246]],
-    [18.95, 19.45, [288, 246], [216, 555]],
+    [13.35, 13.85, [108, 369], [216, 528]],
+    [15.85, 16.35, [216, 528], [288, 246]],
+    [18.95, 19.45, [288, 246], [216, 528]],
   ];
+  // tujuan: enam slot di wilayah browser (ukuran 240x56)
   const SLOT = [[62, 662], [318, 662], [62, 724], [318, 724], [62, 786], [318, 786]];
-  const INSIDE = [[110, 340], [320, 340], [110, 406], [320, 406], [110, 472], [320, 472]];
+  // posisi di dalam kartu file gede (ukuran 190x54, mulai di bawah nama file)
+  const INSIDE = [[110, 400], [320, 400], [110, 458], [320, 458], [110, 516], [320, 516]];
   const IN_SMALL = [[116, 448], [336, 448]];
+  // posisi balik ke wilayah server pas kartunya udah nggak ada (ukuran 160x54)
+  const SRV_ROWS = [[40, 330], [220, 330], [400, 330], [130, 390], [310, 390]];
   const API_T = [[6.0, 6.5], [7.05, 7.65], [8.05, 8.5]];
   const CAPS = [
     [0.38, 2.13, 'nggak bisa diklik?'],
@@ -307,25 +312,27 @@
   window.SEEK = function (t) {
     /* ---------------- kredit wajib + tag ---------------- */
     const wmOn = t > 1.9 ? 1 : 0;
-    set(E.wm, { opacity: String(wmOn * 0.9), visibility: wmOn ? 'visible' : 'hidden' });
+    const wmGone = 1 - seg(t, 23.3, 23.6); // nggak boleh nembus overlay penutup
+    set(E.wm, { opacity: String(wmOn * wmGone * 0.9), visibility: wmOn * wmGone > 0 ? 'visible' : 'hidden' });
     rise(E.tagNext, t, 0.2, 0.4);
     drop(E.tagNext, t, 3.0, 0.3);
 
     /* ---------------- A. hook: tombol yang nggak reaksi (0 - 3.3) ---------------- */
     rise(E.h1, t, 0.06, 0.5);
     rise(E.hookBtn, t, 0.5, 0.4);
+    // kursor berhenti di sisi kanan tombol biar nggak nutupin label "Simpan"
     const tapK = easeInOut(seg(t, 0.95, 1.4));
     const cursorOn = t > 0.85 && t < 2.95;
     set(E.cursor, {
-      left: mix(176, 296, tapK) + 'px', top: mix(776, 686, tapK) + 'px',
+      left: mix(470, 388, tapK) + 'px', top: mix(786, 690, tapK) + 'px',
       opacity: cursorOn ? '1' : '0', visibility: cursorOn ? 'visible' : 'hidden',
     });
     const rp = seg(t, 1.45, 2.05);
     if (rp > 0 && rp < 1) {
-      const s = mix(0.5, 1.7, rp);
+      const d = mix(55, 150, rp);
       set(E.tapRing, {
-        left: (321 - 55 * s) + 'px', top: (705 - 55 * s) + 'px',
-        width: (110 * s) + 'px', height: (110 * s) + 'px',
+        left: (401 - d / 2) + 'px', top: (703 - d / 2) + 'px',
+        width: d + 'px', height: d + 'px',
         opacity: String(1 - rp), visibility: 'visible',
       });
     } else { hide(E.tapRing); }
@@ -374,47 +381,48 @@
     drop(E.kid[0], t, 15.4, 0.25);
     drop(E.kid[1], t, 15.4, 0.25);
     const fg = easeInOut(seg(t, 15.8, 16.25));
-    if (t >= 15.8) {
+    if (t >= 15.8 && t < 18.85) {
       rise(E.file1, t, 15.8, 0.4);
-      at(E.file1, 90, mix(300, 296, fg), 440, mix(116, 268, fg));
+      at(E.file1, 90, mix(300, 306, fg), 440, mix(116, 284, fg));
     }
     E.kid.forEach(function (el, i) {
       const kt = 16.3 + i * 0.3;
       if (t < kt) {
         rise(el, t, 15.95 + i * 0.07, 0.32);
-        at(el, INSIDE[i][0], INSIDE[i][1], 200, 62);
+        at(el, INSIDE[i][0], INSIDE[i][1], 190, 54);
       } else {
-        travel(el, t, kt, 0.7, [INSIDE[i][0], INSIDE[i][1], 200, 62], [SLOT[i][0], SLOT[i][1], 240, 56]);
+        travel(el, t, kt, 0.7, [INSIDE[i][0], INSIDE[i][1], 190, 54], [SLOT[i][0], SLOT[i][1], 240, 56]);
       }
     });
 
     /* ---------------- G. pindah ke komponen kecil (18.9 - 21.2) ---------------- */
     if (t >= 18.8) {
       const tail = 1 - seg(t, 21.0, 21.3); // semuanya keluar sebelum CTA
-      E.kid.forEach(function (el, i) {
-        if (i === 0) {
-          set(el, {
-            left: SLOT[0][0] + 'px', top: SLOT[0][1] + 'px', width: '240px', height: '56px',
-            opacity: String(tail), visibility: 'visible',
-            borderColor: t >= 20.1 ? ACCENT : LINE,
-            color: t >= 20.1 ? ACCENT_TEXT : TEXT2,
-            background: t >= 20.1 ? ACCENT_SOFT : CARD,
-          });
-          return;
-        }
-        const kt = 19.55 + (i - 1) * 0.12;
+      drop(E.file1, t, 18.85, 0.3);        // kartu gede pergi
+      // komponen yang nggak butuh interaksi balik ke wilayah server
+      for (let i = 1; i < 6; i++) {
+        const kt = 19.5 + (i - 1) * 0.1, to = SRV_ROWS[i - 1];
         if (t < kt) {
-          at(el, SLOT[i][0], SLOT[i][1], 240, 56);
-          set(el, { opacity: String(tail), visibility: 'visible' });
+          at(E.kid[i], SLOT[i][0], SLOT[i][1], 240, 56);
+          set(E.kid[i], { opacity: String(tail), visibility: 'visible' });
         } else if (t < kt + 0.6) {
-          travel(el, t, kt, 0.6, [SLOT[i][0], SLOT[i][1], 240, 56], [INSIDE[i][0], INSIDE[i][1], 200, 62]);
-          set(el, { opacity: String(clamp01(seg(t, kt, kt + 0.2)) * tail) });
+          travel(E.kid[i], t, kt, 0.6, [SLOT[i][0], SLOT[i][1], 240, 56], [to[0], to[1], 160, 54]);
+          set(E.kid[i], { opacity: String(clamp01(seg(t, kt, kt + 0.2)) * tail) });
         } else {
-          at(el, INSIDE[i][0], INSIDE[i][1], 200, 62);
-          set(el, { opacity: String(mix(1, 0.4, seg(t, kt + 0.6, kt + 0.95)) * tail), visibility: 'visible' });
+          at(E.kid[i], to[0], to[1], 160, 54);
+          set(E.kid[i], { opacity: String(tail), visibility: 'visible' });
         }
+      }
+      // yang butuh interaksi: satu-satunya yang tetap tinggal di browser, nggak pindah ke mana-mana
+      const hi = t >= 20.1;
+      at(E.kid[0], SLOT[0][0], SLOT[0][1], 240, 56);
+      set(E.kid[0], {
+        opacity: String(tail), visibility: 'visible',
+        borderColor: hi ? ACCENT : LINE, color: hi ? ACCENT_TEXT : TEXT2,
+        background: hi ? ACCENT_SOFT : CARD,
       });
-      set(E.file1, { borderColor: LINE });
+      set(E.browserBox, { borderColor: hi && t < 20.95 ? ACCENT : LINE });
+      set(E.browserLabel, { color: hi && t < 20.95 ? ACCENT_TEXT : '#8d95a3' });
     }
 
     /* ---------------- H. CTA (21.3 - 23.5) ---------------- */
