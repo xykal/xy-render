@@ -81,3 +81,15 @@ Hashtag (5): #nextjs #frontend #webdev #programmerindonesia #javascript
 `node --check` bersih; nggak ada `Date.now`, `Math.random`, timer, `requestAnimationFrame`, CSS transition/animation, atau URL http; scene dijalani 1777 langkah `SEEK(i/60)` di DOM tiruan tanpa error; hasil `SEEK` identik walau urutan pemanggilannya diacak (nggak ada state bocor); semua elemen dicek masuk kolom aman x 30..590 dan y 150..980; tabrakan antar teks dicek tiap frame (yang tersisa cuma yang disengaja: stempel di atas tombol, komponen berpapasan di pintu); lebar tiap caption diukur pakai font yang lebih lebar dari font aslinya.
 
 Yang belum dites: pelafalan "use client" sama "Next.js" oleh suara. Gua nggak bisa muter audionya dari sini, cuma bisa ngukur durasi dan jeda.
+
+## Catatan QA dari hasil render
+
+Tiap iterasi gua cek frame hasil mp4-nya (bukan cuma nebak dari kode), dan tiap kali ketemu masalah langsung dibenerin:
+
+1. Terdeteksi: kursor masih nangkring di atas stempel "BUKAN BUG" — kursor sekarang keluar di detik 14,32, tepat sebelum stempelnya mendarat.
+2. Terdeteksi: chip "klik" nempel di bawah stempel — chip-nya sekarang turun di detik 12,40, sebelum tombolnya muncul.
+3. Terdeteksi: teks `'use client'` ketiban nomor baris 1 di kartu file — teksnya digeser ke kanan gutter, highlight-nya ikut.
+4. Terdeteksi: komponen "kid" nabrak baris kode di dalam kartu — baris kode dan nomor barisnya keluar di detik 22,86 pas kartunya ganti nama jadi `page.tsx`.
+5. Terdeteksi: caption satu baris kepotong di 7 dari 15 frasa — semua caption sekarang maksimal dua baris dan udah diukur satu-satu.
+
+Catatan buat `xy-render`: log render nulis `Error submitting packet to decoder: Invalid data found when processing input` di salah satu track mp3, di tiap run (termasuk run yang hijau). Belum ketahuan track mana dan belum ada bukti ada yang ke-drop — gua nggak bisa probe audionya dari sini karena ffmpeg cuma ada di runner. Layak dicek sekali pakai `ffprobe` di runner.
