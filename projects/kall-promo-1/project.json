@@ -4,17 +4,17 @@
   "width": 720,
   "height": 1280,
   "fps": 60,
-  "duration": 22,
+  "duration": 27,
   "scene": "scene.html",
   "audio": {
-    "voice": { "file": "assets/vo.mp3", "gain": 1.0 },
+    "voice": { "file": "assets/vo.mp3", "gain": 1.0, "speed": 1.32, "energy": true },
     "sfx": [
-      { "file": "assets/sfx/vine-boom.mp3", "at": 0.2, "gain": 0.55 },
-      { "file": "assets/sfx/bruh.mp3", "at": 3.05, "gain": 0.5 },
-      { "file": "assets/sfx/error.mp3", "at": 4.7, "gain": 0.45 },
-      { "file": "assets/sfx/anime-wow.mp3", "at": 6.2, "gain": 0.55 },
-      { "file": "assets/sfx/rizz.mp3", "at": 8.5, "gain": 0.5 },
-      { "file": "assets/sfx/metal-pipe.mp3", "at": 13.15, "gain": 0.5 }
+      { "file": "assets/sfx/vine-boom.mp3", "at": 0.22, "gain": 0.55 },
+      { "file": "assets/sfx/bruh.mp3", "at": 2.75, "gain": 0.5 },
+      { "file": "assets/sfx/error.mp3", "at": 4.9, "gain": 0.45 },
+      { "file": "assets/sfx/anime-wow.mp3", "at": 6.45, "gain": 0.55 },
+      { "file": "assets/sfx/rizz.mp3", "at": 9.05, "gain": 0.5 },
+      { "file": "assets/sfx/metal-pipe.mp3", "at": 16.75, "gain": 0.5 }
     ]
   },
   "out": "kall-promo-1.mp4"

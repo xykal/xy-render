@@ -26,6 +26,7 @@ Satu standar untuk semua video di repo ini. Platform target: **TikTok** (Reels/S
 | Bitrate | 192 kbps |
 | Loudness | **-14 LUFS** (loudnorm `I=-14:TP=-1.5:LRA=11`) | standar TikTok |
 | VO vs SFX | VO dominan; SFX gain ≤ 0.5 saat ada VO |
+| Shaping VO | `speed` (atempo, jaga pitch) + `energy` (kompressor + treble) di `project.json` — pakai kalau VO TTS terasa lambat/lemah |
 
 ## Komposisi & desain
 

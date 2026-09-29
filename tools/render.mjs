@@ -53,10 +53,20 @@ const mixLabels = [];
 audioInputs.forEach((a, i) => {
   const gain = a.gain ?? (a.kind === 'voice' ? 1.0 : 0.5);
   const delay = Math.round((a.at || 0) * 1000);
-  afChain.push(
-    `[${i + 1}:a]aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,` +
-    `volume=${gain},adelay=${delay}:all=1[a${i}]`
-  );
+  // shaping suara: speed (atempo, jaga pitch) + energy (kompresi + presence)
+  const shape = [];
+  if (a.speed && a.speed !== 1) shape.push(`atempo=${a.speed}`);
+  if (a.energy) {
+    shape.push('acompressor=threshold=-18dB:ratio=3:attack=5:release=120:makeup=3');
+    shape.push('treble=g=2.5:f=6000');
+  }
+  const chain = [
+    `[${i + 1}:a]aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo`,
+    ...shape,
+    `volume=${gain}`,
+    `adelay=${delay}:all=1[a${i}]`,
+  ];
+  afChain.push(chain.join(','));
   mixLabels.push(`[a${i}]`);
 });
 let audioMap = '-an';

@@ -50,6 +50,8 @@ Nama folder: huruf kecil, angka, tanda minus (`kall-promo-1`, `demo-arsip-2`).
 | `fps` | 60 (default). |
 | `duration` | **maks 30 detik.** |
 | `audio.voice` | opsional; VO/voiceover mono/stereo mp3/wav. |
+| `audio.voice.speed` | opsional; `atempo` (jaga pitch), mis. 1.32 untuk VO lambat. |
+| `audio.voice.energy` | opsional `true`; kompresi + presence boost biar nggak lemas. |
 | `audio.sfx` | opsional; `at` = detik mulai, `gain` 0..1.5. |
 | `out` | nama file hasil, harus `.mp4`. |
 
