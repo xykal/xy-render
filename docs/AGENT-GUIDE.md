@@ -48,7 +48,7 @@ Nama folder: huruf kecil, angka, tanda minus (`kall-promo-1`, `demo-arsip-2`).
 |---|---|
 | `width`×`height` | 720×1280 (default). Jangan ganti tanpa alasan kuat. |
 | `fps` | 60 (default). |
-| `duration` | **maks 30 detik.** |
+| `duration` | **maks 32 detik.** |
 | `audio.voice` | opsional; VO/voiceover mono/stereo mp3/wav. |
 | `audio.voice.speed` | opsional; `atempo` (jaga pitch), mis. 1.32 untuk VO lambat. |
 | `audio.voice.energy` | opsional `true`; kompresi + presence boost biar nggak lemas. |
@@ -91,14 +91,14 @@ Actions → **Render video (720p60)** → Run workflow → `project` = nama fold
 
 - Smoke test cepat: set `duration` kecil (mis. 3) di `project.json`, render, cek hasil.
 - Hasil: artifact `video-<nama>` + commit otomatis ke `out/<nama>.mp4`.
-- Waktu render kasar: ~2-6 menit untuk 20-30 detik.
+- Waktu render kasar: ~2-6 menit untuk 20-32 detik.
 
 ## 6. QA sebelum rilis
 
 - [ ] `SEEK(0)`, `SEEK(tengah)`, `SEEK(duration-0.1)` masuk akal (tidak ada frame kosong/bug).
 - [ ] Teks tidak keluar safe area.
 - [ ] VO jelas terdengar di atas sfx (gain sfx ≤ 0.5 kalau ada VO).
-- [ ] Durasi ≤ 30 detik.
+- [ ] Durasi ≤ 32 detik.
 - [ ] Semua aset lokal (tidak ada URL http di scene.html).
 
 ## 7. Format & kualitas
@@ -110,6 +110,6 @@ Standar tetap ada di [SPEC-FORMAT.md](SPEC-FORMAT.md). Ringkas: **MP4, H.264 Hig
 
 - Render di lokal / mesin pribadi.
 - Trigger otomatis (schedule, push) untuk render — repo ini manual-only.
-- Video > 30 detik atau resolusi/fps di luar standar tanpa diskusi.
+- Video > 32 detik atau resolusi/fps di luar standar tanpa diskusi.
 - Menyimpan kredensial apa pun di repo.
 - Men-commit file mentah raksasa (frame PNG, PSD) — cukup aset ringan + mp4 hasil.

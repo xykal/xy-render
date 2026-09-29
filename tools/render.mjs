@@ -33,7 +33,7 @@ const cfg = JSON.parse(readFileSync(path.join(projDir, 'project.json'), 'utf8'))
 const W = cfg.width || 720;
 const H = cfg.height || 1280;
 const FPS = cfg.fps || 60;
-const DUR = Math.min(30, Number(cfg.duration) || 15); // pagar keras 30 detik
+const DUR = Math.min(32, Number(cfg.duration) || 15); // pagar keras 32 detik
 const FRAMES = Math.round(DUR * FPS);
 const outName = cfg.out || `${cfg.id}.mp4`;
 
@@ -57,8 +57,8 @@ audioInputs.forEach((a, i) => {
   const shape = [];
   if (a.speed && a.speed !== 1) shape.push(`atempo=${a.speed}`);
   if (a.energy) {
-    shape.push('acompressor=threshold=-18dB:ratio=3:attack=5:release=120:makeup=3');
-    shape.push('treble=g=2.5:f=6000');
+    shape.push('acompressor=threshold=-16dB:ratio=2.4:attack=5:release=120:makeup=2');
+    shape.push('treble=g=1.8:f=6000');
   }
   const chain = [
     `[${i + 1}:a]aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo`,

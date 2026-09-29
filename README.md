@@ -36,7 +36,7 @@ Menit CI itu dipakai bersama. Repo ini sengaja dibatasi:
 | Batasan | Nilai | Kenapa |
 |---|---|---|
 | Trigger | `workflow_dispatch` manual saja | tanpa jadwal/webhook — nggak ada render liar |
-| Durasi video | **maks 30 detik** | 1800 frame @60fps itu batas wajar |
+| Durasi video | **maks 32 detik** | 1920 frame @60fps itu batas wajar |
 | Timeout job | 15 menit | auto-kill kalau lewat |
 | Resolusi/fps | 720×1280 @60 | jangan dinaikkan tanpa diskusi |
 | Artifact | 7 hari | hemat storage |

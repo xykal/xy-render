@@ -2,470 +2,413 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>kall-promo-1 — DownloadAja</title>
+<title>kall-promo-1 — DownloadAja TikTok (31s, v3)</title>
 <style>
-  @font-face { font-family:'PJS'; src:url('assets/font/pjs-400.woff2') format('woff2'); font-weight:400; }
-  @font-face { font-family:'PJS'; src:url('assets/font/pjs-700.woff2') format('woff2'); font-weight:700; }
-  @font-face { font-family:'PJS'; src:url('assets/font/pjs-800.woff2') format('woff2'); font-weight:800; }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  html, body { width:720px; height:1280px; overflow:hidden; background:#0b1023; }
-  #stage {
-    position:relative; width:720px; height:1280px; overflow:hidden;
-    font-family:'PJS',sans-serif; color:#fff;
-  }
-  .abs { position:absolute; }
+  /* ==== KONTRAK: deterministik penuh, tanpa timer/CSS-animasi/random ==== */
+  @font-face { font-family:'PJS'; src:url('assets/font/pjs-400.woff2') format('woff2'); font-weight:400; font-display:block; }
+  @font-face { font-family:'PJS'; src:url('assets/font/pjs-700.woff2') format('woff2'); font-weight:700; font-display:block; }
+  @font-face { font-family:'PJS'; src:url('assets/font/pjs-800.woff2') format('woff2'); font-weight:800; font-display:block; }
+  html,body { margin:0; padding:0; background:#05060c; overflow:hidden; }
+  #stage { position:fixed; left:0; top:0; width:720px; height:1280px; overflow:hidden;
+           font-family:'PJS',sans-serif; color:#fff; user-select:none; }
+  .layer { position:absolute; left:0; top:0; width:720px; height:1280px; }
+  .cen  { left:0; width:720px; text-align:center; }
+  .abs  { position:absolute; }
 
-  /* ---------- latar ---------- */
-  #bg {
-    position:absolute; inset:0;
-    background:
-      radial-gradient(900px 700px at 15% 8%, rgba(124,92,255,.28), transparent 60%),
-      radial-gradient(820px 640px at 92% 22%, rgba(34,211,238,.16), transparent 62%),
-      radial-gradient(1000px 800px at 50% 118%, rgba(244,114,182,.14), transparent 62%),
-      linear-gradient(180deg, #0b1023 0%, #0d0f24 46%, #0a0c1c 100%);
-  }
-  .blob { position:absolute; border-radius:50%; filter:blur(70px); opacity:.5; }
-  #b1 { width:520px; height:520px; background:#7c5cff; left:-160px; top:-120px; }
-  #b2 { width:460px; height:460px; background:#22d3ee; right:-180px; top:320px; opacity:.32; }
-  #b3 { width:520px; height:520px; background:#f472b6; left:120px; bottom:-260px; opacity:.24; }
-  #grain {
-    position:absolute; inset:0; opacity:.055; mix-blend-mode:overlay;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.9'/></svg>");
-  }
-  #vignette {
-    position:absolute; inset:0;
-    background:radial-gradient(560px 820px at 50% 46%, transparent 55%, rgba(5,6,14,.55) 100%);
-  }
+  /* --- gradasi teks --- */
+  .g-cyan   { background:linear-gradient(92deg,#7bf7ff 0%,#4fd1ff 55%,#7c8cff 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .g-warm   { background:linear-gradient(92deg,#ffd166 0%,#ff9f45 50%,#ff6b6b 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .g-mix    { background:linear-gradient(92deg,#7bf7ff 0%,#b48cff 60%,#ff8fd8 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
 
-  /* ---------- panggung konten ---------- */
-  #shake { position:absolute; inset:0; }
+  /* --- caption chip --- */
+  #cap { position:absolute; left:56px; right:56px; bottom:118px; display:flex; justify-content:center; }
+  #capInner { max-width:600px; background:rgba(10,14,26,.82); border:1.5px solid rgba(255,255,255,.16);
+              border-radius:26px; padding:16px 30px; font-size:29px; font-weight:700; line-height:1.32;
+              text-align:center; box-shadow:0 12px 40px rgba(0,0,0,.55); backdrop-filter:blur(6px); }
 
-  .chip {
-    display:inline-flex; align-items:center; gap:10px;
-    padding:14px 22px; border-radius:999px;
-    background:rgba(18,20,40,.72); border:1.5px solid rgba(255,255,255,.14);
-    font-size:30px; font-weight:700; letter-spacing:-.01em; white-space:nowrap;
-    box-shadow:0 12px 34px rgba(0,0,0,.35);
-  }
-  .chip.hot { background:linear-gradient(135deg,#7c5cff,#22d3ee); border-color:transparent; }
-  .chip.red { background:linear-gradient(135deg,#f43f5e,#fb7185); border-color:transparent; }
-  .chip.green { background:linear-gradient(135deg,#10b981,#34d399); border-color:transparent; }
+  /* --- kartu kaca (glass) --- */
+  .glass { background:rgba(14,18,32,.72); border:1.5px solid rgba(255,255,255,.14); border-radius:22px;
+           box-shadow:0 14px 44px rgba(0,0,0,.5); backdrop-filter:blur(8px); }
 
-  #hook-tag {
-    left:56px; top:196px;
-    background:linear-gradient(135deg,#f43f5e,#fb7185); font-size:26px; font-weight:800;
-    letter-spacing:.14em; text-transform:uppercase;
-  }
-  #hook-main {
-    left:56px; top:268px; width:640px;
-    font-size:132px; font-weight:800; line-height:.94; letter-spacing:-.045em;
-  }
-  #hook-sub {
-    left:56px; top:528px; width:560px;
-    font-size:40px; font-weight:700; color:#c9cdf0; line-height:1.25;
-  }
+  /* --- progress bar --- */
+  #track { position:absolute; left:56px; right:56px; bottom:64px; height:14px; border-radius:99px;
+           background:rgba(255,255,255,.14); overflow:hidden; }
+  #bar   { height:100%; width:0%; border-radius:99px;
+           background:linear-gradient(90deg,#4fd1ff,#7bf7ff 55%,#b48cff);
+           box-shadow:0 0 18px rgba(79,209,255,.8); }
 
-  #prob-title {
-    left:56px; top:250px; width:620px;
-    font-size:92px; font-weight:800; letter-spacing:-.04em; line-height:1.02;
-    background:linear-gradient(120deg,#fb7185,#fbbf24 70%); -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  #prob-chips { left:56px; top:500px; display:flex; flex-direction:column; gap:22px; align-items:flex-start; }
+  /* --- stiker --- */
+  .stik { border-radius:14px; box-shadow:0 18px 50px rgba(0,0,0,.55); overflow:hidden;
+          border:2.5px solid rgba(255,255,255,.85); background:#fff; }
 
-  #wipe {
-    position:absolute; inset:0;
-    background:linear-gradient(115deg,#7c5cff 0%,#22d3ee 55%,#34d399 100%);
-  }
+  /* --- badge --- */
+  .pill { display:inline-flex; align-items:center; gap:10px; padding:13px 26px; border-radius:99px;
+          font-weight:700; font-size:26px; letter-spacing:.02em; }
 
-  #turn-1 { left:56px; top:420px; width:620px; font-size:56px; font-weight:700; color:#c9cdf0; }
-  #turn-2 {
-    left:56px; top:520px; width:640px;
-    font-size:118px; font-weight:800; letter-spacing:-.045em; line-height:.98;
-    background:linear-gradient(120deg,#a78bfa,#22d3ee 55%,#34d399); -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  #turn-icon {
-    left:56px; top:332px; width:104px; height:104px; border-radius:26px;
-    box-shadow:0 18px 50px rgba(124,92,255,.5);
-  }
+  /* --- latar --- */
+  .blob { position:absolute; border-radius:50%; filter:blur(90px); }
 
-  #phone {
-    left:236px; top:300px; width:396px; height:660px; border-radius:44px;
-    background:linear-gradient(180deg,#14162e,#0e1024);
-    border:2px solid rgba(255,255,255,.16);
-    box-shadow:0 40px 90px rgba(0,0,0,.55), 0 0 0 8px rgba(124,92,255,.12);
-  }
-  #phone-bar {
-    left:26px; top:34px; width:344px; height:64px; border-radius:18px;
-    background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.12);
-    display:flex; align-items:center; padding:0 18px; gap:12px;
-  }
-  #phone-bar .u { color:#8b90b8; font-size:24px; font-weight:700; }
-  #caret { width:3px; height:30px; background:#22d3ee; }
-  #phone-btn {
-    left:26px; top:120px; width:344px; height:76px; border-radius:22px;
-    background:linear-gradient(135deg,#7c5cff,#22d3ee);
-    display:flex; align-items:center; justify-content:center;
-    font-size:30px; font-weight:800;
-    box-shadow:0 16px 40px rgba(124,92,255,.45);
-  }
-  #phone-prog-bg {
-    left:26px; top:236px; width:344px; height:18px; border-radius:999px;
-    background:rgba(255,255,255,.1); overflow:hidden;
-  }
-  #phone-prog {
-    position:absolute; left:0; top:0; height:100%; width:0%;
-    background:linear-gradient(90deg,#34d399,#22d3ee); border-radius:999px;
-  }
-  #phone-done {
-    left:26px; top:288px; width:344px; height:66px; border-radius:18px;
-    background:rgba(16,185,129,.18); border:1.5px solid rgba(52,211,153,.5);
-    display:flex; align-items:center; justify-content:center; gap:10px;
-    font-size:26px; font-weight:800; color:#6ee7b7;
-  }
-  #demo-chips { left:36px; top:1024px; display:flex; gap:16px; }
+  /* --- watermark --- */
+  #wm { position:absolute; right:40px; top:40px; padding:12px 22px; border-radius:99px;
+        background:rgba(10,14,26,.78); border:1.5px solid rgba(255,255,255,.18);
+        font-size:22px; font-weight:700; letter-spacing:.04em; color:#e8f6ff;
+        box-shadow:0 10px 30px rgba(0,0,0,.45); }
 
-  #punch-main {
-    left:0; top:430px; width:720px; text-align:center;
-    font-size:168px; font-weight:800; letter-spacing:-.05em; line-height:.92;
-  }
-  #punch-2 {
-    left:0; top:660px; width:720px; text-align:center;
-    font-size:48px; font-weight:800; color:#fde68a;
-  }
-  #punch-3 {
-    left:0; top:742px; width:720px; text-align:center;
-    font-size:38px; font-weight:700; color:#c9cdf0;
-  }
-
-  #cta-title {
-    left:0; top:390px; width:720px; text-align:center;
-    font-size:104px; font-weight:800; letter-spacing:-.045em;
-    background:linear-gradient(120deg,#a78bfa,#22d3ee); -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  #cta-pill {
-    left:196px; top:560px;
-    background:linear-gradient(135deg,#7c5cff,#22d3ee); font-size:36px; font-weight:800;
-  }
-  #cta-arrow {
-    left:0; top:680px; width:720px; text-align:center;
-    font-size:64px; font-weight:800; color:#22d3ee;
-  }
-
-  #end-dark { position:absolute; inset:0; background:#05060e; opacity:0; }
-  #end-icon {
-    left:258px; top:430px; width:204px; height:204px; border-radius:52px;
-    box-shadow:0 30px 80px rgba(124,92,255,.55);
-  }
-  #end-title {
-    left:0; top:680px; width:720px; text-align:center;
-    font-size:78px; font-weight:800; letter-spacing:-.04em;
-  }
-  #end-credit {
-    left:0; top:806px; width:720px; text-align:center;
-    font-size:38px; font-weight:800;
-    background:linear-gradient(100deg,#a78bfa,#22d3ee,#f472b6,#a78bfa);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  #end-bye {
-    left:0; top:896px; width:720px; text-align:center;
-    font-size:34px; font-weight:700; color:#8b90b8;
-  }
-
-  .sticker { position:absolute; width:220px; height:220px; object-fit:contain;
-    filter:drop-shadow(0 18px 34px rgba(0,0,0,.45)); }
-
-  /* ---------- caption gaya TikTok ---------- */
-  #caption {
-    position:absolute; left:50%; top:944px; transform:translateX(-50%);
-    max-width:600px; padding:18px 30px; border-radius:22px;
-    background:rgba(8,10,24,.82); border:1.5px solid rgba(255,255,255,.14);
-    font-size:38px; font-weight:800; text-align:center; line-height:1.22;
-    box-shadow:0 18px 44px rgba(0,0,0,.45);
-  }
-
-  /* ---------- kredit + progres ---------- */
-  #watermark {
-    right:26px; top:168px;
-    padding:10px 18px; border-radius:999px;
-    background:rgba(8,10,24,.6); border:1.5px solid rgba(255,255,255,.18);
-    font-size:24px; font-weight:800; letter-spacing:.02em;
-    background-image:linear-gradient(100deg, rgba(255,255,255,0) 30%, rgba(255,255,255,.7) 50%, rgba(255,255,255,0) 70%);
-    background-size:220px 100%; background-repeat:no-repeat;
-  }
-  #progress {
-    position:absolute; left:56px; right:56px; bottom:210px; height:12px;
-    border-radius:999px; background:rgba(255,255,255,.12); overflow:hidden;
-  }
-  #progress-fill {
-    position:absolute; left:0; top:0; height:100%; width:0%;
-    background:linear-gradient(90deg,#7c5cff,#22d3ee,#34d399); border-radius:999px;
-  }
+  /* --- tipografi hero --- */
+  .hero { font-weight:800; letter-spacing:-.022em; line-height:.92; }
+  .sub  { font-weight:700; letter-spacing:-.012em; }
 </style>
 </head>
 <body>
 <div id="stage">
-  <div id="bg"></div>
-  <div class="blob" id="b1"></div>
-  <div class="blob" id="b2"></div>
-  <div class="blob" id="b3"></div>
 
-  <div id="shake">
-    <div class="abs chip red" id="hook-tag">stop scroll</div>
-    <div class="abs" id="hook-main">EH, LU.<br>IYA, LU.</div>
-    <div class="abs" id="hook-sub">yang lagi scroll itu — bentar doang.</div>
-
-    <div class="abs" id="prob-title">RIBET<br>BANGET?!</div>
-    <div class="abs" id="prob-chips">
-      <div class="chip">screenshot &rarr; crop manual</div>
-      <div class="chip red">watermark ke mana-mana</div>
-      <div class="chip">kualitas rusak parah</div>
-    </div>
-
-    <div id="wipe"></div>
-
-    <img class="abs" id="turn-icon" src="assets/icon-192.png" alt="">
-    <div class="abs" id="turn-1">udah, gitu aja.</div>
-    <div class="abs" id="turn-2">PAKE<br>DownloadAja.</div>
-
-    <div class="abs" id="phone">
-      <div class="abs" id="phone-bar"><span class="u">tempel link&hellip;</span><div id="caret"></div></div>
-      <div class="abs" id="phone-btn">Proses</div>
-      <div class="abs" id="phone-prog-bg"><div id="phone-prog"></div></div>
-      <div class="abs" id="phone-done">&#10003; tersimpan</div>
-    </div>
-    <div class="abs" id="demo-chips">
-      <div class="chip hot">semua platform</div>
-      <div class="chip green">tanpa watermark</div>
-      <div class="chip">bisa jadi MP3</div>
-    </div>
-
-    <div class="abs" id="punch-main">GRATIS.</div>
-    <div class="abs" id="punch-2">serius, gratis.</div>
-    <div class="abs" id="punch-3">bukan gratis-gratisan.</div>
-
-    <div class="abs" id="cta-title">DownloadAja</div>
-    <div class="abs chip hot" id="cta-pill">LINK DI BIO &#8599;</div>
-    <div class="abs" id="cta-arrow">&#8595;</div>
-
-    <img class="sticker" id="st1" src="assets/sticker/stiker-03.webp" alt="">
-    <img class="sticker" id="st2" src="assets/sticker/stiker-07.webp" alt="">
-    <img class="sticker" id="st3" src="assets/sticker/stiker-01.webp" alt="">
-    <img class="sticker" id="st4" src="assets/sticker/stiker-05.webp" alt="">
-    <img class="sticker" id="st5" src="assets/sticker/stiker-09.webp" alt="">
-    <img class="sticker" id="st6" src="assets/sticker/stiker-11.webp" alt="">
+  <!-- ============ LATAR ============ -->
+  <div class="layer" id="bg">
+    <div class="abs" style="left:0;top:0;width:720px;height:1280px;
+      background:radial-gradient(1100px 900px at 20% -8%, #3b1f7e 0%, rgba(21,14,48,0) 55%),
+                 radial-gradient(900px 800px at 108% 30%, #0d4a63 0%, rgba(11,16,32,0) 52%),
+                 radial-gradient(1100px 900px at -10% 105%, #5c1f6e 0%, rgba(21,14,48,0) 55%),
+                 linear-gradient(180deg,#120a24 0%,#0a0d1f 52%,#080a16 100%);"></div>
+    <div class="blob" id="bl1" style="width:700px;height:700px;left:-160px;top:-180px;background:rgba(124,92,255,.42);"></div>
+    <div class="blob" id="bl2" style="width:620px;height:620px;left:420px;top:220px;background:rgba(79,209,255,.30);"></div>
+    <div class="blob" id="bl3" style="width:700px;height:700px;left:-120px;top:820px;background:rgba(255,110,199,.24);"></div>
+    <div class="blob" id="bl4" style="width:560px;height:560px;left:340px;top:900px;background:rgba(64,82,255,.22);"></div>
+    <!-- grain -->
+    <svg width="720" height="1280" style="opacity:.11;mix-blend-mode:overlay;position:absolute;left:0;top:0;">
+      <filter id="gr"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
+        <feColorMatrix type="saturate" values="0"/></filter>
+      <rect width="720" height="1280" filter="url(#gr)"/>
+    </svg>
+    <!-- vignette -->
+    <div class="abs" style="left:0;top:0;width:720px;height:1280px;
+      background:radial-gradient(78% 62% at 50% 42%, rgba(0,0,0,0) 52%, rgba(2,3,10,.52) 100%);"></div>
   </div>
 
-  <div id="end-dark"></div>
-  <img class="abs" id="end-icon" src="assets/icon-192.png" alt="">
-  <div class="abs" id="end-title">DownloadAja</div>
-  <div class="abs" id="end-credit">&#10022; bikinan Kall &#10022;</div>
-  <div class="abs" id="end-bye">daaah.</div>
+  <!-- ============ WATERMARK ============ -->
+  <div id="wm">✦ bikinan Kall</div>
 
-  <div id="caption"></div>
-  <div class="abs" id="watermark">&#10022; bikinan Kall</div>
-  <div id="progress"><div id="progress-fill"></div></div>
+  <!-- ============ 1. HOOK (0–2.55) ============ -->
+  <div class="layer" id="hook">
+    <div class="abs cen" id="hookPill" style="top:172px;">
+      <span class="pill" style="background:rgba(255,93,106,.2);border:1.5px solid rgba(255,120,130,.55);color:#ffc9cd;font-size:24px;letter-spacing:.14em;">STOP SCROLL</span>
+    </div>
+    <div class="abs cen hero g-cyan" id="hook1" style="top:290px;font-size:150px;">EH, LU.</div>
+    <div class="abs cen hero" id="hook2" style="top:436px;font-size:118px;color:#fff;">IYA, LU.</div>
+    <div class="abs cen sub" id="hook3" style="top:596px;font-size:38px;color:#c7d2ff;font-weight:700;">yang lagi scroll itu — bentar doang.</div>
+    <div class="abs stik" id="hookStik" style="left:472px;top:148px;width:186px;transform:rotate(-6deg);">
+      <img src="assets/sticker/stiker-05.webp" width="186">
+    </div>
+  </div>
+
+  <!-- ============ 2. PROBLEM (2.6–6.05) ============ -->
+  <div class="layer" id="prob">
+    <div class="abs" id="probHead" style="left:70px;top:300px;">
+      <div class="hero g-warm" id="prob1" style="font-size:118px;">RIBET</div>
+      <div class="hero g-warm" id="prob2" style="font-size:118px;">BANGET?!</div>
+    </div>
+    <div class="abs glass" id="chA" style="left:70px;top:596px;padding:17px 30px;display:inline-flex;align-items:center;gap:14px;">
+      <span style="width:13px;height:13px;border-radius:50%;background:#ff8f6b;box-shadow:0 0 12px #ff8f6b;"></span>
+      <span class="sub" style="font-size:31px;">screenshot → crop manual</span>
+    </div>
+    <div class="abs glass" id="chB" style="left:70px;top:682px;padding:17px 30px;display:inline-flex;align-items:center;gap:14px;">
+      <span style="width:13px;height:13px;border-radius:50%;background:#ff5d6c;box-shadow:0 0 12px #ff5d6c;"></span>
+      <span class="sub" style="font-size:31px;">watermark nempel kayak hutang</span>
+    </div>
+    <div class="abs glass" id="chC" style="left:70px;top:768px;padding:17px 30px;display:inline-flex;align-items:center;gap:14px;">
+      <span style="width:13px;height:13px;border-radius:50%;background:#ffb05c;box-shadow:0 0 12px #ffb05c;"></span>
+      <span class="sub" style="font-size:31px;">kualitas ambyar, size gede</span>
+    </div>
+    <div class="abs stik" id="probStik" style="left:468px;top:214px;width:182px;transform:rotate(5deg);">
+      <img src="assets/sticker/stiker-07.webp" width="182">
+    </div>
+  </div>
+
+  <!-- ============ 3. TURN (6.05–8.85) ============ -->
+  <div class="layer" id="turn">
+    <div class="abs" id="turnIcon" style="left:268px;top:330px;width:184px;height:184px;border-radius:44px;
+         background:linear-gradient(145deg,#2b2450,#151227);border:2px solid rgba(255,255,255,.22);
+         box-shadow:0 30px 80px rgba(79,209,255,.35), 0 14px 40px rgba(0,0,0,.5);
+         display:flex;align-items:center;justify-content:center;">
+      <svg width="104" height="104" viewBox="0 0 104 104">
+        <path d="M52 16v48M52 64 32 44M52 64l20-20" stroke="#7bf7ff" stroke-width="11" stroke-linecap="round" fill="none"/>
+        <path d="M22 74v10a8 8 0 0 0 8 8h44a8 8 0 0 0 8-8v-10" stroke="#4fd1ff" stroke-width="11" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="abs cen sub" id="turn1" style="top:568px;font-size:42px;color:#dfe6ff;">udah, gitu aja.</div>
+    <div class="abs cen hero g-mix" id="turn2" style="top:634px;font-size:104px;">PAKE</div>
+    <div class="abs cen hero" id="turn3" style="top:752px;font-size:78px;">
+      <span class="g-cyan">Download</span><span style="color:#fff;">Aja</span><span class="g-mix">.</span>
+    </div>
+    <div class="abs cen" id="turn4" style="top:872px;">
+      <span class="pill" style="background:rgba(79,209,255,.16);border:1.5px solid rgba(123,247,255,.5);color:#c8f4ff;font-size:25px;">semua platform · tanpa watermark · MP3</span>
+    </div>
+  </div>
+
+  <!-- ============ 4. DEMO (8.9–16.55) ============ -->
+  <div class="layer" id="demo">
+    <!-- phone -->
+    <div class="abs" id="phone" style="left:196px;top:246px;width:328px;height:672px;border-radius:52px;
+         background:linear-gradient(160deg,#262238,#0e0c18);padding:9px;
+         box-shadow:0 50px 110px rgba(0,0,0,.65), 0 0 0 1.5px rgba(255,255,255,.16);">
+      <div style="position:relative;width:310px;height:654px;border-radius:44px;overflow:hidden;
+           background:linear-gradient(180deg,#12101f,#0b0a14);">
+        <!-- status bar -->
+        <div style="position:absolute;left:0;top:0;width:310px;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:13px;font-weight:700;color:#9aa3c0;">
+          <span>09:41</span><span style="letter-spacing:.12em;">5G ▮▮▮</span>
+        </div>
+        <!-- island -->
+        <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:86px;height:24px;border-radius:99px;background:#000;"></div>
+        <!-- app header -->
+        <div id="dHead" style="position:absolute;left:22px;top:58px;display:flex;align-items:center;gap:10px;">
+          <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(145deg,#4fd1ff,#7c5cff);"></div>
+          <div style="font-size:19px;font-weight:800;letter-spacing:-.01em;">DownloadAja</div>
+        </div>
+        <!-- input -->
+        <div id="dInput" style="position:absolute;left:22px;top:112px;width:266px;height:52px;border-radius:15px;
+             background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.13);
+             display:flex;align-items:center;padding:0 15px;gap:9px;">
+          <div style="width:16px;height:16px;border-radius:5px;border:2.2px solid #6f7ba6;"></div>
+          <div id="dUrl" style="font-size:15px;font-weight:700;color:#8b94b8;white-space:nowrap;overflow:hidden;">tiktok.com/@video.anjay</div>
+        </div>
+        <!-- tombol -->
+        <div id="dBtn" style="position:absolute;left:22px;top:180px;width:266px;height:54px;border-radius:17px;
+             background:linear-gradient(92deg,#3fb9ff,#24d3b8);box-shadow:0 12px 30px rgba(63,185,255,.35);
+             display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;letter-spacing:.01em;">
+          <span id="dBtnT">tempel &amp; proses</span>
+        </div>
+        <!-- progress -->
+        <div id="dProgWrap" style="position:absolute;left:22px;top:252px;width:266px;">
+          <div style="height:11px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;">
+            <div id="dProg" style="height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,#24d3b8,#3fb9ff);box-shadow:0 0 12px rgba(63,185,255,.8);"></div>
+          </div>
+          <div id="dPct" style="margin-top:7px;font-size:12px;font-weight:700;color:#7f89b0;letter-spacing:.06em;">MEMPROSES 0%</div>
+        </div>
+        <!-- kartu hasil -->
+        <div id="dCard" style="position:absolute;left:22px;top:320px;width:266px;border-radius:19px;
+             background:rgba(255,255,255,.075);border:1.5px solid rgba(255,255,255,.15);padding:15px;">
+          <div style="display:flex;align-items:center;gap:11px;">
+            <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(145deg,#24d3b8,#3fb9ff);
+                 display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;">✓</div>
+            <div>
+              <div style="font-size:15px;font-weight:800;">tersimpan ke galeri</div>
+              <div style="font-size:11.5px;font-weight:700;color:#8b94b8;letter-spacing:.05em;">MP4 · 1080p · tanpa watermark</div>
+            </div>
+          </div>
+        </div>
+        <!-- chips mini -->
+        <div id="dMini" style="position:absolute;left:22px;top:412px;width:266px;display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="pill" style="padding:8px 14px;font-size:12px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.14);color:#c9d2f2;">MP3 juga bisa</span>
+          <span class="pill" style="padding:8px 14px;font-size:12px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.14);color:#c9d2f2;">semua platform</span>
+        </div>
+        <!-- home bar -->
+        <div style="position:absolute;left:50%;bottom:12px;transform:translateX(-50%);width:104px;height:5px;border-radius:99px;background:rgba(255,255,255,.35);"></div>
+      </div>
+    </div>
+    <!-- caption kiri bawah -->
+    <div class="abs glass" id="demoCap" style="left:64px;top:982px;padding:18px 30px;display:inline-flex;align-items:center;gap:13px;">
+      <span style="width:13px;height:13px;border-radius:50%;background:#4fe3c1;box-shadow:0 0 12px #4fe3c1;"></span>
+      <span class="sub" style="font-size:32px;">tempel link, klik, beres.</span>
+    </div>
+    <div class="abs stik" id="demoStik" style="left:486px;top:962px;width:168px;transform:rotate(-5deg);">
+      <img src="assets/sticker/stiker-01.webp" width="168">
+    </div>
+  </div>
+
+  <!-- ============ 5. PUNCH (16.6–21.5) ============ -->
+  <div class="layer" id="punch">
+    <div class="abs cen hero" id="punch1" style="top:380px;font-size:168px;">
+      <span class="g-cyan">GRATIS.</span>
+    </div>
+    <div class="abs cen sub" id="punch2" style="top:580px;font-size:46px;color:#e6ebff;">serius, gratis.</div>
+    <div class="abs cen" id="punch3" style="top:664px;">
+      <span class="pill" style="background:rgba(255,93,106,.16);border:1.5px solid rgba(255,120,130,.5);color:#ffc9cd;font-size:28px;">bukan gratis-gratisan</span>
+    </div>
+    <div class="abs cen" id="punch4" style="top:748px;">
+      <span class="pill" style="background:rgba(180,140,255,.16);border:1.5px solid rgba(180,140,255,.5);color:#e2d4ff;font-size:28px;">awas lu ketawa.</span>
+    </div>
+  </div>
+
+  <!-- ============ 6. CTA (21.55–25.9) ============ -->
+  <div class="layer" id="cta">
+    <div class="abs cen" id="ctaUp" style="top:360px;">
+      <span class="pill" style="background:rgba(79,209,255,.18);border:1.5px solid rgba(123,247,255,.55);color:#c8f4ff;font-size:30px;">
+        <svg width="22" height="22" viewBox="0 0 22 22"><path d="M11 3v12M11 15l-5-5M11 15l5-5M4 19h14" stroke="#7bf7ff" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>
+        LINK DI BIO
+      </span>
+    </div>
+    <div class="abs cen hero" id="cta1" style="top:470px;font-size:92px;">
+      <span class="g-cyan">Download</span><span style="color:#fff;">Aja</span>
+    </div>
+    <div class="abs cen sub" id="cta2" style="top:606px;font-size:36px;color:#c7d2ff;">sekarang. jangan lama-lama.</div>
+    <div class="abs" id="cta3" style="left:56px;top:700px;width:608px;height:3px;border-radius:99px;
+         background:linear-gradient(90deg,rgba(79,209,255,0),rgba(79,209,255,.75),rgba(79,209,255,0));"></div>
+    <div class="abs cen" id="cta4" style="top:738px;">
+      <span class="pill" style="background:rgba(124,92,255,.18);border:1.5px solid rgba(160,130,255,.5);color:#d9ccff;font-size:26px;">gratis · tanpa login · tanpa ribet</span>
+    </div>
+    <div class="abs stik" id="ctaStik" style="left:276px;top:836px;width:168px;transform:rotate(4deg);">
+      <img src="assets/sticker/stiker-12.webp" width="168">
+    </div>
+  </div>
+
+  <!-- ============ 7. END CARD (24.95–27) ============ -->
+  <div class="layer" id="end">
+    <div class="abs" id="endShade" style="left:0;top:0;width:720px;height:1280px;background:rgba(5,6,12,.82);"></div>
+    <div class="abs" id="endIcon" style="left:262px;top:452px;width:196px;height:196px;border-radius:48px;
+         background:linear-gradient(145deg,#2b2450,#141127);border:2px solid rgba(255,255,255,.2);
+         box-shadow:0 34px 90px rgba(79,209,255,.3), 0 18px 50px rgba(0,0,0,.55);
+         display:flex;align-items:center;justify-content:center;">
+      <svg width="112" height="112" viewBox="0 0 104 104">
+        <path d="M52 16v48M52 64 32 44M52 64l20-20" stroke="#7bf7ff" stroke-width="11" stroke-linecap="round" fill="none"/>
+        <path d="M22 74v10a8 8 0 0 0 8 8h44a8 8 0 0 0 8-8v-10" stroke="#4fd1ff" stroke-width="11" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="abs cen hero" id="endWm" style="top:688px;font-size:64px;">
+      <span class="g-cyan">Download</span><span style="color:#fff;">Aja</span>
+    </div>
+    <div class="abs cen sub" id="endCredit" style="top:784px;font-size:30px;color:#aab6e6;letter-spacing:.12em;">✦ bikinan Kall ✦</div>
+    <div class="abs cen sub" id="endBye" style="top:846px;font-size:30px;color:#7c86b4;font-weight:400;">daaah.</div>
+  </div>
+
+  <!-- ============ HUD ============ -->
+  <div id="cap"><div id="capInner"></div></div>
+  <div id="track"><div id="bar"></div></div>
 </div>
 
 <script>
-(function () {
-  'use strict';
-  const $ = (s) => document.querySelector(s);
-  const clamp01 = (x) => Math.max(0, Math.min(1, x));
-  const seg = (t, a, b) => clamp01((t - a) / (b - a));
-  const mix = (a, b, x) => a + (b - a) * x;
-  const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
-  const easeInOut = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
-  const easeOutBack = (x) => {
-    const c1 = 1.70158, c3 = c1 + 1;
-    return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
-  };
-  const DUR = 27;
+/* ==== KONTRAK: window.SEEK(t) murni deterministik ==== */
+const DUR = 31;
+const $ = id => document.getElementById(id);
+const clamp = (x,a,b) => Math.min(b, Math.max(a,x));
+const map  = (t,a,b) => clamp((t-a)/(b-a),0,1);
+const eOut = x => 1-Math.pow(1-x,3);
+const eExpo= x => x>=1 ? 1 : 1-Math.pow(2,-10*x);
+const eBack= x => { const c1=1.70158, c3=c1+1; return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2); };
+const sin  = (t,p) => Math.sin(t*p);
 
-  const HIDE = { opacity: '0', visibility: 'hidden' };
-  function set(el, o) { Object.assign(el.style, o); }
-  function hold(el, t, t0, t1, opts) {
-    const o = opts || {};
-    if (t < t0) { set(el, HIDE); return; }
-    if (t > t1 && !o.keep) { set(el, HIDE); return; }
-    const x = seg(t, t0, t0 + (o.dur || 0.5));
-    const s = mix(o.from == null ? 0.72 : o.from, 1, easeOutBack(x));
-    const fl = o.float ? Math.sin((t - t0) * 1.6 + (o.phase || 0)) * o.float : 0;
-    const rot = (o.rot || 0) + (o.swing ? Math.sin((t - t0) * 1.2 + (o.phase || 0)) * o.swing : 0);
-    set(el, {
-      opacity: String(Math.min(1, x * 1.6)),
-      visibility: 'visible',
-      transform: `translate(${o.dx || 0}px, ${(o.dy || 0) + fl}px) scale(${s}) rotate(${rot}deg)`,
-    });
-  }
+function set(el, t, {on, off, x=0, y=0, sc=1, rot=null, op=1}) {
+  let o = 0, dx=0, dy=0, s=sc;
+  if (t>=on) { const g=eExpo(map(t,on,on+0.42)); o=op*g; dx=x*(1-g); dy=y*(1-g); s=sc<1?1-(1-sc)*g:1+(sc-1)*g; }
+  if (off!=null && t>=off) { o=Math.min(o, 1-map(t,off,off+0.3)); }
+  el.style.opacity = o.toFixed(3);
+  const r = rot!=null ? ` rotate(${rot}deg)` : '';
+  el.style.transform = `translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px) scale(${s.toFixed(3)})${r}`;
+  el.style.visibility = o>0.001 ? 'visible' : 'hidden';
+}
 
-  const el = {
-    b1: $('#b1'), b2: $('#b2'), b3: $('#b3'),
-    shake: $('#shake'),
-    hookTag: $('#hook-tag'), hookMain: $('#hook-main'), hookSub: $('#hook-sub'),
-    probTitle: $('#prob-title'), probChips: [...document.querySelectorAll('#prob-chips .chip')],
-    wipe: $('#wipe'),
-    turnIcon: $('#turn-icon'), turn1: $('#turn-1'), turn2: $('#turn-2'),
-    phone: $('#phone'), phoneBtn: $('#phone-btn'), phoneProg: $('#phone-prog'),
-    phoneDone: $('#phone-done'), caret: $('#caret'),
-    demoChips: [...document.querySelectorAll('#demo-chips .chip')],
-    punchMain: $('#punch-main'), punch2: $('#punch-2'), punch3: $('#punch-3'),
-    ctaTitle: $('#cta-title'), ctaPill: $('#cta-pill'), ctaArrow: $('#cta-arrow'),
-    endDark: $('#end-dark'), endIcon: $('#end-icon'), endTitle: $('#end-title'),
-    endCredit: $('#end-credit'), endBye: $('#end-bye'),
-    caption: $('#caption'), wm: $('#watermark'),
-    progFill: $('#progress-fill'),
-    st: [$('#st1'), $('#st2'), $('#st3'), $('#st4'), $('#st5'), $('#st6')],
-    stage: $('#stage'),
-  };
+/* jendela caption sinkron kalimat VO (atempo 1.15 => VO 30.3s) */
+const CAPS = [
+  [0.15, 2.7,  'eh, lu! iya, lu yang lagi scroll — bentar doang.'],
+  [2.8,  6.45, 'capek kan nyimpen video ribet? screenshot, crop, watermarknya bikin emosi.'],
+  [6.55, 9.45, 'haha! udah, gitu aja. pake DownloadAja.'],
+  [9.55, 17.7, 'tempel link, klik, beres. semua platform, tanpa watermark, bisa jadi MP3 juga.'],
+  [17.8, 23.0, 'hehe, gampang banget kan? gratis. serius deh, gratis. bukan gratis-gratisan. awas lu ketawa.'],
+  [23.1, 28.3, 'downloadAja sekarang, link di bio.'],
+  [28.4, 31,   'jangan lupa mampir ya! dahaaah!'],
+];
+const capEl = $('capInner');
 
-  // Ritme kalimat VO (setelah atempo 1.32) — caption & beat ikut irama ini
-  const CAPTIONS = [
-    [0.15, 2.5, 'eh, lu. iya, lu.'],
-    [2.6, 6.0, 'capek kan nyimpen video ribet?'],
-    [6.1, 8.8, 'udah, gitu aja.'],
-    [8.9, 16.5, 'tempel link, klik, beres.'],
-    [16.6, 21.45, 'gratis. serius, gratis.'],
-    [21.55, 25.85, 'downloadaja — link di bio.'],
-    [25.95, 26.95, 'daaah.'],
-  ];
+window.SEEK = function(t) {
+  t = clamp(t,0,DUR);
 
-  window.SEEK = function (t) {
-    // ---- latar hidup (pelan) ----
-    set(el.b1, { transform: `translate(${Math.sin(t * 0.32) * 26}px, ${Math.cos(t * 0.27) * 22}px)` });
-    set(el.b2, { transform: `translate(${Math.cos(t * 0.24) * 30}px, ${Math.sin(t * 0.3) * 26}px)` });
-    set(el.b3, { transform: `translate(${Math.sin(t * 0.22 + 2) * 24}px, ${Math.cos(t * 0.26 + 1) * 18}px)` });
+  /* --- latar hidup (gerak halus, fungsi t) --- */
+  $('bl1').style.transform = `translate(${sin(t,0.22)*36}px, ${sin(t,0.17+1)*30}px)`;
+  $('bl2').style.transform = `translate(${sin(t,0.19+2)*-32}px, ${sin(t,0.23)*28}px)`;
+  $('bl3').style.transform = `translate(${sin(t,0.21+4)*30}px, ${sin(t,0.18+2)*-26}px)`;
+  $('bl4').style.transform = `translate(${sin(t,0.16+1)*-26}px, ${sin(t,0.2+3)*22}px)`;
 
-    // ---- guncangan hook (vine boom) + punch (metal pipe) ----
-    let sx = 0, sy = 0;
-    for (const [at, amp] of [[0.22, 16], [16.75, 10]]) {
-      const d = t - at;
-      if (d >= 0 && d < 0.7) {
-        const k = amp * Math.exp(-7 * d) * Math.sin(d * 46);
-        sx += k; sy += k * 0.7;
-      }
-    }
-    set(el.shake, { transform: `translate(${sx}px, ${sy}px)` });
+  /* --- watermark: glint sekejap saat end card --- */
+  const wm = $('wm');
+  const wmGlint = (t>28.6&&t<29.5) ? 1+0.06*Math.abs(sin((t-28.6)*7)) : 1;
+  wm.style.transform = `scale(${wmGlint.toFixed(3)})`;
+  wm.style.opacity = t>2.1 ? (t>29.8 ? String(1-map(t,29.8,30.5)) : '1') : '0';
+  wm.style.borderColor = (t>28.6&&t<29.5) ? 'rgba(123,247,255,.85)' : 'rgba(255,255,255,.18)';
 
-    // ---- beat 1: HOOK (0 - 2.55) ----
-    hold(el.hookTag, t, 0.08, 2.55, { dy: -20, rot: -3, swing: 1.4, float: 5 });
-    hold(el.hookMain, t, 0.12, 2.58, { from: 1.18, dy: 24, float: 4, phase: 1 });
-    hold(el.hookSub, t, 0.55, 2.58, { dy: 18, float: 3, phase: 2 });
+  /* --- caption chip --- */
+  let cap = '';
+  for (const [a,b,txt] of CAPS) if (t>=a && t<b) cap = txt;
+  if (capEl.textContent !== cap) capEl.textContent = cap;
+  $('cap').style.opacity = cap ? 1 : 0;
+  const cur = CAPS.find(c=>t>=c[0]&&t<c[1]) || [0];
+  const capPulse = 1 + 0.025*(1-eOut(map(t, cur[0], cur[0]+0.4)));
+  $('capInner').style.transform = `scale(${capPulse.toFixed(3)})`;
 
-    // ---- beat 2: PROBLEM (2.6 - 6.05) ----
-    hold(el.probTitle, t, 2.62, 6.05, { from: 1.12, dx: -36, rot: -2 });
-    el.probChips.forEach((c, i) => {
-      hold(c, t, 2.95 + i * 0.3, 6.05, { dx: -60, rot: [-4, 3, -3][i], swing: 1.2, phase: i });
-    });
-    // flash "gagal" halus saat sfx error (4.88 - 5.25) — tanpa kedip cepat
-    const flash = seg(t, 4.88, 4.98) * (1 - seg(t, 4.98, 5.25));
-    set(el.stage, { filter: flash > 0 ? `saturate(${1 + flash * 0.5})` : 'none' });
+  /* --- progress --- */
+  $('bar').style.width = (t/DUR*100).toFixed(2)+'%';
 
-    // ---- beat 3: TURN + wipe (6.05 - 8.85) ----
-    const w = seg(t, 6.1, 6.8);
-    const wVis = t > 6.02 && t < 6.92;
-    set(el.wipe, {
-      visibility: wVis ? 'visible' : 'hidden',
-      transform: `translateX(${wVis ? mix(-110, 110, easeInOut(w)) : -110}%) skewX(-8deg)`,
-      opacity: '1',
-    });
-    hold(el.turnIcon, t, 6.62, 8.85, { from: 0.4, dy: -18, swing: 1.2 });
-    hold(el.turn1, t, 6.35, 8.85, { dy: 16, float: 3 });
-    hold(el.turn2, t, 6.68, 8.85, { from: 1.14, dy: 20, float: 4, phase: 1 });
+  /* ===== HOOK 0–2.75 ===== */
+  set($('hookPill'), t, {on:0.34, off:2.55, y:-30});
+  const pop = eBack(map(t,0.05,0.6));
+  const hook1o = map(t,0.05,0.42)*Math.min(1,1-map(t,2.45,2.75));
+  $('hook1').style.opacity = hook1o;
+  $('hook1').style.transform = `scale(${(1.14-0.14*pop).toFixed(3)})`;
+  $('hook1').style.visibility = hook1o>0.001?'visible':'hidden';
+  set($('hook2'), t, {on:0.48, off:2.55, y:36, sc:0.94});
+  set($('hook3'), t, {on:0.82, off:2.55, y:26});
+  set($('hookStik'), t, {on:1.1, off:2.55, y:-44, sc:0.6, rot:-6});
 
-    // ---- beat 4: DEMO (8.9 - 16.55) ----
-    hold(el.phone, t, 8.95, 16.55, { from: 0.9, dy: 90, rot: 2 });
-    hold(el.phoneBtn, t, 9.35, 16.55, { keep: true, dur: 0.35 });
-    const press = seg(t, 10.15, 10.28) * (1 - seg(t, 10.28, 10.5));
-    if (t >= 9.35 && t <= 16.55) {
-      set(el.phoneBtn, {
-        transform: `scale(${1 - press * 0.09})`,
-        filter: `brightness(${1 + press * 0.25})`,
-        opacity: '1', visibility: 'visible',
-      });
-    }
-    const prog = seg(t, 10.55, 12.4);
-    set(el.phoneProg, { width: `${Math.round(easeInOut(prog) * 100)}%` });
-    hold(el.phoneDone, t, 12.65, 16.55, { from: 0.6, dy: 12 });
-    set(el.caret, { opacity: String(t < 10.15 ? (Math.sin(t * 6) > -0.2 ? 1 : 0) : 0) });
-    el.demoChips.forEach((c, i) => {
-      hold(c, t, 9.6 + i * 1.7, 16.55, { dy: 34, from: 0.7, swing: 1, phase: i + 1, float: 4 });
-    });
+  /* ===== PROBLEM 2.75–6.5 ===== */
+  set($('prob1'), t, {on:2.85, off:6.28, x:-70});
+  set($('prob2'), t, {on:3.03, off:6.28, x:-70});
+  set($('chA'), t, {on:3.4, off:6.28, y:44});
+  set($('chB'), t, {on:3.85, off:6.28, y:44});
+  set($('chC'), t, {on:4.3, off:6.28, y:44});
+  set($('probStik'), t, {on:3.65, off:6.28, sc:0.55, rot:5});
 
-    // ---- beat 5: PUNCH (16.6 - 21.5) ----
-    hold(el.punchMain, t, 16.7, 21.5, { from: 1.3, rot: -2, float: 5, phase: 2 });
-    hold(el.punch2, t, 17.55, 21.5, { dy: 18, float: 3 });
-    hold(el.punch3, t, 18.7, 21.5, { dy: 16, float: 3, phase: 1 });
+  /* ===== TURN 6.5–9.5 ===== */
+  set($('turnIcon'), t, {on:6.6, off:9.25, y:30, sc:0.8});
+  set($('turn1'), t, {on:7.0, off:9.25, y:24});
+  set($('turn2'), t, {on:7.25, off:9.25, y:30, sc:0.92});
+  set($('turn3'), t, {on:7.5, off:9.25, y:30, sc:0.92});
+  set($('turn4'), t, {on:8.0, off:9.25, y:24});
 
-    // ---- beat 6: CTA (21.55 - 25.9) ----
-    hold(el.ctaTitle, t, 21.6, 25.9, { from: 1.1, dy: 18, float: 4 });
-    hold(el.ctaPill, t, 22.15, 25.9, { from: 0.5, rot: -2, swing: 1.2 });
-    const bob = Math.abs(Math.sin(t * 2.6)) * 14;
-    if (t > 22.6 && t < 25.9) {
-      set(el.ctaArrow, { opacity: String(seg(t, 22.6, 22.9)), visibility: 'visible', transform: `translateY(${bob}px)` });
-    } else {
-      set(el.ctaArrow, HIDE);
-    }
+  /* ===== DEMO 9.5–17.75 ===== */
+  set($('phone'), t, {on:9.55, off:17.5, y:70, sc:0.93});
+  set($('demoCap'), t, {on:10.2, off:17.5, x:-60});
+  set($('demoStik'), t, {on:12.2, off:17.5, sc:0.55, rot:-5});
+  // micro-interaksi dalam layar HP
+  const press = t>=11.05 && t<11.45 ? 1-0.045*Math.abs(sin((t-11.05)*14)) : 1;
+  $('dBtn').style.filter = (t>=11.05&&t<11.35) ? 'brightness(1.2)' : 'none';
+  $('dBtn').style.transform = `scale(${press.toFixed(3)})`;
+  $('dUrl').textContent = (t>=10.3) ? 'tiktok.com/@video.anjay ✓' : 'tiktok.com/@video.anjay';
+  $('dUrl').style.color = (t>=10.3) ? '#4fe3c1' : '#8b94b8';
+  $('dBtnT').textContent = t>=13.6 ? '✓ selesai' : (t>=11.45 ? 'memproses…' : 'tempel & proses');
+  const prog = map(t,11.5,13.6);
+  $('dProg').style.width = (prog*100).toFixed(1)+'%';
+  $('dPct').textContent = 'MEMPROSES '+Math.round(prog*100)+'%';
+  const cardG = eOut(map(t,13.85,14.3));
+  $('dCard').style.opacity = cardG;
+  $('dCard').style.transform = `translateY(${((1-cardG)*26).toFixed(1)}px)`;
+  $('dMini').style.opacity = eOut(map(t,14.25,14.7));
+  if (t<13.85) { $('dCard').style.opacity=0; $('dMini').style.opacity=0; }
 
-    // ---- beat 7: END CARD (24.9 - 27) ----
-    const eo = seg(t, 24.95, 25.7);
-    set(el.endDark, { opacity: String(mix(0, 0.72, easeOutCubic(eo))) });
-    hold(el.endIcon, t, 25.15, 27, { from: 0.55, dy: -16, swing: 1, keep: true });
-    hold(el.endTitle, t, 25.45, 27, { from: 0.8, dy: 16, keep: true });
-    hold(el.endCredit, t, 25.85, 27, { from: 0.7, dy: 14, keep: true });
-    hold(el.endBye, t, 26.3, 27, { dy: 12, keep: true });
+  /* ===== PUNCH 17.75–23.05 ===== */
+  const pPop = eBack(map(t,17.8,18.4));
+  const pOp = map(t,17.8,18.2)*Math.min(1,1-map(t,22.75,23.05));
+  $('punch1').style.opacity = pOp;
+  $('punch1').style.transform = `scale(${(1.16-0.16*pPop).toFixed(3)})`;
+  $('punch1').style.visibility = pOp>0.001?'visible':'hidden';
+  set($('punch2'), t, {on:18.7, off:22.75, y:26});
+  set($('punch3'), t, {on:19.7, off:22.75, y:30});
+  set($('punch4'), t, {on:21.0, off:22.75, y:30});
 
-    // ---- stiker melayang ----
-    const stCfg = [
-      { t0: 0.35, t1: 2.6, x: 470, y: 150, s: 1, sw: 5, ph: 0 },
-      { t0: 3.35, t1: 6.08, x: 455, y: 812, s: 0.95, sw: 6, ph: 1.2 },
-      { t0: 11.2, t1: 16.6, x: 60, y: 640, s: 0.9, sw: 5, ph: 2 },
-      { t0: 18.85, t1: 21.5, x: 455, y: 830, s: 0.85, sw: 7, ph: 0.6 },
-      { t0: 22.9, t1: 25.92, x: 470, y: 780, s: 0.85, sw: 5, ph: 1.6 },
-      { t0: 23.4, t1: 25.92, x: 78, y: 800, s: 0.8, sw: 6, ph: 2.4 },
-    ];
-    el.st.forEach((s, i) => {
-      const c = stCfg[i];
-      hold(s, t, c.t0, c.t1, {
-        dx: c.x, dy: c.y + Math.sin((t - c.t0) * 1.5 + c.ph) * 12,
-        from: 0.4, swing: c.sw, phase: c.ph,
-      });
-      s.style.width = s.style.height = `${Math.round(220 * c.s)}px`;
-    });
+  /* ===== CTA 23.05–28.2 ===== */
+  set($('ctaUp'), t, {on:23.2, off:27.9, y:-26});
+  set($('cta1'), t, {on:23.45, off:27.9, y:34, sc:0.94});
+  set($('cta2'), t, {on:23.9, off:27.9, y:26});
+  set($('cta3'), t, {on:24.35, off:27.9, y:0, sc:1});
+  set($('cta4'), t, {on:24.7, off:27.9, y:26});
+  set($('ctaStik'), t, {on:24.5, off:27.9, sc:0.55, rot:4});
 
-    // ---- caption ----
-    const cap = CAPTIONS.find(([a, b]) => t >= a && t <= b);
-    if (cap) {
-      const x = seg(t, cap[0], cap[0] + 0.32);
-      set(el.caption, {
-        visibility: 'visible',
-        opacity: String(Math.min(1, x * 1.8)),
-        transform: `translateX(-50%) scale(${mix(0.86, 1, easeOutBack(x))})`,
-        textContent: cap[2],
-      });
-    } else {
-      set(el.caption, { visibility: 'hidden', opacity: '0' });
-    }
-
-    // ---- watermark + glint ----
-    const wmOn = t > 1.9 ? 1 : 0;
-    const glint = seg(t, 25.0, 25.85);
-    set(el.wm, {
-      opacity: String(wmOn * 0.92),
-      visibility: wmOn ? 'visible' : 'hidden',
-      backgroundPositionX: `${mix(-220, 340, glint)}px`,
-    });
-
-    // ---- progres ----
-    set(el.progFill, { width: `${(clamp01(t / DUR) * 100).toFixed(2)}%` });
-  };
-
-  window.__READY = (async () => {
-    await document.fonts.ready;
-    await Promise.all([...document.images].map((i) => i.decode().catch(() => {})));
-    window.SEEK(0);
-    return true;
-  })();
-})();
+  /* ===== END 28.1–31 ===== */
+  const endO = map(t,28.1,28.65);
+  $('end').style.opacity = endO;
+  $('end').style.visibility = endO>0.001?'visible':'hidden';
+  set($('endIcon'), t, {on:28.35, sc:0.75});
+  set($('endWm'), t, {on:28.7, y:28});
+  set($('endCredit'), t, {on:29.15, y:20});
+  set($('endBye'), t, {on:29.65, y:16});
+};
+window.SEEK(0);
 </script>
 </body>
 </html>
