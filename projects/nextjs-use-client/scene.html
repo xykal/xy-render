@@ -348,8 +348,9 @@
     /* ---------- D. tiga hal yang nggak ada di server (9.5 - 12.4) ---------- */
     const NT = [9.5, 10.4, 11.3];
     [E.need1, E.need2, E.need3].forEach((el, i) => rise(el, t, NT[i], 0.4));
-    drop(E.need2, t, 12.42, 0.24);
-    drop(E.need3, t, 12.48, 0.24);
+    drop(E.need1, t, 12.4, 0.24);
+    drop(E.need2, t, 12.45, 0.24);
+    drop(E.need3, t, 12.5, 0.24);
 
     /* ---------- E. tombol nggak reaksi + stempel (12.5 - 15.9) ---------- */
     rise(E.btnSimpan, t, 12.52, 0.4);
@@ -416,7 +417,6 @@
     const hot = t >= 21.95 && t < 26.18;
     if (hot) { if (E.kid0.className.indexOf('hot') < 0) E.kid0.className = 'abs kid hot'; }
     else if (E.kid0.className.indexOf('hot') >= 0) E.kid0.className = 'abs kid';
-    drop(E.need1, t, 21.85, 0.22);
 
     /* ---------- H. file gede: semua ikut (22.9 - 26.1) ---------- */
     if (t > 22.86) {
