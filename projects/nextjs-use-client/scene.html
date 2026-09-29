@@ -90,7 +90,7 @@
 
   /* ---------- E. dua tempat ---------- */
   #srvPanel { left: 30px; top: 262px; width: 560px; height: 236px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
-  #srvLabel { left: 54px; top: 282px; width: 250px; font-size: 36px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
+  #srvLabel { left: 54px; top: 282px; width: 300px; white-space: nowrap; font-size: 36px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
   #srvNote { left: 320px; top: 286px; width: 246px; text-align: right; font-size: 30px; font-weight: 700; color: var(--faint); }
   .rack { left: 54px; width: 512px; height: 54px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); }
   #rk0 { top: 330px; } #rk1 { top: 394px; } #rk2 { top: 458px; }
@@ -103,7 +103,7 @@
   #flow { left: 356px; top: 524px; width: 8px; height: 62px; border-radius: 4px;
     background: repeating-linear-gradient(180deg, var(--accent) 0 10px, transparent 10px 22px); }
   #brwPanel { left: 30px; top: 590px; width: 560px; height: 210px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
-  #brwLabel { left: 54px; top: 540px; width: 240px; font-size: 36px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
+  #brwLabel { left: 54px; top: 540px; width: 300px; white-space: nowrap; font-size: 36px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
   #brwTop { left: 30px; top: 590px; width: 560px; height: 50px; background: #0f131a; border-radius: 22px 22px 0 0; border-bottom: 1px solid var(--line); }
   .dot { width: 13px; height: 13px; border-radius: 50%; background: var(--line); top: 609px; }
   #dot1 { left: 58px; } #dot2 { left: 80px; } #dot3 { left: 102px; }
@@ -200,7 +200,7 @@
   #fixNote { left: 30px; top: 640px; width: 560px; font-size: 34px; font-weight: 700; color: var(--muted); text-align: center; }
 
   /* ---------- M. CTA ---------- */
-  #ctaQ { left: 30px; top: 320px; width: 560px; text-align: center; font-size: 68px; font-weight: 800; line-height: 1.12; letter-spacing: -.04em; }
+  #ctaQ { left: 30px; top: 320px; width: 560px; text-align: center; font-size: 68px; font-weight: 800; line-height: 1.12; letter-spacing: -.02em; word-spacing: 10px; }
   #ctaA, #ctaB { top: 520px; width: 244px; height: 96px; border-radius: 18px; background: var(--card); border: 1px solid var(--line);
     display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: var(--ink-2); text-align: center; padding: 0 12px; }
   #ctaA { left: 56px; } #ctaB { left: 320px; }
@@ -275,7 +275,7 @@
 
   <!-- D. yang udah disiapin -->
   <div class="abs" id="toolBox"></div>
-  <div class="abs" id="toolHead">udah disiapin, nggak perlu ngatur sendiri</div>
+  <div class="abs" id="toolHead">udah disiapin semua</div>
   <div class="abs tool" id="tl0">routing<span class="ok" id="ok0">&#10003;</span></div>
   <div class="abs tool" id="tl1">bundling<span class="ok" id="ok1">&#10003;</span></div>
   <div class="abs tool" id="tl2">gambar<span class="ok" id="ok2">&#10003;</span></div>
@@ -755,18 +755,21 @@
     group(t, [[73.6, 79.3]], G_BUNDLE, 0.3);
     if (kOn > 0.02) {
       const ins = [[74, 330], [296, 330], [74, 386], [296, 386], [74, 442]];
-      const slots = [[122, 640], [214, 640], [306, 640], [398, 640], [490, 640]];
+      // baris akhir 6 chip: 6 x 88px + 5 jarak 6px = 558px, muat di area aman
+      const slots = [[124, 640], [218, 640], [312, 640], [406, 640], [500, 640]];
       [E.kid1, E.kid2, E.kid3, E.kid4, E.kid5].forEach((el, i) => {
         const t0 = 74.45 + i * 0.3;
         at(el, ins[i][0], ins[i][1], 220, 46);
+        const landed = t >= t0 + 0.72;
+        set(el, { fontSize: landed ? '22px' : '31px' });
         if (t < t0) { rise(el, t, 74.0 + i * 0.12, 0.3); }
         else travel(el, t, [
           { t0: t0, t1: t0 + 0.34, from: [ins[i][0], ins[i][1], 220, 46], to: [250, 462, 220, 46] },
-          { t0: t0 + 0.34, t1: t0 + 0.72, from: [250, 462, 220, 46], to: [slots[i][0], slots[i][1], 84, 46] },
+          { t0: t0 + 0.34, t1: t0 + 0.72, from: [250, 462, 220, 46], to: [slots[i][0], slots[i][1], 88, 46] },
         ]);
       });
-      at(E.kid0, 30, 640, 84, 46);
-      set(E.kid0, { opacity: '1', visibility: 'visible' });
+      at(E.kid0, 30, 640, 88, 46);
+      set(E.kid0, { opacity: '1', visibility: 'visible', fontSize: '22px' });
       const bf = seg(t, 74.6, 79.0);
       set(E.bundleFill, { width: Math.round(mix(8, 100, easeInOut(bf))) + '%' });
       if (t > 74.5) text(E.bundleNote, 'semuanya masuk'); else text(E.bundleNote, 'yang dikirim ke HP orang');
