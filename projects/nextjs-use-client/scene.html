@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Next.js — apa itu, dan kenapa tombol lu nggak bisa diklik</title>
+<title>Next.js dari nol — apa itu, dan kenapa tombol lu nggak bisa diklik</title>
 <style>
   @font-face { font-family: PJS; src: url('assets/font/pjs-400.woff2') format('woff2'); font-weight: 400; font-display: block; }
   @font-face { font-family: PJS; src: url('assets/font/pjs-700.woff2') format('woff2'); font-weight: 700; font-display: block; }
@@ -18,13 +18,15 @@
     --line: #2b333f;
     --surface: #131720;
     --card: #1a1f27;
-    --card-2: #202632;
+    --card-2: #212836;
     --accent: #7fb0ff;
     --accent-text: #cfe2ff;
     --accent-soft: rgba(127, 176, 255, .14);
     --bad: #e07b6f;
+    --bad-soft: rgba(224, 123, 111, .13);
+    --ok: #7fd6a6;
+    --ok-soft: rgba(127, 214, 166, .13);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: var(--bg); }
   body { font-family: PJS, system-ui, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
@@ -32,135 +34,318 @@
   .abs { position: absolute; }
   .mono { font-family: JBM, ui-monospace, monospace; }
 
-  /* ---------- kepala ---------- */
+  /* ---------- kepala + caption ---------- */
   #wm { left: 30px; top: 162px; font-size: 40px; font-weight: 700; color: var(--faint); }
   #tagNext { left: 416px; top: 156px; height: 56px; padding: 0 22px; border-radius: 14px;
     background: var(--card); border: 1px solid var(--line); display: flex; align-items: center;
     font-size: 36px; font-weight: 700; color: var(--muted); }
+  #caption { left: 30px; top: 826px; width: 560px; padding: 18px 26px; border-radius: 20px;
+    background: rgba(9, 11, 15, .92); border: 1px solid rgba(255, 255, 255, .1);
+    font-size: 38px; font-weight: 800; line-height: 1.18; text-align: center; white-space: pre-line; }
+
+  /* ---------- judul beat ---------- */
+  .beat { font-size: 52px; font-weight: 800; letter-spacing: -.02em; }
+  #beatL { left: 30px; top: 206px; color: var(--ink); }
+  #beatNote { left: 30px; top: 272px; font-size: 36px; font-weight: 700; color: var(--muted); }
 
   /* ---------- A. hook ---------- */
-  #hookTitle { left: 30px; top: 340px; font-size: 84px; font-weight: 800; line-height: 1.1; letter-spacing: -.035em; }
-  #hookAns { left: 30px; top: 580px; width: 560px; padding: 26px 30px; border-radius: 22px;
-    background: var(--card); border: 1px solid var(--line); }
-  #hookAns1 { font-size: 42px; font-weight: 800; color: var(--accent-text); }
-  #hookAns2 { margin-top: 10px; font-size: 38px; font-weight: 700; color: var(--ink-2); }
+  #h1 { left: 30px; top: 296px; font-size: 96px; font-weight: 800; line-height: 1.02; letter-spacing: -.045em; }
+  #h2 { left: 30px; top: 404px; font-size: 96px; font-weight: 800; line-height: 1.02; letter-spacing: -.045em; color: var(--accent-text); }
+  #hsub { left: 30px; top: 540px; width: 420px; font-size: 38px; font-weight: 700; color: var(--muted); line-height: 1.3; }
 
-  /* ---------- B. dua wilayah ---------- */
-  .rlabel { font-size: 38px; font-weight: 800; letter-spacing: .1em; color: var(--muted); }
-  #srvLabel { left: 30px; top: 214px; }
-  .note { font-size: 30px; font-weight: 700; color: var(--faint); text-align: right; }
-  #srvNote { left: 420px; top: 222px; width: 170px; }
-  #brwNote { left: 335px; top: 548px; width: 255px; }
-  #srvPanel { left: 30px; top: 262px; width: 560px; height: 248px; border-radius: 22px;
-    background: var(--surface); border: 1px solid var(--line); }
-  #bnd { left: 30px; top: 524px; width: 560px; height: 3px; border-radius: 2px; background: var(--line); }
-  #doorGap { left: 296px; top: 521px; width: 128px; height: 9px; background: var(--bg); }
-  #doorL { left: 300px; top: 512px; width: 4px; height: 30px; border-radius: 2px; background: var(--accent); }
-  #doorR { left: 416px; top: 512px; width: 4px; height: 30px; border-radius: 2px; background: var(--accent); }
-  #flow { left: 356px; top: 528px; width: 8px; height: 58px; border-radius: 4px;
-    background: repeating-linear-gradient(180deg, var(--accent) 0 10px, transparent 10px 20px); }
-  #brwLabel { left: 30px; top: 540px; }
-  #brwPanel { left: 30px; top: 590px; width: 560px; height: 230px; border-radius: 22px;
-    background: var(--surface); border: 1px solid var(--line); }
-  #brwTop { left: 30px; top: 590px; width: 560px; height: 52px; background: #0f131a;
-    border-radius: 22px 22px 0 0; border-bottom: 1px solid var(--line); }
-  .dot { width: 13px; height: 13px; border-radius: 50%; background: var(--line); top: 610px; }
+  /* ---------- B. dari nol + blok komponen ---------- */
+  #zeroTitle { left: 30px; top: 216px; font-size: 78px; font-weight: 800; letter-spacing: -.03em; }
+  #zeroSub { left: 30px; top: 318px; width: 560px; font-size: 40px; font-weight: 700; color: var(--ink-2); line-height: 1.3; }
+  .block { width: 112px; height: 112px; border-radius: 20px; background: var(--card); border: 1px solid var(--line); }
+  .block::before { content: ''; position: absolute; left: 20px; top: 20px; width: 30px; height: 30px; border-radius: 9px; background: var(--accent-soft); border: 2px solid var(--accent); }
+  .block::after { content: ''; position: absolute; left: 20px; top: 62px; width: 72px; height: 12px; border-radius: 6px; background: var(--card-2); }
+  #bl0 { left: 44px; top: 470px; } #bl1 { left: 172px; top: 470px; }
+  #bl2 { left: 300px; top: 470px; } #bl3 { left: 428px; top: 470px; }
+  #blBrace { left: 44px; top: 596px; width: 496px; height: 44px; border-bottom: 3px solid var(--line); border-left: 3px solid var(--line); border-right: 3px solid var(--line); border-radius: 0 0 18px 18px; }
+  #blLabel { left: 44px; top: 652px; width: 496px; text-align: center; font-size: 44px; font-weight: 800; color: var(--accent-text); }
+
+  /* ---------- C. react vs next.js ---------- */
+  #cmpL, #cmpR { top: 300px; width: 262px; height: 340px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
+  #cmpL { left: 30px; } #cmpR { left: 328px; }
+  #cmpLTitle, #cmpRTitle { font-size: 40px; font-weight: 800; }
+  #cmpLTitle { left: 54px; top: 326px; } #cmpRTitle { left: 352px; top: 326px; }
+  #cmpLSub, #cmpRSub { font-size: 30px; font-weight: 700; color: var(--muted); }
+  #cmpLSub { left: 54px; top: 376px; width: 214px; } #cmpRSub { left: 352px; top: 376px; width: 214px; }
+  #gear { left: 112px; top: 440px; width: 128px; height: 128px; border-radius: 50%; background: var(--card-2); border: 3px solid var(--accent); }
+  #gearCore { left: 148px; top: 476px; width: 56px; height: 56px; border-radius: 50%; background: var(--accent-soft); border: 2px solid var(--accent); }
+  .spoke { position: absolute; width: 8px; height: 34px; border-radius: 4px; background: var(--accent); }
+  #carBody { left: 374px; top: 508px; width: 190px; height: 58px; border-radius: 16px; background: var(--card-2); border: 2px solid var(--accent); }
+  #carRoof { left: 404px; top: 470px; width: 118px; height: 46px; border-radius: 14px 14px 4px 4px; background: var(--card-2); border: 2px solid var(--accent); }
+  .wheel { position: absolute; width: 34px; height: 34px; border-radius: 50%; background: #0d1016; border: 3px solid var(--accent); top: 552px; }
+
+  /* ---------- D. toolkit ---------- */
+  #toolBox { left: 30px; top: 300px; width: 560px; height: 320px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line); }
+  #toolHead { left: 54px; top: 326px; font-size: 38px; font-weight: 800; color: var(--ink-2); }
+  .tool { height: 76px; border-radius: 16px; background: var(--card); border: 1px solid var(--line);
+    display: flex; align-items: center; padding-left: 24px; font-size: 36px; font-weight: 700; color: var(--ink-2); }
+  .tool .ok { position: absolute; right: 18px; top: 20px; width: 36px; height: 36px; border-radius: 50%;
+    border: 2px solid var(--ok); color: var(--ok); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; }
+  #tl0 { left: 54px; top: 386px; width: 248px; } #tl1 { left: 318px; top: 386px; width: 248px; }
+  #tl2 { left: 54px; top: 476px; width: 248px; } #tl3 { left: 318px; top: 476px; width: 248px; }
+
+  /* ---------- E. dua tempat ---------- */
+  #srvPanel { left: 30px; top: 262px; width: 560px; height: 236px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
+  #srvLabel { left: 54px; top: 282px; width: 250px; font-size: 36px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
+  #srvNote { left: 320px; top: 286px; width: 246px; text-align: right; font-size: 30px; font-weight: 700; color: var(--faint); }
+  .rack { left: 54px; width: 512px; height: 54px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); }
+  #rk0 { top: 330px; } #rk1 { top: 394px; } #rk2 { top: 458px; }
+  .led { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: var(--ok); }
+  .slot { position: absolute; height: 14px; border-radius: 7px; background: var(--card-2); }
+  #bnd { left: 30px; top: 522px; width: 560px; height: 3px; border-radius: 2px; background: var(--line); }
+  #doorGap { left: 296px; top: 519px; width: 128px; height: 9px; background: var(--bg); }
+  #doorL { left: 300px; top: 508px; width: 4px; height: 32px; border-radius: 2px; background: var(--accent); }
+  #doorR { left: 416px; top: 508px; width: 4px; height: 32px; border-radius: 2px; background: var(--accent); }
+  #flow { left: 356px; top: 524px; width: 8px; height: 62px; border-radius: 4px;
+    background: repeating-linear-gradient(180deg, var(--accent) 0 10px, transparent 10px 22px); }
+  #brwPanel { left: 30px; top: 590px; width: 560px; height: 210px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
+  #brwLabel { left: 54px; top: 540px; width: 240px; font-size: 36px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
+  #brwTop { left: 30px; top: 590px; width: 560px; height: 50px; background: #0f131a; border-radius: 22px 22px 0 0; border-bottom: 1px solid var(--line); }
+  .dot { width: 13px; height: 13px; border-radius: 50%; background: var(--line); top: 609px; }
   #dot1 { left: 58px; } #dot2 { left: 80px; } #dot3 { left: 102px; }
-  #brwPill { left: 126px; top: 604px; width: 426px; height: 30px; border-radius: 9px; background: var(--card-2); overflow: hidden; }
-  #brwFill { position: absolute; left: 0; top: 0; height: 100%; width: 8%; background: var(--accent-soft);
-    border-right: 2px solid var(--accent); }
-  #brwPillText { position: absolute; left: 14px; top: 0; height: 30px; display: flex; align-items: center;
-    font-size: 24px; color: var(--muted); letter-spacing: .02em; }
+  #brwPill { left: 126px; top: 603px; width: 426px; height: 30px; border-radius: 9px; background: var(--card-2); overflow: hidden; }
+  #brwFill { position: absolute; left: 0; top: 0; height: 100%; width: 10%; background: var(--accent-soft); border-right: 2px solid var(--accent); }
+  #brwPillText { position: absolute; left: 14px; top: 0; height: 30px; display: flex; align-items: center; font-size: 24px; color: var(--muted); }
+  #docIcon { left: 250px; top: 330px; width: 150px; height: 186px; border-radius: 14px; background: var(--card); border: 2px solid var(--accent); }
+  #docIcon .ln { position: absolute; left: 20px; height: 12px; border-radius: 6px; background: var(--card-2); }
+  #docTag { position: absolute; left: 0; top: 0; width: 100%; text-align: center; font-size: 26px; font-weight: 800; color: var(--accent-text); }
 
-  /* ---------- C. kartu file ---------- */
-  #ed { left: 56px; top: 284px; width: 508px; height: 202px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
-  #edHead { left: 56px; top: 284px; width: 508px; height: 46px; background: var(--card-2);
-    border-radius: 18px 18px 0 0; border-bottom: 1px solid var(--line); }
-  #edDot { left: 78px; top: 301px; width: 12px; height: 12px; border-radius: 50%; background: var(--faint); }
-  #edName { left: 102px; top: 292px; font-size: 31px; font-weight: 700; }
-  #edHi { left: 118px; top: 338px; width: 330px; height: 46px; border-radius: 10px;
-    background: var(--accent-soft); border: 1.5px solid var(--accent); }
-  #edClient { left: 132px; top: 343px; font-size: 37px; color: var(--accent-text); }
-  .gl { left: 80px; width: 44px; text-align: right; font-size: 24px; color: var(--faint); }
-  #gl1 { top: 347px; } #gl2 { top: 386px; } #gl3 { top: 422px; } #gl4 { top: 458px; }
-  .cl { left: 132px; height: 15px; border-radius: 7px; background: #242b36; }
-  #cl1 { top: 392px; width: 250px; } #cl2 { top: 428px; width: 300px; } #cl3 { top: 464px; width: 180px; }
+  /* ---------- F. untung ---------- */
+  #advL, #advR { top: 300px; width: 262px; height: 300px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
+  #advL { left: 30px; } #advR { left: 328px; }
+  #advLTitle { left: 54px; top: 326px; width: 214px; height: 56px; font-size: 34px; font-weight: 800; }
+  #advRTitle { left: 352px; top: 326px; width: 214px; height: 56px; font-size: 34px; font-weight: 800; }
+  .loadBar { height: 22px; border-radius: 11px; background: var(--card-2); overflow: hidden; }
+  .loadBar i { position: absolute; left: 0; top: 0; height: 100%; background: var(--accent); border-radius: 11px; }
+  #lbA { left: 54px; top: 420px; width: 214px; } #lbB { left: 54px; top: 490px; width: 214px; }
+  .lbLab { font-size: 28px; font-weight: 700; color: var(--muted); }
+  #lblA { left: 54px; top: 392px; } #lblB { left: 54px; top: 462px; }
+  #lockBody { left: 400px; top: 470px; width: 120px; height: 92px; border-radius: 14px; background: var(--card-2); border: 3px solid var(--ok); }
+  #lockRing { left: 428px; top: 424px; width: 64px; height: 60px; border-radius: 32px 32px 0 0; border: 6px solid var(--ok); border-bottom: 0; }
+  #lockKey { left: 440px; top: 496px; width: 40px; height: 40px; border-radius: 50%; border: 3px solid var(--ok); }
+  #keyOff { left: 352px; top: 560px; width: 216px; height: 4px; border-radius: 2px; background: var(--bad); }
 
-  /* ---------- D. yang nggak ada di server ---------- */
-  .need { height: 52px; width: 156px; border-radius: 14px; background: var(--card); border: 1px solid var(--line);
-    display: flex; align-items: center; padding-left: 20px; font-size: 33px; font-weight: 700; color: var(--muted); }
-  #need1 { left: 56px; top: 656px; } #need2 { left: 232px; top: 656px; } #need3 { left: 408px; top: 656px; }
-  .mk { position: absolute; right: 12px; top: 12px; width: 26px; height: 26px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; font-size: 21px; font-weight: 800; }
-  .mk.no { color: var(--bad); border: 2px solid var(--bad); }
-  .mk.yes { color: var(--accent-text); border: 2px solid var(--accent); }
+  /* ---------- G. harga ---------- */
+  .miss { height: 72px; border-radius: 16px; background: var(--card); border: 1px solid var(--line);
+    display: flex; align-items: center; padding-left: 24px; font-size: 36px; font-weight: 700; color: var(--muted); }
+  .miss .x { position: absolute; right: 18px; top: 16px; width: 38px; height: 38px; border-radius: 50%;
+    border: 2px solid var(--bad); color: var(--bad); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; }
+  #ms0 { left: 54px; top: 392px; width: 248px; } #ms1 { left: 318px; top: 392px; width: 248px; }
+  #ms2 { left: 54px; top: 482px; width: 248px; } #ms3 { left: 318px; top: 482px; width: 248px; }
+  #missBox { left: 30px; top: 300px; width: 560px; height: 300px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line); }
+  #missHead { left: 54px; top: 322px; font-size: 36px; font-weight: 800; color: var(--bad); }
 
-  /* ---------- E. tombol yang nggak reaksi ---------- */
-  #btnSimpan { left: 250px; top: 726px; width: 220px; height: 78px; border-radius: 16px; background: var(--card-2);
-    border: 1px solid var(--line); display: flex; align-items: center; padding-left: 26px;
-    font-size: 42px; font-weight: 800; }
-  #tapRing { left: 397px; top: 717px; width: 96px; height: 96px; border-radius: 50%; border: 3px solid var(--accent); }
-  #cursor { left: 432px; top: 752px; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); }
-  #tagRespon { left: 250px; top: 660px; width: 220px; height: 52px; border-radius: 13px; background: var(--card);
+  /* ---------- H. tombol diam ---------- */
+  #btnBeli { left: 240px; top: 386px; width: 240px; height: 88px; border-radius: 18px; background: var(--card-2);
+    border: 1px solid var(--line); display: flex; align-items: center; padding-left: 30px; font-size: 44px; font-weight: 800; }
+  #tapRing { left: 386px; top: 372px; width: 108px; height: 108px; border-radius: 50%; border: 3px solid var(--accent); }
+  #cursor { left: 428px; top: 424px; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); }
+  #onClickTag { left: 240px; top: 314px; width: 240px; height: 56px; border-radius: 14px; background: var(--card);
     border: 1.5px solid var(--bad); display: flex; align-items: center; justify-content: center;
     font-size: 32px; font-weight: 800; color: var(--bad); }
-  #stamp { left: 60px; top: 716px; width: 480px; height: 96px; border-radius: 18px; border: 4px solid var(--bad);
+  #noRespon { left: 240px; top: 496px; width: 240px; height: 56px; border-radius: 14px; background: var(--bad-soft);
+    border: 1.5px solid var(--bad); display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 800; color: var(--bad); }
+  #stamp { left: 60px; top: 592px; width: 480px; height: 96px; border-radius: 18px; border: 4px solid var(--bad);
     display: flex; align-items: center; justify-content: center; font-size: 60px; font-weight: 800; color: var(--bad); }
 
-  /* ---------- F. komponen yang pindah ---------- */
-  .kid { width: 220px; height: 46px; border-radius: 12px; background: var(--card-2); border: 1px solid var(--line);
-    display: flex; align-items: center; justify-content: center; font-size: 33px; font-weight: 700; color: var(--ink-2); }
-  .kid.hot { border-color: var(--accent); color: var(--accent-text); background: var(--accent-soft); }
-  #doorChip { left: 196px; top: 484px; width: 328px; height: 44px; border-radius: 12px;
-    background: var(--accent-soft); border: 2px solid var(--accent); display: flex; align-items: center;
-    justify-content: center; font-size: 34px; color: var(--accent-text); }
+  /* ---------- I. editor + use client ---------- */
+  #ed { left: 56px; top: 300px; width: 508px; height: 214px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
+  #edHead { left: 56px; top: 300px; width: 508px; height: 46px; background: var(--card-2); border-radius: 18px 18px 0 0; border-bottom: 1px solid var(--line); }
+  #edDot { left: 78px; top: 317px; width: 12px; height: 12px; border-radius: 50%; background: var(--faint); }
+  #edName { left: 102px; top: 308px; font-size: 31px; font-weight: 700; }
+  #edHi { left: 118px; top: 356px; width: 330px; height: 46px; border-radius: 10px; background: var(--accent-soft); border: 1.5px solid var(--accent); }
+  #edClient { left: 132px; top: 361px; font-size: 37px; color: var(--accent-text); }
+  #caret { left: 132px; top: 361px; width: 3px; height: 36px; background: var(--accent-text); }
+  .gl { left: 80px; width: 44px; text-align: right; font-size: 24px; color: var(--faint); }
+  #gl1 { top: 365px; } #gl2 { top: 404px; } #gl3 { top: 440px; } #gl4 { top: 476px; }
+  .cl { left: 132px; height: 15px; border-radius: 7px; background: #242b36; }
+  #cl1 { top: 410px; width: 250px; } #cl2 { top: 446px; width: 300px; } #cl3 { top: 482px; width: 180px; }
 
-  /* ---------- G. CTA ---------- */
-  #ctaQ { left: 30px; top: 330px; width: 560px; text-align: center; font-size: 66px; font-weight: 800;
-    line-height: 1.14; letter-spacing: -.04em; }
-  #ctaA, #ctaB { top: 520px; width: 244px; height: 92px; border-radius: 18px; background: var(--card);
-    border: 1px solid var(--line); display: flex; align-items: center; justify-content: center;
-    font-size: 33px; font-weight: 700; color: var(--ink-2); text-align: center; padding: 0 14px; }
+  /* ---------- J/K. file gede + bundel ---------- */
+  #bigFile { left: 56px; top: 262px; width: 508px; height: 244px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
+  #bigHead { left: 56px; top: 262px; width: 508px; height: 46px; background: var(--card-2); border-radius: 18px 18px 0 0; border-bottom: 1px solid var(--line); }
+  #bigName { left: 102px; top: 270px; font-size: 31px; font-weight: 700; }
+  #bigDot { left: 78px; top: 279px; width: 12px; height: 12px; border-radius: 50%; background: var(--faint); }
+  .kid { width: 156px; height: 46px; border-radius: 12px; background: var(--card-2); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center; font-size: 31px; font-weight: 700; color: var(--ink-2); }
+  .kid.hot { border-color: var(--accent); color: var(--accent-text); background: var(--accent-soft); }
+  #bundleSym { left: 30px; top: 700px; width: 280px; font-size: 30px; font-weight: 800; color: var(--muted); letter-spacing: .06em; }
+  #bundleBar { left: 30px; top: 740px; width: 560px; height: 34px; border-radius: 17px; background: var(--card); border: 1px solid var(--line); overflow: hidden; }
+  #bundleFill { position: absolute; left: 0; top: 0; height: 100%; width: 8%; background: var(--accent); border-radius: 17px 4px 4px 17px; }
+  #bundleNote { left: 322px; top: 700px; width: 268px; text-align: right; font-size: 30px; font-weight: 700; color: var(--faint); }
+
+  /* ---------- L. yang bener ---------- */
+  #fixL, #fixR { top: 300px; width: 262px; height: 300px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
+  #fixL { left: 30px; } #fixR { left: 328px; }
+  #fixLLab { left: 54px; top: 322px; font-size: 34px; font-weight: 800; color: var(--muted); letter-spacing: .06em; }
+  #fixRLab { left: 352px; top: 322px; width: 140px; font-size: 34px; font-weight: 800; color: var(--accent-text); letter-spacing: .06em; }
+  #fixFile { left: 54px; top: 380px; width: 214px; height: 84px; border-radius: 14px; background: var(--card); border: 1px solid var(--line);
+    display: flex; align-items: center; padding-left: 18px; font-size: 30px; font-weight: 700; color: var(--ink-2); }
+  #fixBar { left: 54px; top: 470px; width: 214px; height: 20px; border-radius: 10px; background: var(--card); border: 1px solid var(--line); overflow: hidden; }
+  #fixBarFill { position: absolute; left: 0; top: 0; height: 100%; width: 12%; background: var(--ok); border-radius: 10px; }
+  #fixBarLab { left: 54px; top: 496px; width: 200px; font-size: 26px; font-weight: 700; color: var(--faint); }
+  #fixChip { left: 352px; top: 380px; width: 214px; height: 66px; border-radius: 14px; background: var(--accent-soft); border: 2px solid var(--accent);
+    display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; color: var(--accent-text); }
+  .ex { height: 62px; border-radius: 12px; background: var(--card); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700; color: var(--ink-2); }
+  #ex0 { left: 352px; top: 462px; width: 214px; } #ex1 { left: 352px; top: 534px; width: 100px; }
+  #ex2 { left: 466px; top: 534px; width: 100px; }
+  #fixCheck { left: 500px; top: 322px; width: 56px; height: 56px; border-radius: 50%; border: 3px solid var(--ok); color: var(--ok);
+    display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 800; }
+  #fixNote { left: 30px; top: 640px; width: 560px; font-size: 34px; font-weight: 700; color: var(--muted); text-align: center; }
+
+  /* ---------- M. CTA ---------- */
+  #ctaQ { left: 30px; top: 320px; width: 560px; text-align: center; font-size: 68px; font-weight: 800; line-height: 1.12; letter-spacing: -.04em; }
+  #ctaA, #ctaB { top: 520px; width: 244px; height: 96px; border-radius: 18px; background: var(--card); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: var(--ink-2); text-align: center; padding: 0 12px; }
   #ctaA { left: 56px; } #ctaB { left: 320px; }
   #ctaPill { left: 210px; top: 660px; width: 300px; height: 92px; border-radius: 999px; background: var(--accent);
     display: flex; align-items: center; justify-content: center; font-size: 44px; font-weight: 800; color: #08131f; }
 
-  /* ---------- H. penutup ---------- */
+  /* ---------- N. penutup ---------- */
   #endDark { left: 0; top: 0; width: 720px; height: 1280px; background: var(--bg); }
-  #endRule1 { left: 30px; top: 500px; width: 560px; text-align: center; font-size: 50px; font-weight: 800; line-height: 1.24; }
-  #endRule2 { left: 30px; top: 580px; width: 560px; text-align: center; font-size: 46px; font-weight: 700;
-    color: var(--accent-text); line-height: 1.26; }
-  #endCredit { left: 30px; top: 780px; width: 560px; text-align: center; font-size: 44px; font-weight: 800; }
-  #endBrand { left: 30px; top: 840px; width: 560px; text-align: center; font-size: 37px; font-weight: 700;
-    color: var(--muted); letter-spacing: -.01em; }
+  #endRule1 { left: 30px; top: 470px; width: 560px; text-align: center; font-size: 48px; font-weight: 800; line-height: 1.26; }
+  #endRule2 { left: 30px; top: 590px; width: 560px; text-align: center; font-size: 46px; font-weight: 700; color: var(--accent-text); line-height: 1.26; }
+  #endCredit { left: 30px; top: 790px; width: 560px; text-align: center; font-size: 44px; font-weight: 800; }
+  #endBrand { left: 30px; top: 850px; width: 560px; text-align: center; font-size: 37px; font-weight: 700; color: var(--muted); }
 
-  /* ---------- caption ---------- */
-  #caption { left: 30px; top: 830px; width: 560px; padding: 18px 26px; border-radius: 20px;
-    background: rgba(9, 11, 15, .9); border: 1px solid rgba(255, 255, 255, .1);
-    font-size: 38px; font-weight: 800; line-height: 1.18; text-align: center; white-space: pre-line; }
+  /* ---------- objek: gear, mobil, kunci, keping pintu ---------- */
+  #gearLab { left: 96px; top: 578px; width: 160px; text-align: center; font-size: 30px; font-weight: 800; color: var(--accent-text); }
+  #carLab { left: 378px; top: 604px; width: 182px; text-align: center; font-size: 30px; font-weight: 800; color: var(--accent-text); }
+  #sp0 { left: 172px; top: 404px; } #sp1 { left: 172px; top: 570px; }
+  #sp2 { left: 76px; top: 500px; width: 34px; height: 8px; } #sp3 { left: 246px; top: 500px; width: 34px; height: 8px; }
+  #w0 { left: 392px; } #w1 { left: 502px; }
+  #lockLab { left: 328px; top: 600px; width: 262px; text-align: center; font-size: 28px; font-weight: 700; color: var(--muted); }
+  #doorChip { left: 196px; top: 484px; width: 328px; height: 44px; border-radius: 12px;
+    background: var(--accent-soft); border: 2px solid var(--accent); display: flex; align-items: center;
+    justify-content: center; font-size: 34px; color: var(--accent-text); }
+  .led { left: 22px; top: 20px; }
+  .slot { left: 56px; top: 20px; width: 400px; }
+
+  /* ---------- stiker meme ---------- */
+  .stk { object-fit: contain; }
 </style>
 </head>
 <body>
 <div id="stage">
   <div class="abs" id="wm">bikinan Kall</div>
   <div class="abs" id="tagNext">next.js</div>
+  <div class="abs beat" id="beatL"></div>
+  <div class="abs" id="beatNote"></div>
 
-  <div class="abs" id="hookTitle">NEXT.JS<br>ITU APA?</div>
-  <div class="abs" id="hookAns">
-    <div id="hookAns1">framework React</div>
-    <div id="hookAns2">buat bikin web</div>
+  <!-- A. hook -->
+  <div class="abs" id="h1">NEXT.JS</div>
+  <div class="abs" id="h2">ITU APA?</div>
+  <div class="abs" id="hsub">santai, gua jelasin dari nol</div>
+
+  <!-- B. dari nol: komponen -->
+  <div class="abs" id="zeroTitle">DARI NOL</div>
+  <div class="abs" id="zeroSub">potongan tampilan yang bisa disusun ulang</div>
+  <div class="abs block" id="bl0"></div>
+  <div class="abs block" id="bl1"></div>
+  <div class="abs block" id="bl2"></div>
+  <div class="abs block" id="bl3"></div>
+  <div class="abs" id="blBrace"></div>
+  <div class="abs" id="blLabel">komponen</div>
+
+  <!-- C. react vs next.js -->
+  <div class="abs" id="cmpL"></div>
+  <div class="abs" id="cmpR"></div>
+  <div class="abs" id="cmpLTitle">React</div>
+  <div class="abs" id="cmpRTitle">Next.js</div>
+  <div class="abs" id="cmpLSub">library tampilan</div>
+  <div class="abs" id="cmpRSub">framework lengkap</div>
+  <div class="abs" id="gear"></div>
+  <div class="abs" id="gearCore"></div>
+  <div class="abs spoke" id="sp0"></div>
+  <div class="abs spoke" id="sp1"></div>
+  <div class="abs spoke" id="sp2"></div>
+  <div class="abs spoke" id="sp3"></div>
+  <div class="abs" id="gearLab">mesin</div>
+  <div class="abs" id="carRoof"></div>
+  <div class="abs" id="carBody"></div>
+  <div class="abs wheel" id="w0"></div>
+  <div class="abs wheel" id="w1"></div>
+  <div class="abs" id="carLab">mobil lengkap</div>
+
+  <!-- D. yang udah disiapin -->
+  <div class="abs" id="toolBox"></div>
+  <div class="abs" id="toolHead">udah disiapin, nggak perlu ngatur sendiri</div>
+  <div class="abs tool" id="tl0">routing<span class="ok" id="ok0">&#10003;</span></div>
+  <div class="abs tool" id="tl1">bundling<span class="ok" id="ok1">&#10003;</span></div>
+  <div class="abs tool" id="tl2">gambar<span class="ok" id="ok2">&#10003;</span></div>
+  <div class="abs tool" id="tl3">cache<span class="ok" id="ok3">&#10003;</span></div>
+
+  <!-- E. dua tempat -->
+  <div class="abs" id="srvPanel"></div>
+  <div class="abs" id="srvLabel">DI SERVER</div>
+  <div class="abs" id="srvNote">jadi HTML</div>
+  <div class="abs rack" id="rk0"><span class="led" id="led0"></span><span class="slot" id="sl0"></span></div>
+  <div class="abs rack" id="rk1"><span class="led" id="led1"></span><span class="slot" id="sl1"></span></div>
+  <div class="abs rack" id="rk2"><span class="led" id="led2"></span><span class="slot" id="sl2"></span></div>
+  <div class="abs" id="bnd"></div>
+  <div class="abs" id="doorGap"></div>
+  <div class="abs" id="doorL"></div>
+  <div class="abs" id="doorR"></div>
+  <div class="abs" id="flow"></div>
+  <div class="abs" id="brwLabel">DI BROWSER</div>
+  <div class="abs" id="brwPanel"></div>
+  <div class="abs" id="brwTop"></div>
+  <div class="abs dot" id="dot1"></div>
+  <div class="abs dot" id="dot2"></div>
+  <div class="abs dot" id="dot3"></div>
+  <div class="abs" id="brwPill"><div id="brwFill"></div><div id="brwPillText">situs lu</div></div>
+  <div class="abs" id="docIcon">
+    <div class="ln" id="ln0" style="top:56px;width:96px"></div>
+    <div class="ln" id="ln1" style="top:88px;width:110px"></div>
+    <div class="ln" id="ln2" style="top:120px;width:74px"></div>
+    <div id="docTag" style="top:18px">HTML</div>
   </div>
 
-  <div class="abs rlabel" id="srvLabel">DI SERVER</div>
-  <div class="abs note" id="srvNote">jadi HTML</div>
-  <div class="abs" id="srvPanel"></div>
+  <!-- F. untungnya -->
+  <div class="abs" id="advL"></div>
+  <div class="abs" id="advR"></div>
+  <div class="abs" id="advLTitle">loading lebih cepat</div>
+  <div class="abs" id="advRTitle">kunci API aman</div>
+  <div class="abs lbLab" id="lblA">cara lama</div>
+  <div class="abs lbLab" id="lblB">pake server</div>
+  <div class="abs loadBar" id="lbA"><i id="lbAf" style="width:0%"></i></div>
+  <div class="abs loadBar" id="lbB"><i id="lbBf" style="width:0%"></i></div>
+  <div class="abs" id="lockBody"></div>
+  <div class="abs" id="lockRing"></div>
+  <div class="abs" id="lockKey"></div>
+  <div class="abs" id="lockLab">nggak pernah sampe browser</div>
+  <div class="abs" id="keyOff"></div>
 
+  <!-- G. harganya -->
+  <div class="abs" id="missBox"></div>
+  <div class="abs" id="missHead">yang nggak ada di server</div>
+  <div class="abs miss" id="ms0">klik<span class="x" id="x0">&#215;</span></div>
+  <div class="abs miss" id="ms1">state<span class="x" id="x1">&#215;</span></div>
+  <div class="abs miss" id="ms2">storage<span class="x" id="x2">&#215;</span></div>
+  <div class="abs miss" id="ms3">window<span class="x" id="x3">&#215;</span></div>
+
+  <!-- H. tombol diam -->
+  <div class="abs" id="onClickTag">onClick</div>
+  <div class="abs" id="btnBeli">Beli</div>
+  <div class="abs" id="tapRing"></div>
+  <div class="abs" id="cursor"></div>
+  <div class="abs" id="noRespon">nggak respon</div>
+  <div class="abs" id="stamp">BUKAN BUG</div>
+
+  <!-- I. jalan keluar -->
   <div class="abs" id="ed"></div>
   <div class="abs" id="edHead"></div>
   <div class="abs" id="edDot"></div>
   <div class="abs mono" id="edName">like-button.tsx</div>
   <div class="abs" id="edHi"></div>
   <div class="abs mono" id="edClient"></div>
+  <div class="abs" id="caret"></div>
   <div class="abs mono gl" id="gl1">1</div>
   <div class="abs mono gl" id="gl2">2</div>
   <div class="abs mono gl" id="gl3">3</div>
@@ -168,59 +353,68 @@
   <div class="abs cl" id="cl1"></div>
   <div class="abs cl" id="cl2"></div>
   <div class="abs cl" id="cl3"></div>
-
   <div class="abs" id="doorChip"><span class="mono">'use client'</span></div>
-  <div class="abs" id="flow"></div>
-  <div class="abs" id="bnd"></div>
-  <div class="abs" id="doorGap"></div>
-  <div class="abs" id="doorL"></div>
-  <div class="abs" id="doorR"></div>
 
-  <div class="abs rlabel" id="brwLabel">DI BROWSER</div>
-  <div class="abs note" id="brwNote">yang interaktif</div>
-  <div class="abs" id="brwPanel"></div>
-  <div class="abs" id="brwTop"></div>
-  <div class="abs dot" id="dot1"></div>
-  <div class="abs dot" id="dot2"></div>
-  <div class="abs dot" id="dot3"></div>
-  <div class="abs" id="brwPill">
-    <div id="brwFill"></div>
-    <div id="brwPillText">situs lu</div>
-  </div>
-
-  <div class="abs need" id="need1">klik<span class="mk no" id="mk1">&#215;</span></div>
-  <div class="abs need" id="need2">state<span class="mk no" id="mk2">&#215;</span></div>
-  <div class="abs need" id="need3">storage<span class="mk no" id="mk3">&#215;</span></div>
-
-  <div class="abs" id="btnSimpan">Simpan</div>
-  <div class="abs" id="tapRing"></div>
-  <div class="abs" id="cursor"></div>
-  <div class="abs" id="tagRespon">nggak respon</div>
-  <div class="abs" id="stamp">BUKAN BUG</div>
-
+  <!-- J/K. file gede + bundel -->
+  <div class="abs" id="bigFile"></div>
+  <div class="abs" id="bigHead"></div>
+  <div class="abs" id="bigDot"></div>
+  <div class="abs mono" id="bigName">page.tsx</div>
   <div class="abs kid" id="kid0">tombol</div>
   <div class="abs kid" id="kid1">icon</div>
   <div class="abs kid" id="kid2">modal</div>
   <div class="abs kid" id="kid3">chart</div>
   <div class="abs kid" id="kid4">search</div>
   <div class="abs kid" id="kid5">map</div>
+  <div class="abs" id="bundleSym">BUNDEL JS</div>
+  <div class="abs" id="bundleNote">yang dikirim ke HP orang</div>
+  <div class="abs" id="bundleBar"><div id="bundleFill"></div></div>
 
+  <!-- L. yang bener -->
+  <div class="abs" id="fixL"></div>
+  <div class="abs" id="fixR"></div>
+  <div class="abs" id="fixLLab">DI SERVER</div>
+  <div class="abs" id="fixRLab">DI BROWSER</div>
+  <div class="abs" id="fixFile">page.tsx</div>
+  <div class="abs" id="fixBar"><div id="fixBarFill"></div></div>
+  <div class="abs" id="fixBarLab">bundel kecil</div>
+  <div class="abs" id="fixChip">'use client'</div>
+  <div class="abs ex" id="ex0">tombol</div>
+  <div class="abs ex" id="ex1">modal</div>
+  <div class="abs ex" id="ex2">cari</div>
+  <div class="abs" id="fixCheck">&#10003;</div>
+  <div class="abs" id="fixNote">halaman tetap di server, yang interaktif doang yang ke client</div>
+
+  <!-- M. CTA -->
   <div class="abs" id="ctaQ">LU TIM<br>YANG MANA?</div>
-  <div class="abs" id="ctaA">A. di file gede</div>
+  <div class="abs" id="ctaA">A. taruh di file gede</div>
   <div class="abs" id="ctaB">B. di komponen kecil</div>
   <div class="abs" id="ctaPill">komen</div>
 
+  <!-- N. penutup -->
   <div class="abs" id="endDark"></div>
   <div class="abs" id="endRule1">server by default,</div>
   <div class="abs" id="endRule2">client kalau butuh interaksi.</div>
   <div class="abs" id="endCredit">bikinan Kall</div>
   <div class="abs" id="endBrand">XyVerse Technology Global</div>
 
+  <!-- stiker meme -->
+  <img class="abs stk" id="stk0" src="assets/sticker/stiker-06.webp" alt="">
+  <img class="abs stk" id="stk1" src="assets/sticker/stiker-12.webp" alt="">
+  <img class="abs stk" id="stk2" src="assets/sticker/stiker-04.webp" alt="">
+  <img class="abs stk" id="stk3" src="assets/sticker/stiker-11.webp" alt="">
+  <img class="abs stk" id="stk4" src="assets/sticker/stiker-02.webp" alt="">
+  <img class="abs stk" id="stk5" src="assets/sticker/stiker-09.webp" alt="">
+  <img class="abs stk" id="stk6" src="assets/sticker/stiker-03.webp" alt="">
+  <img class="abs stk" id="stk7" src="assets/sticker/stiker-07.webp" alt="">
+  <img class="abs stk" id="stk8" src="assets/sticker/stiker-10.webp" alt="">
+  <img class="abs stk" id="stk9" src="assets/sticker/stiker-01.webp" alt="">
+
   <div class="abs" id="caption"></div>
 <script>
 (function () {
   'use strict';
-  // Semua gerak dihitung dari window.SEEK(t). Tanpa timer, tanpa acak, tanpa CSS animation.
+  // Semua gerak & suara dihitung dari window.SEEK(t). Tanpa timer, tanpa acak, tanpa CSS animation.
   const $ = (s) => document.querySelector(s);
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
   const seg = (t, a, b) => clamp01((t - a) / (b - a));
@@ -229,32 +423,77 @@
   const easeInOut = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
   const easeOutBack = (x) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
 
+  const DUR = 96.6;
+  const ACCENT = '#7fb0ff', ACCENT_TEXT = '#cfe2ff', ACCENT_SOFT = 'rgba(127,176,255,.14)';
+  const LINE = '#2b333f', CARD = '#1a1f27', CARD_ON = '#141c2a', INK2 = '#d7dbe2', MUTED = '#939aa7';
   const CLIENT = "'use client'";
-  const SLOT = [[56, 656], [232, 656], [408, 656], [56, 716], [232, 716], [408, 716]]; // 156x52
-  const CARDK = [[80, 330], [320, 330], [80, 385], [320, 385], [200, 440]];            // 220x46
-  const DOOR_TOP = [250, 462, 220, 46];
+
+  // ---------- beat (detik, dari jeda asli VO) ----------
+  const B = {
+    hook: [0, 5.0], nol: [5.0, 14.0], cmp: [14.0, 18.4], tool: [18.4, 28.9], two: [28.9, 38.4],
+    adv: [38.4, 48.1], price: [48.1, 56.6], btn: [56.6, 63.3], out: [63.3, 69.3], door: [69.3, 73.6],
+    all: [73.6, 79.7], right: [79.7, 91.2], cta: [91.2, 94.4], end: [94.4, 96.6],
+  };
+
+  // ---------- caption per frasa VO (56 potongan) ----------
+  const CAPS = [
+    [0.42, 2.60, 'next.js itu apa sih?'],
+    [2.60, 5.10, 'santai, gua jelasin dari nol'],
+    [5.10, 8.90, 'framework buat bikin website'],
+    [8.90, 13.90, 'potongan tampilan = komponen'],
+    [13.90, 18.30, 'React itu mesinnya'],
+    [16.30, 21.90, 'Next.js itu mobil lengkapnya'],
+    [21.90, 28.60, 'routing, bundling, gambar — beres'],
+    [28.60, 32.90, 'kenapa milih next.js?'],
+    [32.90, 38.30, 'jalan di DUA tempat'],
+    [38.30, 43.20, 'server kirim HTML jadi'],
+    [43.20, 47.90, 'loading cepat, API key aman'],
+    [47.90, 50.90, 'tapi ada harganya'],
+    [50.90, 56.60, 'klik, state, storage, window — nggak ada'],
+    [56.60, 59.80, 'makanya tombol lu diam'],
+    [59.80, 63.20, 'dan itu bukan bug'],
+    [63.20, 68.20, "jalan keluar: 'use client'"],
+    [68.20, 71.30, 'itu pintu, bukan stiker'],
+    [71.30, 76.40, 'file gede: SATU tanda, semua ikut'],
+    [76.40, 79.60, 'halaman lu jadi berat'],
+    [79.60, 84.30, 'yang bener: pisahin'],
+    [84.30, 91.10, 'kecil aja yang ke client'],
+    [91.10, 94.20, 'lu tim yang mana?'],
+  ];
+
+  // ---------- stiker meme: jadwal, posisi, arah miring ----------
+  const STK = [
+    { id: 'stk0', t0: 5.7, t1: 11.6, x: 392, y: 620, w: 190, rot: -4 },
+    { id: 'stk2', t0: 19.6, t1: 24.6, x: 390, y: 614, w: 196, rot: 3 },
+    { id: 'stk1', t0: 30.2, t1: 35.4, x: 392, y: 616, w: 192, rot: -3 },
+    { id: 'stk3', t0: 39.9, t1: 43.6, x: 30, y: 606, w: 186, rot: 2 },
+    { id: 'stk4', t0: 49.2, t1: 53.6, x: 392, y: 614, w: 190, rot: -2 },
+    { id: 'stk5', t0: 53.9, t1: 56.6, x: 30, y: 616, w: 184, rot: 3 },
+    { id: 'stk6', t0: 57.2, t1: 61.4, x: 30, y: 300, w: 172, rot: -3 },
+    { id: 'stk7', t0: 67.9, t1: 72.4, x: 30, y: 548, w: 190, rot: 2 },
+    { id: 'stk8', t0: 75.4, t1: 78.9, x: 400, y: 468, w: 164, rot: -2 },
+    { id: 'stk9', t0: 91.9, t1: 94.2, x: 30, y: 630, w: 168, rot: 3 },
+  ];
 
   const E = {};
-  ['wm', 'tagNext', 'hookTitle', 'hookAns', 'srvLabel', 'srvNote', 'srvPanel', 'ed', 'edHead', 'edDot', 'edName',
-   'edHi', 'edClient', 'gl1', 'gl2', 'gl3', 'gl4', 'cl1', 'cl2', 'cl3', 'doorChip', 'flow', 'bnd',
-   'doorGap', 'doorL', 'doorR', 'brwLabel', 'brwNote', 'brwPanel', 'brwTop', 'dot1', 'dot2', 'dot3', 'brwPill',
-   'brwFill', 'brwPillText', 'need1', 'need2', 'need3', 'mk1', 'mk2', 'mk3', 'btnSimpan', 'tapRing',
-   'cursor', 'tagRespon', 'stamp', 'kid0', 'kid1', 'kid2', 'kid3', 'kid4', 'kid5', 'ctaQ', 'ctaA',
-   'ctaB', 'ctaPill', 'endDark', 'endRule1', 'endRule2', 'endCredit', 'endBrand', 'caption'
-  ].forEach((id) => { E[id] = $('#' + id); });
-  const GUTTER = [E.gl1, E.gl2, E.gl3, E.gl4];
-  const BARS = [E.cl1, E.cl2, E.cl3];
-  const KIDS = [E.kid0, E.kid1, E.kid2, E.kid3, E.kid4, E.kid5];
-  const DGRP = [E.srvLabel, E.srvNote, E.brwNote, E.srvPanel, E.ed, E.edHead, E.edDot, E.edName, E.edHi, E.edClient, E.doorChip, E.flow,
-    E.bnd, E.doorGap, E.doorL, E.doorR, E.brwLabel, E.brwPanel, E.brwTop, E.dot1, E.dot2, E.dot3,
-    E.brwPill, E.need1].concat(GUTTER, BARS, KIDS);
+  const ids = ['wm', 'tagNext', 'beatL', 'beatNote', 'h1', 'h2', 'hsub', 'zeroTitle', 'zeroSub', 'bl0', 'bl1', 'bl2', 'bl3',
+    'blBrace', 'blLabel', 'cmpL', 'cmpR', 'cmpLTitle', 'cmpRTitle', 'cmpLSub', 'cmpRSub', 'gear', 'gearCore', 'sp0', 'sp1', 'sp2', 'sp3',
+    'gearLab', 'carRoof', 'carBody', 'w0', 'w1', 'carLab', 'toolBox', 'toolHead', 'tl0', 'tl1', 'tl2', 'tl3', 'ok0', 'ok1', 'ok2', 'ok3',
+    'srvPanel', 'srvLabel', 'srvNote', 'rk0', 'rk1', 'rk2', 'led0', 'led1', 'led2', 'sl0', 'sl1', 'sl2', 'bnd', 'doorGap', 'doorL',
+    'doorR', 'flow', 'brwLabel', 'brwPanel', 'brwTop', 'dot1', 'dot2', 'dot3', 'brwPill', 'brwFill', 'brwPillText', 'docIcon', 'ln0',
+    'ln1', 'ln2', 'docTag', 'advL', 'advR', 'advLTitle', 'advRTitle', 'lblA', 'lblB', 'lbA', 'lbB', 'lbAf', 'lbBf', 'lockBody',
+    'lockRing', 'lockKey', 'lockLab', 'keyOff', 'missBox', 'missHead', 'ms0', 'ms1', 'ms2', 'ms3', 'x0', 'x1', 'x2', 'x3', 'onClickTag',
+    'btnBeli', 'tapRing', 'cursor', 'noRespon', 'stamp', 'ed', 'edHead', 'edDot', 'edName', 'edHi', 'edClient', 'caret', 'gl1', 'gl2',
+    'gl3', 'gl4', 'cl1', 'cl2', 'cl3', 'doorChip', 'bigFile', 'bigHead', 'bigDot', 'bigName', 'kid0', 'kid1', 'kid2', 'kid3', 'kid4',
+    'kid5', 'bundleSym', 'bundleNote', 'bundleBar', 'bundleFill', 'fixL', 'fixR', 'fixLLab', 'fixRLab', 'fixFile', 'fixBar',
+    'fixBarFill', 'fixBarLab', 'fixChip', 'ex0', 'ex1', 'ex2', 'fixCheck', 'fixNote', 'ctaQ', 'ctaA', 'ctaB', 'ctaPill', 'endDark',
+    'endRule1', 'endRule2', 'endCredit', 'endBrand', 'caption'];
+  ids.forEach((id) => { E[id] = $('#' + id); });
+  STK.forEach((s) => { s.el = $('#' + s.id); });
 
   function set(el, o) { Object.assign(el.style, o); }
   function hide(el) { set(el, { opacity: '0', visibility: 'hidden' }); }
   function at(el, x, y, w, h) { set(el, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' }); }
-  function show(el, o) { set(el, { opacity: '1', visibility: 'visible' }); if (o) set(el, o); }
-
-  // muncul: naik sedikit + membesar, pakai easeOutBack
   function rise(el, t, t0, dur) {
     const x = seg(t, t0, t0 + (dur || 0.4));
     if (x <= 0) { hide(el); set(el, { transform: 'translateY(16px) scale(0.97)' }); return 0; }
@@ -263,229 +502,336 @@
     return x;
   }
   function drop(el, t, t1, dur) {
-    const x = seg(t, t1, t1 + (dur || 0.26));
+    const x = seg(t, t1, t1 + (dur || 0.28));
     if (x <= 0) return 0;
     if (x >= 1) { hide(el); return 1; }
     set(el, { opacity: String(1 - x) });
     return x;
   }
-  // perpindahan berukuran: posisi dan ukuran ikut berubah, disambung beberapa kaki
+  // elemen hidup di dalam satu atau beberapa jendela waktu, dengan fade di tepinya
+  function win(t, wins, f) {
+    f = f || 0.34;
+    let v = 0;
+    for (const w of wins) {
+      const a = w[0] - f, b = w[1] + f;
+      if (t > a && t < b) v = Math.max(v, clamp01(Math.min((t - a) / f, (b - t) / f, 1)));
+    }
+    return v;
+  }
+  function group(t, wins, els, f) {
+    const o = win(t, wins, f);
+    const on = o > 0.02;
+    els.forEach((el) => set(el, { opacity: String(o), visibility: on ? 'visible' : 'hidden' }));
+    return o;
+  }
+  // elemen berpindah lewat beberapa kaki (posisi + ukuran)
   function travel(el, t, legs) {
     if (t < legs[0].t0) { hide(el); at(el, legs[0].from[0], legs[0].from[1], legs[0].from[2], legs[0].from[3]); return; }
-    for (let i = 0; i < legs.length; i++) {
-      const L = legs[i];
+    for (const L of legs) {
       if (t < L.t1) {
         const k = easeInOut(clamp01(seg(t, L.t0, L.t1)));
         const w = mix(L.from[2], L.to[2], k), h = mix(L.from[3], L.to[3], k);
         const cx = mix(L.from[0] + L.from[2] / 2, L.to[0] + L.to[2] / 2, k);
         const cy = mix(L.from[1] + L.from[3] / 2, L.to[1] + L.to[3] / 2, k);
         at(el, cx - w / 2, cy - h / 2, w, h);
-        show(el);
+        set(el, { opacity: '1', visibility: 'visible' });
         return;
       }
     }
     const L = legs[legs.length - 1].to;
     at(el, L[0], L[1], L[2], L[3]);
-    show(el);
+    set(el, { opacity: '1', visibility: 'visible' });
+  }
+  function text(el, s) { if (el.textContent !== s) el.textContent = s; }
+  function skin(el, hot, skinOk) {
+    set(el, { borderColor: hot ? ACCENT : LINE, background: hot ? CARD_ON : (skinOk ? CARD : CARD), color: hot ? ACCENT_TEXT : INK2 });
   }
 
-  const CAPS = [
-    [0.40, 3.05, 'nextjs itu\nframework React'],
-    [3.55, 5.30, 'jalan di dua tempat:\nserver & browser'],
-    [5.75, 6.95, 'komponen lu\ndefault di server'],
-    [7.64, 9.15, 'nggak ada klik'],
-    [9.56, 10.25, 'nggak ada state'],
-    [10.43, 11.15, 'nggak ada storage'],
-    [12.50, 14.10, 'makanya tombol lu\nnggak bisa diklik'],
-    [14.39, 15.32, 'dan itu bukan bug'],
-    [16.04, 17.10, 'yang butuh interaksi'],
-    [17.35, 19.55, "tandain: 'use client'\ndi baris paling atas"],
-    [20.14, 22.58, 'use client itu pintu,\nbukan stiker'],
-    [23.03, 24.48, 'sekali ditulis\ndi file gede'],
-    [24.79, 26.00, 'semuanya ikut\nke browser'],
-    [26.60, 27.40, 'lu tim yang mana?'],
-    [27.72, 28.06, 'komen'],
-  ];
+  // ---------- grup elemen ----------
+  const G_SERVER = [E.srvPanel, E.srvLabel, E.srvNote, E.rk0, E.rk1, E.rk2];
+  const G_BROWSER = [E.bnd, E.doorGap, E.doorL, E.doorR, E.brwLabel, E.brwPanel, E.brwTop, E.dot1, E.dot2, E.dot3, E.brwPill];
+  const G_DIAGRAM = G_SERVER.concat(G_BROWSER);
+  const DIAGRAM_WINS = [[28.9, 42.8], [69.3, 73.55]];
+  const BROWSER_WINS = [[28.9, 42.8], [69.3, 80.0]];
+  const G_ADV = [E.advL, E.advR, E.advLTitle, E.advRTitle, E.lblA, E.lblB, E.lbA, E.lbB, E.lockBody, E.lockRing, E.lockKey, E.lockLab, E.keyOff];
+  const G_PRICE = [E.missBox, E.missHead, E.ms0, E.ms1, E.ms2, E.ms3];
+  const G_BTN = [E.onClickTag, E.btnBeli, E.noRespon, E.stamp];
+  const G_ED = [E.ed, E.edHead, E.edDot, E.edName, E.edHi, E.edClient, E.caret, E.gl1, E.gl2, E.gl3, E.gl4, E.cl1, E.cl2, E.cl3];
+  const G_BIG = [E.bigFile, E.bigHead, E.bigDot, E.bigName, E.kid1, E.kid2, E.kid3, E.kid4, E.kid5];
+  const G_BUNDLE = [E.bundleSym, E.bundleNote, E.bundleBar];
+  const G_FIX = [E.fixL, E.fixR, E.fixLLab, E.fixRLab, E.fixFile, E.fixBar, E.fixBarLab, E.fixChip, E.fixCheck, E.fixNote];
+  const G_HOW = [E.toolBox, E.toolHead, E.tl0, E.tl1, E.tl2, E.tl3];
 
   window.SEEK = function (t) {
-    /* ---------- kredit + tag ---------- */
-    const wmOn = t > 1.7 ? 1 : 0;
-    const wmGone = 1 - seg(t, 28.3, 28.6);
+    /* ---------- kepala ---------- */
+    const wmOn = t > 1.6 ? 1 : 0;
+    const wmGone = 1 - seg(t, 94.3, 94.6);
     set(E.wm, { opacity: String(wmOn * wmGone * 0.9), visibility: wmOn * wmGone > 0 ? 'visible' : 'hidden' });
     rise(E.tagNext, t, 0.2, 0.36);
-    drop(E.tagNext, t, 3.2, 0.26);
+    drop(E.tagNext, t, 5.1, 0.26);
+    drop(E.beatL, t, B.hook[1], 0.3); drop(E.beatNote, t, B.hook[1], 0.3);
 
-    /* ---------- A. hook (0 - 3.2) ---------- */
-    rise(E.hookTitle, t, 0.14, 0.5);
-    rise(E.hookAns, t, 1.5, 0.44);
-    drop(E.hookTitle, t, 3.2, 0.28);
-    drop(E.hookAns, t, 3.2, 0.28);
+    /* ---------- A. hook (0 - 5) ---------- */
+    rise(E.h1, t, 0.12, 0.5);
+    rise(E.h2, t, 0.34, 0.5);
+    rise(E.hsub, t, 1.9, 0.4);
+    drop(E.h1, t, 4.9, 0.26); drop(E.h2, t, 4.9, 0.26); drop(E.hsub, t, 4.8, 0.26);
 
-    /* ---------- B. dua wilayah (3.4 - 7) ---------- */
-    rise(E.srvLabel, t, 3.42, 0.36);
-    rise(E.srvNote, t, 4.05, 0.36);
-    rise(E.srvPanel, t, 3.58, 0.42);
-    const bo = seg(t, 4.5, 4.9);
-    set(E.bnd, { opacity: String(bo), visibility: bo > 0 ? 'visible' : 'hidden' });
-    set(E.doorGap, { opacity: String(bo), visibility: bo > 0 ? 'visible' : 'hidden' });
-    set(E.doorL, { opacity: String(bo), visibility: bo > 0 ? 'visible' : 'hidden' });
-    set(E.doorR, { opacity: String(bo), visibility: bo > 0 ? 'visible' : 'hidden' });
-    rise(E.brwLabel, t, 5.7, 0.36);
-    rise(E.brwNote, t, 6.3, 0.36);
-    const bw = seg(t, 5.86, 6.28);
-    [E.brwPanel, E.brwTop, E.dot1, E.dot2, E.dot3, E.brwPill].forEach((el) => {
-      set(el, { opacity: String(bw), visibility: bw > 0 ? 'visible' : 'hidden' });
-    });
+    /* ---------- B. dari nol + komponen (5 - 14) ---------- */
+    if (t > 4.9) {
+      rise(E.zeroTitle, t, 5.05, 0.44);
+      rise(E.zeroSub, t, 5.7, 0.4);
+      const bt = [8.9, 9.75, 10.6, 11.45];
+      [E.bl0, E.bl1, E.bl2, E.bl3].forEach((el, i) => rise(el, t, bt[i], 0.42));
+      const bw = seg(t, 9.1, 12.2);
+      set(E.blBrace, { opacity: String(bw), visibility: bw > 0 ? 'visible' : 'hidden' });
+      rise(E.blLabel, t, 11.6, 0.4);
+      drop(E.zeroTitle, t, 13.9, 0.3); drop(E.zeroSub, t, 13.9, 0.3);
+      drop(E.bl0, t, 13.95, 0.26); drop(E.bl1, t, 14.0, 0.26); drop(E.bl2, t, 14.05, 0.26); drop(E.bl3, t, 14.1, 0.26);
+      drop(E.blBrace, t, 13.9, 0.24); drop(E.blLabel, t, 13.9, 0.24);
+    } else { [E.zeroTitle, E.zeroSub, E.bl0, E.bl1, E.bl2, E.bl3, E.blBrace, E.blLabel].forEach(hide); }
 
-    /* ---------- C. file + kode (7.5 - 16) ---------- */
-    rise(E.ed, t, 7.5, 0.42);
-    rise(E.edHead, t, 7.5, 0.42);
-    rise(E.edDot, t, 7.72, 0.3);
-    rise(E.edName, t, 7.62, 0.36);
-    GUTTER.forEach((el, i) => rise(el, t, 7.9 + i * 0.1, 0.3));
-    BARS.forEach((el, i) => rise(el, t, 8.0 + i * 0.12, 0.32));
-
-    /* ---------- D. tiga hal yang nggak ada di server (9.5 - 12.4) ---------- */
-    const NT = [9.5, 10.4, 11.3];
-    [E.need1, E.need2, E.need3].forEach((el, i) => rise(el, t, NT[i], 0.4));
-    drop(E.need1, t, 12.4, 0.24);
-    drop(E.need2, t, 12.45, 0.24);
-    drop(E.need3, t, 12.5, 0.24);
-
-    /* ---------- E. tombol nggak reaksi + stempel (12.5 - 15.9) ---------- */
-    rise(E.btnSimpan, t, 12.52, 0.4);
-    const ck = easeInOut(seg(t, 12.6, 13.0));
-    const cursorOn = t > 12.55 && t < 14.32; // keluar pas stempel mendarat, biar nggak nutupin tulisan
-    set(E.cursor, { left: mix(452, 432, ck) + 'px', top: mix(812, 752, ck) + 'px',
-      opacity: cursorOn ? '1' : '0', visibility: cursorOn ? 'visible' : 'hidden' });
-    const press = seg(t, 13.0, 13.12) * (1 - seg(t, 13.12, 13.34));
-    set(E.btnSimpan, { transform: 'scale(' + (1 - press * 0.08) + ')' });
-    const rp = seg(t, 13.08, 13.6);
-    if (rp > 0 && rp < 1) {
-      const d = mix(70, 168, rp);
-      at(E.tapRing, 445 - d / 2, 765 - d / 2, d, d);
-      set(E.tapRing, { opacity: String(1 - rp), visibility: 'visible' });
-    } else { hide(E.tapRing); }
-    rise(E.tagRespon, t, 13.62, 0.34);
-    const st = seg(t, 14.34, 14.78);
-    if (st > 0) {
-      const s = mix(1.7, 1, easeOutBack(st));
-      const wob = Math.sin((t - 14.34) * 22) * Math.exp(-6 * (t - 14.34)) * 4;
-      set(E.stamp, { opacity: String(Math.min(1, st * 2.4)), visibility: 'visible',
-        transform: 'scale(' + s + ') rotate(' + (-5 + wob) + 'deg)' });
-    } else { hide(E.stamp); }
-    set(E.btnSimpan, { filter: t > 14.3 && t < 15.9 ? 'brightness(0.62)' : 'none' });
-    drop(E.stamp, t, 15.86, 0.24);
-    drop(E.tagRespon, t, 15.86, 0.24);
-    drop(E.btnSimpan, t, 15.9, 0.24);
-
-    /* ---------- F. tandain 'use client' (16 - 20) ---------- */
-    rise(E.edHi, t, 16.02, 0.36);
-    const typed = CLIENT.slice(0, Math.round(seg(t, 17.36, 18.02) * CLIENT.length));
-    if (E.edClient.textContent !== typed) E.edClient.textContent = typed;
-    set(E.edClient, { opacity: typed.length > 0 ? '1' : '0', visibility: typed.length > 0 ? 'visible' : 'hidden' });
-    drop(BARS[0], t, 20.3, 0.16);
-    drop(BARS[1], t, 20.34, 0.16);
-    drop(BARS[2], t, 20.38, 0.16);
-    drop(GUTTER[1], t, 20.3, 0.16);
-    drop(GUTTER[2], t, 20.34, 0.16);
-    drop(GUTTER[3], t, 20.38, 0.16);
-    // tombolnya muncul di dalam file, baru jalan lewat pintu
-    if (t < 21.0) { at(E.kid0, 170, 430, 220, 46); rise(E.kid0, t, 20.5, 0.38); }
-
-    /* pintunya: chip turun dari kartu ke batas server/browser */
-    travel(E.doorChip, t, [
-      { t0: 19.95, t1: 20.32, from: [74, 338, 328, 46], to: [210, 420, 300, 46] },
-      { t0: 20.32, t1: 20.62, from: [210, 420, 300, 46], to: [196, 484, 328, 44] },
-    ]);
-    const open1 = seg(t, 20.72, 21.0) * (1 - seg(t, 22.6, 22.86));
-    const open2 = seg(t, 23.5, 23.78);
-    const swing = Math.max(open1, open2);
-    set(E.doorL, { transform: 'rotate(' + (-44 * swing) + 'deg)', opacity: String(Math.max(bo * (1 - seg(t, 26.15, 26.35)), 0)) });
-    set(E.doorR, { transform: 'rotate(' + (44 * swing) + 'deg)' });
-    const fw = Math.max(seg(t, 20.74, 21.0) * (1 - seg(t, 22.55, 22.8)), seg(t, 23.52, 23.78) * (1 - seg(t, 26.05, 26.3)));
-    set(E.flow, { opacity: String(fw), visibility: fw > 0.02 ? 'visible' : 'hidden' });
-    drop(E.edHi, t, 20.1, 0.22);
-
-    /* ---------- G. tombol pindah ke browser (21 - 22.6) ---------- */
-    if (t >= 21.0) {
-      travel(E.kid0, t, [
-        { t0: 21.0, t1: 21.44, from: [170, 430, 220, 46], to: DOOR_TOP },
-        { t0: 21.44, t1: 21.9, from: DOOR_TOP, to: [SLOT[0][0], SLOT[0][1], 156, 52] },
-      ]);
+    /* ---------- C. react vs next.js (14 - 18.4) ---------- */
+    if (t > 13.85) {
+      const w = 1 - seg(t, 18.0, 18.35);
+      [E.cmpL, E.cmpR, E.cmpLTitle, E.cmpRTitle, E.cmpLSub, E.cmpRSub, E.gear, E.gearCore,
+        E.sp0, E.sp1, E.sp2, E.sp3, E.gearLab, E.carRoof, E.carBody, E.w0, E.w1, E.carLab].forEach((el) => {
+        rise(el, t, 13.9, 0.4);
+        if (w < 1) set(el, { opacity: String(parseFloat(el.style.opacity || '1') * w) });
+      });
+      // gear muter pelan, roda muter: dihitung, bukan animasi CSS
+      set(E.gear, { transform: 'rotate(' + (t * 40) + 'deg)' });
+      set(E.gearCore, { transform: 'rotate(' + (-t * 25) + 'deg)' });
+      [E.sp0, E.sp1, E.sp2, E.sp3].forEach((el, i) => set(el, { transform: 'rotate(' + (t * 40 + i * 90) + 'deg)' }));
+      set(E.w0, { transform: 'rotate(' + (t * 300) + 'deg)' });
+      set(E.w1, { transform: 'rotate(' + (t * 300) + 'deg)' });
+    } else {
+      [E.cmpL, E.cmpR, E.cmpLTitle, E.cmpRTitle, E.cmpLSub, E.cmpRSub, E.gear, E.gearCore,
+        E.sp0, E.sp1, E.sp2, E.sp3, E.gearLab, E.carRoof, E.carBody, E.w0, E.w1, E.carLab].forEach(hide);
     }
-    const hot = t >= 21.95 && t < 26.18;
-    if (hot) { if (E.kid0.className.indexOf('hot') < 0) E.kid0.className = 'abs kid hot'; }
-    else if (E.kid0.className.indexOf('hot') >= 0) E.kid0.className = 'abs kid';
 
-    /* ---------- H. file gede: semua ikut (22.9 - 26.1) ---------- */
-    if (t > 22.86) {
-      if (E.edName.textContent !== 'page.tsx') E.edName.textContent = 'page.tsx';
-    } else if (E.edName.textContent !== 'like-button.tsx') E.edName.textContent = 'like-button.tsx';
-    drop(E.edClient, t, 22.86, 0.16);
-    drop(GUTTER[0], t, 22.86, 0.16);
-    KIDS.slice(1).forEach((el, i) => {
-      const kt = 23.0 + i * 0.08;
-      const legA0 = 24.6 + i * 0.12;
-      const from = [CARDK[i][0], CARDK[i][1], 220, 46];
-      const to = [SLOT[i + 1][0], SLOT[i + 1][1], 156, 52];
-      at(el, from[0], from[1], from[2], from[3]);
-      if (t < kt) { rise(el, t, kt, 0.34); }
-      else if (t < legA0) { show(el); }
-      else {
-        travel(el, t, [
-          { t0: legA0, t1: legA0 + 0.34, from: from, to: DOOR_TOP },
-          { t0: legA0 + 0.34, t1: legA0 + 0.78, from: DOOR_TOP, to: to },
+    /* ---------- D. yang udah disiapin (18.4 - 28.9) ---------- */
+    const howOn = win(t, [[18.4, 28.8]]);
+    group(t, [[18.4, 28.8]], G_HOW);
+    if (howOn > 0.02) {
+      const tt = [22.25, 24.85, 26.3, 27.55];
+      [E.tl0, E.tl1, E.tl2, E.tl3].forEach((el, i) => {
+        const k = seg(t, tt[i], tt[i] + 0.4);
+        set(el, { transform: 'translateY(' + mix(10, 0, easeOutCubic(k)) + 'px)' });
+      });
+      [E.ok0, E.ok1, E.ok2, E.ok3].forEach((el, i) => {
+        const k = seg(t, tt[i] + 0.28, tt[i] + 0.56);
+        set(el, { opacity: String(k), visibility: k > 0 ? 'visible' : 'hidden' });
+      });
+    }
+
+    /* ---------- E/F/J/K. diagram server & browser ---------- */
+    const dOn = win(t, DIAGRAM_WINS) + win(t, BROWSER_WINS) > 0.04 ? 1 : 0;
+    group(t, DIAGRAM_WINS, G_SERVER);
+    group(t, BROWSER_WINS, G_BROWSER);
+    if (dOn > 0.02) {
+      [E.led0, E.led1, E.led2].forEach((el, i) => {
+        set(el, { opacity: Math.sin(t * 3.4 + i * 2.1) > -0.2 ? '1' : '0.28' });
+      });
+      [E.sl0, E.sl1, E.sl2].forEach((el, i) => {
+        const k = mix(0.25, 0.62, 0.5 + 0.5 * Math.sin(t * 0.9 + i));
+        set(el, { width: Math.round(400 * k) + 'px' });
+      });
+    }
+    // pintu: kebuka pas chip turun (J) dan pas semua komponen lewat (K)
+    const swing = Math.max(seg(t, 71.4, 71.7) * (1 - seg(t, 78.9, 79.2)), seg(t, 74.5, 74.8) * (1 - seg(t, 78.6, 78.9)));
+    set(E.doorL, { transform: 'rotate(' + (-46 * swing) + 'deg)' });
+    set(E.doorR, { transform: 'rotate(' + (46 * swing) + 'deg)' });
+    const flowOn = Math.max(seg(t, 71.5, 71.8) * (1 - seg(t, 73.2, 73.5)), seg(t, 74.6, 74.9) * (1 - seg(t, 79.0, 79.3)));
+    set(E.flow, { opacity: String(flowOn), visibility: flowOn > 0.02 ? 'visible' : 'hidden' });
+
+    /* ---------- F. untungnya (38.4 - 48.1) ---------- */
+    // dokumen HTML terbang dari server ke browser
+    if (t > 38.2 && t < 43.6) {
+      const k = easeInOut(seg(t, 39.85, 41.6));
+      at(E.docIcon, 310, mix(340, 620, k), 150, 186);
+      set(E.docIcon, { opacity: String(seg(t, 39.7, 40.0) * (1 - seg(t, 42.6, 42.9))), visibility: 'visible' });
+      set(E.docTag, { opacity: '1' });
+    } else { hide(E.docIcon); }
+    if (t > 41.6 && t < 43.0) {
+      const drop = seg(t, 41.6, 41.75) * (1 - seg(t, 42.5, 42.7));
+      at(E.docIcon, 310, 620, 150, 186);
+      set(E.docIcon, { opacity: String(drop), visibility: 'visible' });
+    }
+    group(t, [[43.0, 48.0]], G_ADV);
+    if (t > 42.9 && t < 48.1) {
+      const a = easeInOut(seg(t, 43.3, 44.4)), b = easeInOut(seg(t, 43.4, 45.6));
+      set(E.lbAf, { width: Math.round(a * 100) + '%' });
+      set(E.lbBf, { width: Math.round(b * 100) + '%' });
+      set(E.keyOff, { transform: 'scaleX(' + easeOutCubic(seg(t, 45.4, 45.9)) + ')' });
+      const lp = seg(t, 45.5, 45.9);
+      set(E.lockRing, { transform: 'translateY(' + mix(-12, 0, easeOutBack(lp)) + 'px)' });
+    }
+    // pil alamat browser: berubah jadi "HTML jadi"
+    if (t > 41.4) { text(E.brwPillText, 'HTML jadi'); } else { text(E.brwPillText, 'situs lu'); }
+    set(E.brwFill, { width: t > 41.4 ? '100%' : '10%' });
+
+    /* ---------- G. harganya (48.1 - 56.6) ---------- */
+    const pOn = win(t, [[48.1, 56.5]]);
+    group(t, [[48.1, 56.5]], G_PRICE);
+    if (pOn > 0.02) {
+      const mt = [49.05, 51.55, 53.9, 55.0];
+      [E.ms0, E.ms1, E.ms2, E.ms3].forEach((el, i) => {
+        const k = seg(t, mt[i], mt[i] + 0.42);
+        set(el, { transform: 'translateY(' + mix(12, 0, easeOutCubic(k)) + 'px) scale(' + mix(0.96, 1, easeOutBack(k)) + ')' });
+      });
+      [E.x0, E.x1, E.x2, E.x3].forEach((el, i) => {
+        const k = seg(t, mt[i] + 0.3, mt[i] + 0.6);
+        set(el, { opacity: String(k), visibility: k > 0 ? 'visible' : 'hidden', transform: 'rotate(' + mix(-40, 0, easeOutBack(k)) + 'deg)' });
+      });
+    } else if (t < 48.1) {
+      [E.x0, E.x1, E.x2, E.x3].forEach((el) => hide(el));
+    }
+    if (t > 56.5) {
+      [E.x0, E.x1, E.x2, E.x3].forEach((el) => hide(el));
+    }
+
+    /* ---------- H. tombol diam (56.6 - 63.3) ---------- */
+    const bOn = win(t, [[56.6, 63.2]]);
+    group(t, [[56.6, 63.2]], G_BTN);
+    if (bOn > 0.02) {
+      rise(E.onClickTag, t, 56.7, 0.4);
+      rise(E.btnBeli, t, 56.95, 0.44);
+      const ck = easeInOut(seg(t, 57.0, 57.45));
+      const cursorOn = t > 56.95 && t < 59.1;
+      at(E.cursor, mix(452, 434, ck), mix(462, 424, ck), 26, 26);
+      set(E.cursor, { opacity: cursorOn ? '1' : '0', visibility: cursorOn ? 'visible' : 'hidden' });
+      const press = seg(t, 57.55, 57.68) * (1 - seg(t, 57.68, 57.9));
+      set(E.btnBeli, { transform: 'scale(' + (1 - press * 0.08) + ')' });
+      const rp = seg(t, 57.62, 58.15);
+      if (rp > 0 && rp < 1) {
+        const d = mix(70, 172, rp);
+        at(E.tapRing, 447 - d / 2, 430 - d / 2, d, d);
+        set(E.tapRing, { opacity: String(1 - rp), visibility: 'visible' });
+      } else { hide(E.tapRing); }
+      rise(E.noRespon, t, 58.2, 0.36);
+      const st = seg(t, 58.95, 59.4);
+      if (st > 0) {
+        const wob = Math.sin((t - 58.95) * 22) * Math.exp(-6 * (t - 58.95)) * 4;
+        set(E.stamp, { opacity: String(Math.min(1, st * 2.4)), visibility: 'visible',
+          transform: 'scale(' + mix(1.7, 1, easeOutBack(st)) + ') rotate(' + (-5 + wob) + 'deg)' });
+      } else { hide(E.stamp); }
+      set(E.btnBeli, { filter: t > 58.9 ? 'brightness(0.6)' : 'none' });
+    }
+
+    /* ---------- I. jalan keluar (63.3 - 69.3) ---------- */
+    const eOn = win(t, [[63.3, 69.2]]);
+    group(t, [[63.3, 69.2]], G_ED);
+    if (eOn > 0.02) {
+      const typed = CLIENT.slice(0, Math.round(seg(t, 64.05, 66.7) * CLIENT.length));
+      text(E.edClient, typed);
+      set(E.edClient, { opacity: typed.length ? '1' : '0', visibility: typed.length ? 'visible' : 'hidden' });
+      const typing = typed.length > 0 && typed.length < CLIENT.length;
+      const caretOn = t > 63.5 && t < 68.2 && (typing || Math.sin(t * 7) > 0);
+      at(E.caret, 132 + (typed ? typed.length * 21.5 : 0), 361, 3, 36);
+      set(E.caret, { opacity: caretOn ? '1' : '0', visibility: caretOn ? 'visible' : 'hidden' });
+      const hk = seg(t, 64.0, 64.4);
+      set(E.edHi, { opacity: String(hk), visibility: hk > 0 ? 'visible' : 'hidden' });
+    }
+
+    /* ---------- J. pintu (69.3 - 73.6) ---------- */
+    if (t >= 69.3 && t < 74.2) {
+      travel(E.doorChip, t, [
+        { t0: 69.6, t1: 70.2, from: [132, 356, 330, 46], to: [196, 420, 328, 46] },
+        { t0: 70.2, t1: 70.75, from: [196, 420, 328, 46], to: [196, 484, 328, 44] },
+      ]);
+      if (t < 69.6) hide(E.doorChip);
+    } else if (t >= 74.2 && t < 79.8) {
+      at(E.doorChip, 196, 484, 328, 44);
+      set(E.doorChip, { opacity: String(1 - seg(t, 74.0, 74.35)), visibility: 'visible' });
+    } else { hide(E.doorChip); }
+
+    /* ---------- K. semua ikut (73.6 - 79.7) ---------- */
+    const kOn = win(t, [[73.6, 79.25]]);
+    group(t, [[73.6, 79.25]], G_BIG, 0.3);
+    group(t, [[73.6, 79.3]], G_BUNDLE, 0.3);
+    if (kOn > 0.02) {
+      const ins = [[74, 330], [296, 330], [74, 386], [296, 386], [74, 442]];
+      const slots = [[122, 640], [214, 640], [306, 640], [398, 640], [490, 640]];
+      [E.kid1, E.kid2, E.kid3, E.kid4, E.kid5].forEach((el, i) => {
+        const t0 = 74.45 + i * 0.3;
+        at(el, ins[i][0], ins[i][1], 220, 46);
+        if (t < t0) { rise(el, t, 74.0 + i * 0.12, 0.3); }
+        else travel(el, t, [
+          { t0: t0, t1: t0 + 0.34, from: [ins[i][0], ins[i][1], 220, 46], to: [250, 462, 220, 46] },
+          { t0: t0 + 0.34, t1: t0 + 0.72, from: [250, 462, 220, 46], to: [slots[i][0], slots[i][1], 84, 46] },
         ]);
-      }
+      });
+      at(E.kid0, 30, 640, 84, 46);
+      set(E.kid0, { opacity: '1', visibility: 'visible' });
+      const bf = seg(t, 74.6, 79.0);
+      set(E.bundleFill, { width: Math.round(mix(8, 100, easeInOut(bf))) + '%' });
+      if (t > 74.5) text(E.bundleNote, 'semuanya masuk'); else text(E.bundleNote, 'yang dikirim ke HP orang');
+    } else { hide(E.kid0); }
+
+    /* ---------- L. yang bener (79.7 - 91.2) ---------- */
+    const fOn = win(t, [[79.7, 91.1]]);
+    group(t, [[79.7, 91.1]], G_FIX);
+    if (fOn > 0.02) {
+      const ck = seg(t, 83.4, 84.0);
+      set(E.fixCheck, { opacity: String(ck), visibility: ck > 0 ? 'visible' : 'hidden', transform: 'scale(' + mix(0.6, 1, easeOutBack(ck)) + ')' });
+      const exT = [84.25, 87.15, 89.4];
+      [E.ex0, E.ex1, E.ex2].forEach((el, i) => rise(el, t, exT[i], 0.4));
+      const fb = seg(t, 80.2, 81.2);
+      set(E.fixBarFill, { width: Math.round(mix(40, 12, easeInOut(fb))) + '%' });
+      set(E.fixChip, { opacity: String(seg(t, 80.6, 81.1)), visibility: t > 80.6 ? 'visible' : 'hidden' });
+    }
+    // bundel: balik kecil pas pola yang bener
+    if (t > 80.0 && t < 86.0) { set(E.bundleFill, { width: Math.round(mix(100, 10, easeInOut(seg(t, 80.0, 80.8)))) + '%' }); }
+    if (t > 86.0) { set(E.bundleFill, { width: '10%' }); }
+
+    /* ---------- M. CTA (91.2 - 94.4) ---------- */
+    group(t, [[91.2, 94.3]], [E.ctaQ, E.ctaA, E.ctaB, E.ctaPill], 0.3);
+    if (t > 91.1 && t < 94.4) {
+      rise(E.ctaQ, t, 91.25, 0.42);
+      rise(E.ctaA, t, 91.75, 0.4);
+      rise(E.ctaB, t, 91.95, 0.4);
+      rise(E.ctaPill, t, 92.7, 0.4);
+      const pp = seg(t, 92.95, 93.08) * (1 - seg(t, 93.08, 93.3));
+      set(E.ctaPill, { transform: 'scale(' + (1 - pp * 0.07) + ')' });
+      set(E.ctaB, { borderColor: t > 93.0 && t < 93.9 ? ACCENT : LINE, color: t > 93.0 && t < 93.9 ? ACCENT_TEXT : INK2 });
+    }
+
+    /* ---------- N. penutup (94.4 - 96.6) ---------- */
+    set(E.endDark, { opacity: String(mix(0, 1, easeOutCubic(seg(t, 94.35, 94.75)))) });
+    rise(E.endRule1, t, 94.5, 0.4);
+    rise(E.endRule2, t, 94.68, 0.4);
+    rise(E.endCredit, t, 94.95, 0.4);
+    rise(E.endBrand, t, 95.1, 0.4);
+
+    /* ---------- stiker meme ---------- */
+    STK.forEach((s) => {
+      const el = s.el;
+      const live = t >= s.t0 && t <= s.t1;
+      const inK = seg(t, s.t0, s.t0 + 0.34);
+      const outK = 1 - seg(t, s.t1 - 0.3, s.t1);
+      const fl = live ? Math.sin((t - s.t0) * 1.7) * 6 : 0;
+      const sw = live ? Math.sin((t - s.t0) * 1.5) * 2.4 : 0;
+      at(el, s.x, s.y + fl, s.w, s.w);      // posisi selalu ditulis, biar nggak ada state nyangkut
+      if (!live) { hide(el); return; }
+      set(el, { opacity: String(Math.min(inK * 1.8, 1) * outK), visibility: 'visible',
+        transform: 'scale(' + mix(0.62, 1, easeOutBack(inK)) + ') rotate(' + (s.rot + sw) + 'deg)',
+        transformOrigin: '50% 50%' });
     });
-    const bf = seg(t, 24.72, 26.0);
-    set(E.brwFill, { width: String(mix(8, 100, easeInOut(bf))) + '%' });
-    if (t > 24.68) {
-      if (E.brwPillText.textContent !== 'bundel js') E.brwPillText.textContent = 'bundel js';
-    } else if (E.brwPillText.textContent !== 'situs lu') E.brwPillText.textContent = 'situs lu';
 
-    /* ---------- I. CTA (26.5 - 28.1) ---------- */
-    rise(E.ctaQ, t, 26.5, 0.42);
-    rise(E.ctaA, t, 26.94, 0.4);
-    rise(E.ctaB, t, 27.14, 0.4);
-    rise(E.ctaPill, t, 27.68, 0.4);
-    const pp = seg(t, 27.86, 27.98) * (1 - seg(t, 27.98, 28.2));
-    set(E.ctaPill, { transform: 'scale(' + (1 - pp * 0.07) + ')' });
-    drop(E.ctaQ, t, 28.02, 0.24);
-    drop(E.ctaA, t, 28.02, 0.24);
-    drop(E.ctaB, t, 28.02, 0.24);
-    drop(E.ctaPill, t, 28.06, 0.24);
-
-    /* ---------- J. penutup (28.3 - 29.6) ---------- */
-    set(E.endDark, { opacity: String(mix(0, 1, easeOutCubic(seg(t, 28.3, 28.62)))) });
-    rise(E.endRule1, t, 28.5, 0.4);
-    rise(E.endRule2, t, 28.66, 0.4);
-    rise(E.endCredit, t, 28.86, 0.4);
-    rise(E.endBrand, t, 29.0, 0.4);
-
-    /* ---------- K. caption per frasa ---------- */
+    /* ---------- caption per frasa ---------- */
     const cap = CAPS.find((c) => t >= c[0] && t <= c[1]);
     if (cap) {
       const k = seg(t, cap[0], cap[0] + 0.16);
-      if (E.caption.textContent !== cap[2]) E.caption.textContent = cap[2];
+      text(E.caption, cap[2]);
       set(E.caption, { visibility: 'visible', opacity: String(Math.min(1, k * 2)),
         transform: 'scale(' + mix(0.95, 1, easeOutBack(k)) + ')' });
     } else { hide(E.caption); }
-
-    /* ---------- L. diagram keluar bareng sebelum CTA ---------- */
-    const dgf = 1 - seg(t, 26.18, 26.44);
-    if (dgf < 1) {
-      DGRP.forEach((el) => {
-        if (dgf <= 0) { hide(el); return; }
-        const cur = parseFloat(el.style.opacity);
-        set(el, { opacity: String((isNaN(cur) ? 1 : cur) * dgf), visibility: 'visible' });
-      });
-    }
   };
 
   window.__READY = (async () => {
     await document.fonts.ready;
+    await Promise.all([...document.images].map((i) => i.decode().catch(() => {})));
     window.SEEK(0);
     return true;
   })();

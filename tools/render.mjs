@@ -33,7 +33,7 @@ const cfg = JSON.parse(readFileSync(path.join(projDir, 'project.json'), 'utf8'))
 const W = cfg.width || 720;
 const H = cfg.height || 1280;
 const FPS = cfg.fps || 60;
-const DUR = Math.min(32, Number(cfg.duration) || 15); // pagar keras 32 detik
+const DUR = Math.min(600, Number(cfg.duration) || 15); // pagar keras 10 menit (TikTok)
 const FRAMES = Math.round(DUR * FPS);
 const outName = cfg.out || `${cfg.id}.mp4`;
 
