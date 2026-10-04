@@ -1,0 +1,340 @@
+{
+  "id": "xydesk-remote",
+  "title": "XyDesk Remote — remote PC Windows dari HP (tutorial lengkap)",
+  "width": 720,
+  "height": 1280,
+  "fps": 60,
+  "duration": 169.36,
+  "scene": "scene.html",
+  "audio": {
+    "voice": {
+      "file": "assets/vo.mp3",
+      "at": 0.55,
+      "gain": 1.0,
+      "energy": true
+    },
+    "sfx": [
+      {
+        "file": "assets/sfx/bed.wav",
+        "at": 0.0,
+        "gain": 0.15
+      },
+      {
+        "file": "assets/sfx/bed2.wav",
+        "at": 96.9,
+        "gain": 0.15
+      },
+      {
+        "file": "assets/sfx/vine-boom.mp3",
+        "at": 0.1,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/huh_37bAoRo.mp3",
+        "at": 0.55,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/rimshot.mp3",
+        "at": 3.848,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/whoosh.wav",
+        "at": 4.15,
+        "gain": 0.38
+      },
+      {
+        "file": "assets/sfx/whoosh.wav",
+        "at": 6.55,
+        "gain": 0.38
+      },
+      {
+        "file": "assets/sfx/whoosh.wav",
+        "at": 8.75,
+        "gain": 0.38
+      },
+      {
+        "file": "assets/sfx/riser.wav",
+        "at": 9.834,
+        "gain": 0.3
+      },
+      {
+        "file": "assets/sfx/whoosh-up.wav",
+        "at": 10.684,
+        "gain": 0.4
+      },
+      {
+        "file": "assets/sfx/chime.wav",
+        "at": 11.584,
+        "gain": 0.3
+      },
+      {
+        "file": "assets/sfx/pop.wav",
+        "at": 18.047,
+        "gain": 0.3
+      },
+      {
+        "file": "assets/sfx/pop.wav",
+        "at": 20.497,
+        "gain": 0.3
+      },
+      {
+        "file": "assets/sfx/pop.wav",
+        "at": 21.635,
+        "gain": 0.3
+      },
+      {
+        "file": "assets/sfx/whoosh.wav",
+        "at": 25.347,
+        "gain": 0.38
+      },
+      {
+        "file": "assets/sfx/typing.wav",
+        "at": 27.517,
+        "gain": 0.42
+      },
+      {
+        "file": "assets/sfx/whoosh.wav",
+        "at": 29.788,
+        "gain": 0.36
+      },
+      {
+        "file": "assets/sfx/pop.wav",
+        "at": 34.987,
+        "gain": 0.3
+      },
+      {
+        "file": "assets/sfx/pop.wav",
+        "at": 35.787,
+        "gain": 0.3
+      },
+      {
+        "file": "assets/sfx/pop.wav",
+        "at": 36.587,
+        "gain": 0.3
+      },
+      {
+        "file": "assets/sfx/boing.wav",
+        "at": 36.603,
+        "gain": 0.32
+      },
+      {
+        "file": "assets/sfx/click.wav",
+        "at": 40.436,
+        "gain": 0.45
+      },
+      {
+        "file": "assets/sfx/huh_37bAoRo.mp3",
+        "at": 41.954,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/bruh.mp3",
+        "at": 44.074,
+        "gain": 0.45
+      },
+      {
+        "file": "assets/sfx/whoosh.wav",
+        "at": 50.075,
+        "gain": 0.38
+      },
+      {
+        "file": "assets/sfx/boing.wav",
+        "at": 52.865,
+        "gain": 0.34
+      },
+      {
+        "file": "assets/sfx/anime-wow.mp3",
+        "at": 57.93,
+        "gain": 0.42
+      },
+      {
+        "file": "assets/sfx/rimshot.mp3",
+        "at": 62.58,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/whoosh.wav",
+        "at": 66.235,
+        "gain": 0.38
+      },
+      {
+        "file": "assets/sfx/pop.wav",
+        "at": 68.153,
+        "gain": 0.32
+      },
+      {
+        "file": "assets/sfx/pop.wav",
+        "at": 71.076,
+        "gain": 0.3
+      },
+      {
+        "file": "assets/sfx/typing.wav",
+        "at": 77.736,
+        "gain": 0.4
+      },
+      {
+        "file": "assets/sfx/pop.wav",
+        "at": 81.24,
+        "gain": 0.3
+      },
+      {
+        "file": "assets/sfx/error.mp3",
+        "at": 93.941,
+        "gain": 0.4
+      },
+      {
+        "file": "assets/sfx/vine-boom.mp3",
+        "at": 95.745,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/whoosh.wav",
+        "at": 99.27,
+        "gain": 0.38
+      },
+      {
+        "file": "assets/sfx/bruh.mp3",
+        "at": 102.125,
+        "gain": 0.45
+      },
+      {
+        "file": "assets/sfx/tick.wav",
+        "at": 106.021,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/tick.wav",
+        "at": 106.488,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/tick.wav",
+        "at": 107.579,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/tick.wav",
+        "at": 109.215,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/metal-pipe.mp3",
+        "at": 112.176,
+        "gain": 0.42
+      },
+      {
+        "file": "assets/sfx/riser.wav",
+        "at": 114.286,
+        "gain": 0.36
+      },
+      {
+        "file": "assets/sfx/whoosh-up.wav",
+        "at": 115.186,
+        "gain": 0.4
+      },
+      {
+        "file": "assets/sfx/sub.wav",
+        "at": 117.253,
+        "gain": 0.36
+      },
+      {
+        "file": "assets/sfx/tick.wav",
+        "at": 117.653,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/tick.wav",
+        "at": 118.803,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/tick.wav",
+        "at": 119.953,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/tick.wav",
+        "at": 121.103,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/vine-boom.mp3",
+        "at": 125.693,
+        "gain": 0.55
+      },
+      {
+        "file": "assets/sfx/yippeeeeeeeeeeeeee.mp3",
+        "at": 125.943,
+        "gain": 0.4
+      },
+      {
+        "file": "assets/sfx/stamp.wav",
+        "at": 126.193,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/whoosh.wav",
+        "at": 135.401,
+        "gain": 0.38
+      },
+      {
+        "file": "assets/sfx/thud.wav",
+        "at": 135.801,
+        "gain": 0.34
+      },
+      {
+        "file": "assets/sfx/pop.wav",
+        "at": 138.282,
+        "gain": 0.32
+      },
+      {
+        "file": "assets/sfx/pop.wav",
+        "at": 142.291,
+        "gain": 0.32
+      },
+      {
+        "file": "assets/sfx/pop.wav",
+        "at": 145.4,
+        "gain": 0.32
+      },
+      {
+        "file": "assets/sfx/error.mp3",
+        "at": 147.036,
+        "gain": 0.42
+      },
+      {
+        "file": "assets/sfx/stamp.wav",
+        "at": 150.963,
+        "gain": 0.5
+      },
+      {
+        "file": "assets/sfx/whoosh.wav",
+        "at": 153.767,
+        "gain": 0.38
+      },
+      {
+        "file": "assets/sfx/chime.wav",
+        "at": 154.267,
+        "gain": 0.3
+      },
+      {
+        "file": "assets/sfx/rizz.mp3",
+        "at": 161.159,
+        "gain": 0.48
+      },
+      {
+        "file": "assets/sfx/boing.wav",
+        "at": 165.519,
+        "gain": 0.34
+      },
+      {
+        "file": "assets/sfx/chime.wav",
+        "at": 166.964,
+        "gain": 0.32
+      }
+    ]
+  },
+  "out": "xydesk-remote.mp4"
+}

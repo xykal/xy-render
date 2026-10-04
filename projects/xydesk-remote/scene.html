@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: PJS; src: url(assets/font/pjs-400.woff2) format("woff2"); font-weight: 400; }
+  @font-face { font-family: PJS; src: url(assets/font/pjs-700.woff2) format("woff2"); font-weight: 700; }
+  @font-face { font-family: PJS; src: url(assets/font/pjs-800.woff2) format("woff2"); font-weight: 800; }
+
+  html, body { margin: 0; padding: 0; width: 720px; height: 1280px; overflow: hidden; background: #06070e; }
+  * { box-sizing: border-box; }
+  #stage { position: absolute; inset: 0; font-family: PJS, sans-serif; }
+
+  /* latar */
+  #bg { position: absolute; inset: 0;
+    background:
+      radial-gradient(900px 600px at 15% -5%, #15224d 0%, transparent 60%),
+      radial-gradient(800px 700px at 110% 108%, #2a1246 0%, transparent 55%),
+      linear-gradient(165deg, #0a0d1c 0%, #070812 55%, #0d0a1d 100%); }
+  #bgdots { position: absolute; inset: 0; opacity: .5;
+    background-image: radial-gradient(rgba(255,255,255,.055) 1.2px, transparent 1.3px);
+    background-size: 34px 34px; }
+
+  /* HP + video */
+  #shaker { position: absolute; inset: 0; }
+  #phone { position: absolute; left: 60px; top: 54px; width: 530px; height: 1178px;
+    border-radius: 30px; overflow: hidden;
+    border: 2px solid rgba(118, 160, 255, .35);
+    box-shadow: 0 0 0 6px rgba(10,12,26,.9), 0 0 70px rgba(64,120,255,.22), 0 28px 60px rgba(0,0,0,.6); }
+  #zoom { position: absolute; left: 0; top: 0; width: 530px; height: 1178px; }
+  #v { display: block; width: 530px; height: 1178px; object-fit: cover; }
+  #phoneDim { position: absolute; inset: 0; background: #000; opacity: 0; }
+
+  /* caption: TANPA background — stroke + shadow */
+  #capWrap { position: absolute; left: 30px; width: 600px; top: 838px; height: 150px;
+    display: flex; align-items: center; justify-content: center; pointer-events: none; }
+  .cap { position: relative; text-align: center; font-weight: 800; font-size: 47px;
+    line-height: 1.14; letter-spacing: .2px; max-width: 590px;
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,.85)); }
+  .cap .lyr { grid-area: a; }
+  .cap { display: grid; grid-template-areas: "a"; }
+  .cap .stroke { -webkit-text-stroke: 11px #000; color: #000; }
+  .cap .fill { color: #fff; }
+  .cap .fill .hl { color: #ffd60a; }
+  .cap .stroke .hl { color: #000; }
+
+  /* judul hook */
+  .big { position: absolute; left: 0; width: 720px; text-align: center; pointer-events: none; }
+  .hookline { font-weight: 800; font-size: 86px; line-height: 1.02; letter-spacing: 1px;
+    display: grid; grid-template-areas: "a"; justify-items: center;
+    filter: drop-shadow(0 10px 22px rgba(0,0,0,.8)); }
+  .hookline .lyr { grid-area: a; }
+  .hookline .stroke { -webkit-text-stroke: 14px #000; color: #000; }
+  .hookline .fill { background: linear-gradient(180deg, #fff 18%, #ffd60a 52%, #ff8a00 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hooksub { margin-top: 14px; font-weight: 700; font-size: 30px; color: #c8d6ff;
+    text-shadow: 0 2px 0 #000, 0 0 18px rgba(0,0,0,.9), 0 4px 16px #000; }
+
+  .brandline { font-weight: 800; font-size: 76px;
+    display: grid; grid-template-areas: "a"; justify-items: center;
+    filter: drop-shadow(0 8px 30px rgba(0,229,160,.35)); }
+  .brandline .lyr { grid-area: a; }
+  .brandline .stroke { -webkit-text-stroke: 13px #000; color: #000; }
+  .brandline .fill { background: linear-gradient(180deg, #d9fff1 5%, #00e5a0 65%, #00b4d8 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* chip section */
+  #secChip { position: absolute; left: 36px; top: 70px; font-weight: 800; font-size: 25px;
+    color: #0b0f1e; background: linear-gradient(135deg, #00e5a0, #35f3be); padding: 10px 20px;
+    border-radius: 999px; box-shadow: 0 6px 22px rgba(0,229,160,.4), 0 4px 10px rgba(0,0,0,.5); }
+
+  /* callout chips */
+  .note { position: absolute; font-weight: 700; font-size: 27px; color: #fff;
+    background: rgba(9, 12, 26, .82); border: 2.5px solid var(--ac, #00e5a0);
+    padding: 11px 20px; border-radius: 18px; white-space: nowrap;
+    box-shadow: 0 10px 26px rgba(0,0,0,.55), 0 0 22px color-mix(in srgb, var(--ac) 38%, transparent); }
+  .note.bigN { font-size: 36px; font-weight: 800; padding: 14px 26px; }
+  .note.smN { font-size: 24px; white-space: normal; max-width: 580px; line-height: 1.3; }
+
+  /* stempel */
+  .stamp { position: absolute; font-weight: 800; font-size: 64px; letter-spacing: 2px;
+    padding: 12px 30px; border: 6px solid var(--c, #16c784); color: var(--c, #16c784);
+    background: rgba(255,255,255,.93); border-radius: 14px;
+    box-shadow: 0 14px 40px rgba(0,0,0,.6); }
+
+  .stix { position: absolute; pointer-events: none;
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,.65)); }
+
+  #flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+  #dark { position: absolute; inset: 0; background: rgba(4,6,14,.78); opacity: 0; }
+
+  /* outro */
+  #outro { position: absolute; left: 60px; top: 268px; width: 530px; text-align: center; opacity: 0; }
+  #outro .ln0 { font-weight: 800; font-size: 44px; color: #ffd60a;
+    text-shadow: 0 3px 0 #000, 0 8px 26px rgba(0,0,0,.9); margin-bottom: 26px; }
+  #outro .lnk { font-weight: 700; font-size: 31px; color: #fff; background: rgba(9,12,26,.85);
+    border: 2.5px solid #00e5a0; border-radius: 16px; padding: 14px 10px; margin: 14px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 24px rgba(0,229,160,.3); }
+  #outro .cr { margin-top: 30px; font-weight: 700; font-size: 24px; color: #9fb3d9;
+    text-shadow: 0 2px 8px #000; }
+
+  #conf { position: absolute; inset: 0; pointer-events: none; }
+  .cf { position: absolute; font-size: 40px; }
+
+  #pbar { position: absolute; left: 0; bottom: 0; height: 7px; background:
+    linear-gradient(90deg, #00e5a0, #00b4d8); width: 0; border-radius: 0 4px 4px 0; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div><div id="bgdots"></div>
+  <div id="shaker">
+    <div id="phone">
+      <div id="zoom"><video id="v" src="assets/screen.webm" muted preload="auto" playsinline></video></div>
+      <div id="phoneDim"></div>
+    </div>
+    <div id="secChip" style="opacity:0"></div>
+    <div id="notes"></div>
+    <div id="stamps"></div>
+    <div id="stixL"></div>
+  </div>
+  <div id="dark"></div>
+  <div id="titles"></div>
+  <div id="outro">
+    <div class="ln0"></div>
+    <div class="lnk l1"></div>
+    <div class="lnk l2"></div>
+    <div class="cr"></div>
+  </div>
+  <div id="capWrap"></div>
+  <div id="conf"></div>
+  <div id="flash"></div>
+  <div id="pbar"></div>
+</div>
+
+<script src="data.js"></script>
+<script>
+const D = window.DATA;
+const V = document.getElementById('v');
+const $ = (id) => document.getElementById(id);
+
+/* ---------- easing (tanpa CSS animation) ---------- */
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, x) => a + (b - a) * x;
+const easeOutCubic = (x) => 1 - Math.pow(1 - clamp(x, 0, 1), 3);
+const easeOutBack = (x) => { x = clamp(x, 0, 1); const c = 1.70158 * 1.25; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const smooth = (x) => { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); };
+
+/* ---------- pra-render elemen statis ---------- */
+function esc(s) { return s; }
+function capEl(html) {
+  return `<div class="cap"><div class="lyr stroke">${html}</div><div class="lyr fill">${html}</div></div>`;
+}
+const capWrap = $('capWrap');
+
+const notesHost = $('notes');
+D.notes.forEach((n, i) => {
+  const el = document.createElement('div');
+  el.className = 'note' + (n.big ? ' bigN' : '') + (n.sm ? ' smN' : '');
+  el.style.setProperty('--ac', n.ac || '#00e5a0');
+  el.style.left = n.x + 'px'; el.style.top = n.y + 'px';
+  el.style.opacity = '0';
+  el.textContent = n.txt;
+  notesHost.appendChild(el); n._el = el;
+});
+
+const stampsHost = $('stamps');
+D.stamps.forEach((s) => {
+  const el = document.createElement('div');
+  el.className = 'stamp';
+  el.style.setProperty('--c', s.color);
+  el.style.left = s.x + 'px'; el.style.top = s.y + 'px';
+  el.style.opacity = '0';
+  el.textContent = s.txt;
+  stampsHost.appendChild(el); s._el = el;
+});
+
+const stixHost = $('stixL');
+D.stix.forEach((s) => {
+  const el = document.createElement('img');
+  el.className = 'stix';
+  el.src = s.src; el.style.width = s.w + 'px';
+  el.style.left = s.x + 'px'; el.style.top = s.y + 'px';
+  el.style.opacity = '0';
+  stixHost.appendChild(el); s._el = el;
+});
+
+const titlesHost = $('titles');
+const hookT = D.titles[0], brandT = D.titles[1];
+titlesHost.innerHTML = `
+  <div class="big" id="hookB" style="top:128px;opacity:0">
+    <div class="hookline"><div class="lyr stroke">${hookT.l1}</div><div class="lyr fill">${hookT.l1}</div></div>
+    <div class="hookline" style="font-size:96px"><div class="lyr stroke">${hookT.l2}</div><div class="lyr fill">${hookT.l2}</div></div>
+    <div class="hooksub">${hookT.sub}</div>
+  </div>
+  <div class="big" id="brandB" style="top:470px;opacity:0">
+    <div class="brandline"><div class="lyr stroke">${brandT.l1}</div><div class="lyr fill">${brandT.l1}</div></div>
+    <div class="hooksub" style="font-size:32px">${brandT.sub}</div>
+  </div>`;
+const hookB = $('hookB'), brandB = $('brandB');
+
+const outro = $('outro');
+outro.querySelector('.ln0').textContent = D.outro.lines[0];
+outro.querySelector('.l1').textContent = D.outro.lines[1];
+outro.querySelector('.l2').textContent = D.outro.lines[2];
+outro.querySelector('.cr').textContent = D.outro.credit;
+
+/* confetti deterministik (LCG seed tetap) */
+const confHost = $('conf');
+const EMO = ['🎉', '🔥', '💚', '⭐', '💻', '📱', '✨'];
+const confs = [];
+D.fx.confetti.forEach((c, ci) => {
+  let seed = 1234567 + ci * 999;
+  const rnd = () => { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; };
+  for (let i = 0; i < c.n; i++) {
+    const el = document.createElement('div');
+    el.className = 'cf'; el.style.opacity = '0';
+    el.textContent = EMO[Math.floor(rnd() * EMO.length)];
+    confHost.appendChild(el);
+    confs.push({ t: c.t, el, x0: 30 + rnd() * 650, vy: 260 + rnd() * 320, vx: (rnd() - 0.5) * 160, rot: (rnd() - 0.5) * 540, dly: rnd() * 0.35, sc: 0.7 + rnd() * 0.9 });
+  }
+});
+
+/* ---------- pemetaan waktu -> waktu sumber video ---------- */
+function srcT(t) {
+  const S = D.segs;
+  if (t <= S[0][0]) return S[0][2];
+  for (const s of S) {
+    if (t >= s[0] && t < s[1]) return s[2] + (t - s[0]) * (s[3] - s[2]) / Math.max(0.0001, (s[1] - s[0]));
+  }
+  return S[S.length - 1][3];
+}
+
+/* ---------- kamera ---------- */
+function camAt(t) {
+  const K = D.cam;
+  if (t <= K[0][0]) return K[0];
+  for (let i = 0; i < K.length - 1; i++) {
+    const a = K[i], b = K[i + 1];
+    if (t >= a[0] && t <= b[0]) {
+      const x = smooth((t - a[0]) / Math.max(0.0001, b[0] - a[0]));
+      return [t, lerp(a[1], b[1], x), lerp(a[2], b[2], x), lerp(a[3], b[3], x)];
+    }
+  }
+  return K[K.length - 1];
+}
+
+function inWin(t, t0, t1) { return t >= t0 && t < t1; }
+
+/* ---------- gambar frame ---------- */
+function draw(t) {
+  /* kamera + micro ken-burns */
+  const [, s0, fx, fy] = camAt(t);
+  let s = s0 * (1 + 0.012 * Math.sin(t * 0.37));
+  /* pulse boom */
+  for (const p of D.fx.pulse) { const dt = t - p.t; if (dt >= 0 && dt < 0.8) s *= 1 + 0.1 * Math.exp(-5.5 * dt); }
+  const W = 530, H = 1178;
+  const tx = (0.5 - fx) * W, ty = (0.5 - fy) * H + 4 * Math.sin(t * 0.23);
+  $('zoom').style.transform = `scale(${s.toFixed(4)}) translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px)`;
+
+  /* shake */
+  let sx = 0, sy = 0;
+  for (const sh of D.fx.shake) {
+    const dt = t - sh.t;
+    if (dt >= 0 && dt < sh.d) { const k = Math.exp(-6 * dt) * sh.amp; sx += k * Math.sin(dt * 55); sy += k * Math.sin(dt * 47 + 1.3); }
+  }
+  $('shaker').style.transform = `translate(${sx.toFixed(1)}px, ${sy.toFixed(1)}px)`;
+
+  /* flash */
+  let fl = 0;
+  for (const f of D.fx.flash) { const dt = t - f.t; if (dt >= 0 && dt < f.d) fl = Math.max(fl, 0.85 * (1 - easeOutCubic(dt / f.d))); }
+  $('flash').style.opacity = fl.toFixed(3);
+
+  /* dim video (tips & outro) + boost terang */
+  let dimB = 0, blur = 0, boost = 1;
+  for (const d of D.fx.dim) {
+    if (inWin(t, d.t0, d.t1)) {
+      const kIn = smooth((t - d.t0) / 0.6), kOut = smooth((d.t1 - t) / 0.6);
+      const k = Math.min(kIn, kOut);
+      dimB = Math.max(dimB, (1 - d.b) * k); blur = Math.max(blur, d.blur * k);
+    }
+  }
+  for (const b of (D.fx.boost || [])) {
+    if (inWin(t, b.t0, b.t1)) {
+      const k = Math.min(smooth((t - b.t0) / 0.4), smooth((b.t1 - t) / 0.4));
+      boost = Math.max(boost, 1 + (b.b - 1) * k);
+    }
+  }
+  $('phoneDim').style.opacity = dimB.toFixed(3);
+  const filt = [];
+  if (boost > 1.01) filt.push(`brightness(${boost.toFixed(3)}) contrast(1.04)`);
+  if (blur > 0.05) filt.push(`blur(${blur.toFixed(1)}px)`);
+  V.style.filter = filt.length ? filt.join(' ') : 'none';
+
+  /* judul hook */
+  if (inWin(t, hookT.t0, hookT.t1)) {
+    const x = easeOutBack((t - hookT.t0) / 0.5);
+    const xo = smooth((hookT.t1 - t) / 0.35);
+    hookB.style.opacity = Math.min(1, (t - hookT.t0) / 0.25 * xo).toFixed(3);
+    hookB.style.transform = `scale(${(0.7 + 0.3 * x).toFixed(3)}) translateY(${((1 - x) * -40).toFixed(1)}px)`;
+  } else hookB.style.opacity = '0';
+
+  /* kartu brand */
+  if (inWin(t, brandT.t0, brandT.t1)) {
+    const x = easeOutBack((t - brandT.t0) / 0.55);
+    const xo = smooth((brandT.t1 - t) / 0.5);
+    brandB.style.opacity = (Math.min(1, (t - brandT.t0) / 0.3) * xo).toFixed(3);
+    brandB.style.transform = `scale(${(0.8 + 0.2 * x).toFixed(3)})`;
+    $('dark').style.opacity = (0.72 * Math.min(1, (t - brandT.t0) / 0.3) * xo).toFixed(3);
+  } else {
+    brandB.style.opacity = '0';
+    if (t >= D.outro.t0) $('dark').style.opacity = (0.55 * smooth((t - D.outro.t0) / 0.6)).toFixed(3);
+    else $('dark').style.opacity = '0';
+  }
+
+  /* chip section */
+  const sec = D.sections.find((sc) => inWin(t, sc.t0, sc.t1));
+  const chip = $('secChip');
+  if (sec) {
+    const x = easeOutBack((t - sec.t0) / 0.4);
+    chip.style.opacity = Math.min(1, (t - sec.t0) / 0.2).toFixed(3);
+    chip.style.transform = `translateX(${((1 - x) * -60).toFixed(1)}px)`;
+    if (chip.textContent !== sec.txt) chip.textContent = sec.txt;
+  } else chip.style.opacity = '0';
+
+  /* caption */
+  const cap = D.caps.find((c) => inWin(t, c.t0, c.t1));
+  if (cap) {
+    if (capWrap._k !== cap.t0) { capWrap.innerHTML = capEl(cap.html); capWrap._k = cap.t0; }
+    const el = capWrap.firstChild;
+    const x = easeOutBack((t - cap.t0) / 0.2);
+    el.style.transform = `scale(${(0.72 + 0.28 * x).toFixed(3)}) translateY(${((1 - x) * 16).toFixed(1)}px)`;
+    el.style.opacity = Math.min(1, (t - cap.t0) / 0.1).toFixed(3);
+  } else { capWrap.innerHTML = ''; capWrap._k = null; }
+
+  /* notes/chips */
+  for (const n of D.notes) {
+    const el = n._el;
+    if (inWin(t, n.t0, n.t1)) {
+      const x = easeOutBack((t - n.t0) / 0.38);
+      const xo = smooth((n.t1 - t) / 0.3);
+      el.style.opacity = (Math.min(1, (t - n.t0) / 0.18) * xo).toFixed(3);
+      el.style.transform = `scale(${(0.6 + 0.4 * x).toFixed(3)}) rotate(${((1 - x) * -4).toFixed(2)}deg)`;
+      if (n.type) {
+        const nch = Math.min(n.txt.length, 2 + Math.floor((t - n.t0) * 16));
+        const txt = n.txt.slice(0, nch);
+        if (el.textContent !== txt) el.textContent = txt;
+      }
+    } else el.style.opacity = '0';
+  }
+
+  /* stempel */
+  for (const sp of D.stamps) {
+    const el = sp._el;
+    if (inWin(t, sp.t0, sp.t1)) {
+      const x = easeOutBack((t - sp.t0) / 0.3);
+      const xo = smooth((sp.t1 - t) / 0.3);
+      el.style.opacity = (Math.min(1, (t - sp.t0) / 0.12) * xo).toFixed(3);
+      el.style.transform = `scale(${(1.9 - 0.9 * x).toFixed(3)}) rotate(${sp.rot}deg)`;
+    } else el.style.opacity = '0';
+  }
+
+  /* stiker */
+  for (const st of D.stix) {
+    const el = st._el;
+    if (inWin(t, st.t0, st.t1)) {
+      const x = easeOutBack((t - st.t0) / 0.42);
+      const xo = smooth((st.t1 - t) / 0.25);
+      const wob = 4 * Math.sin((t - st.t0) * 3.1);
+      el.style.opacity = (Math.min(1, (t - st.t0) / 0.15) * xo).toFixed(3);
+      el.style.transform = `scale(${(0.3 + 0.7 * x).toFixed(3)}) rotate(${(st.rot + wob).toFixed(2)}deg)`;
+    } else el.style.opacity = '0';
+  }
+
+  /* confetti */
+  for (const c of confs) {
+    const dt = t - c.t - c.dly;
+    if (dt >= 0 && dt < 2.3) {
+      const y = -50 + c.vy * dt + 160 * dt * dt;
+      c.el.style.opacity = (Math.min(1, dt / 0.12) * smooth((2.3 - dt) / 0.5)).toFixed(3);
+      c.el.style.transform = `translate(${(c.x0 + c.vx * dt).toFixed(1)}px, ${y.toFixed(1)}px) rotate(${(c.rot * dt).toFixed(1)}deg) scale(${c.sc})`;
+    } else c.el.style.opacity = '0';
+  }
+
+  /* outro */
+  if (t >= D.outro.t0) {
+    const k = smooth((t - D.outro.t0) / 0.55);
+    const x = easeOutBack((t - D.outro.t0) / 0.6);
+    outro.style.opacity = k.toFixed(3);
+    outro.style.transform = `translateY(${((1 - x) * 60).toFixed(1)}px)`;
+  } else outro.style.opacity = '0';
+
+  /* progress bar */
+  $('pbar').style.width = (720 * clamp(t / D.total, 0, 1)).toFixed(1) + 'px';
+}
+
+/* ---------- seek video deterministik ---------- */
+function seekVideo(ts) {
+  return new Promise((res) => {
+    if (Math.abs(V.currentTime - ts) < 0.006 && V.readyState >= 2) return res();
+    let done = false;
+    const fin = () => { if (!done) { done = true; res(); } };
+    V.addEventListener('seeked', () => {
+      if ('requestVideoFrameCallback' in V) { V.requestVideoFrameCallback(() => fin()); setTimeout(fin, 400); }
+      else fin();
+    }, { once: true });
+    setTimeout(fin, 2500); /* pagar darurat kalau event hilang */
+    V.currentTime = ts;
+  });
+}
+
+window.SEEK = async function (t) {
+  draw(t);
+  await seekVideo(srcT(t));
+};
+</script>
+</body>
+</html>
